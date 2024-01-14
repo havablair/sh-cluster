@@ -1,0 +1,290 @@
+# Data Sources {#sec-data-source}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(terra)
+library(sf)
+
+```
+
+## Define Area of Interest
+
+-   Union of MN county boundaries and MLRA boundaries\
+-   An idea for subsetting later - bring in Cropland Data Layer. Exclude pixels with impervious \>50%, or some other %?
+
+## Major Land Resource Areas
+
+1.  Access the [USDA's Geospatial Data Gateway](https://gdg.sc.egov.usda.gov/).\
+2.  Click "Order by State" link, select Minnesota\
+3.  Select Major Land Resource Areas map layers
+4.  Format: ESRI Shape (not sure about this, other options are ESRI File GeoDatabase, separate ESRI shapefiles, separate ESRI GeoDatabase Feature Classes)
+
+The code below is reproduced from `create_aoi_shapefile.R`.
+
+```{r}
+
+# USA MLRAs
+mlras <- st_read("data/mlra/mlra_v42.shp")
+
+# State boundary
+mn <- st_read("_qgis_files/shp_mn_state_boundary/mn_state_boundary.shp")
+
+# confirm CRS the same
+st_crs(mn) == st_crs(mlras)
+
+# keep the intersection of MLRAs and MN boundary
+mn_mlras <- st_intersection(mn, mlras)
+
+# check out the result
+plot(mn_mlras["MLRARSYM"])
+
+```
+
+Now that I have the MLRA-MN intersection, need to subset to only the target MLRAs (selected b/c we know we will have validation data broadly in these regions, and because they are domianted by agriculture, unlike the NE part of the state)
+
+```{r}
+# keep only target MLRAs (agricultural regions of the state)
+# clipped to MN boundary
+
+keep_mlrarsym <- c("56",# Red River Valley of the North
+                "102A", # Rolling Till Prairie
+                "91A", # Central MN Sandy Outwash
+                "57", # Northern Minnesota Gray Drift
+                "103", # Central IA and MN Till Prairies
+                "104", # Eastern IA and MN Till Prairies
+                "105") # Northern Mississippi Valley Loess Hills 
+
+mn_targets <- mn_mlras %>% 
+  rownames_to_column(var = "rowid") %>% 
+  filter(MLRARSYM %in% keep_mlrarsym,
+         # drops the northern portion of N MN Gray Drift 
+         # which was excluded b/c lack of validation pts 
+         rowid != "1.4") 
+
+mn_targets %>% ggplot() + 
+  geom_sf(aes(fill = MLRARSYM))
+
+# might want to make a map that shows the full extent of the MLRAs in MN, 
+# extending out to neighborhing states. 
+mn_mlras_extend <- mlras %>% 
+  filter(MLRARSYM %in% keep_mlrarsym) %>% 
+  # drops the northern portion of N MN Gray Drift 
+  # which was excluded b/c lack of validation pts 
+  slice(-2)
+
+ggplot(data = mn_mlras_extend) +
+  geom_sf(aes(fill = MLRARSYM)) +
+  theme_bw()
+```
+
+## Minnesota County Boundaries
+
+Downloaded the MDNR's version of county boundaries from MN Geospatial
+
+## Minnesota State Boundary
+
+MN State Boundary downloaded from US Census Cartographic Boundary Files
+
+<https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html>
+
+File is the States 2018 500K shapefile
+
+## 2020 National Cultivated Layer
+
+1.  Access the data on the [Cropland "Research & Science" page](https://www.nass.usda.gov/Research_and_Science/Cropland/Release/index.php)\
+2.  Download zip file of 2020 National Cultivated Layer
+
+I think we want the "Cultivated Layer", which is based on most recent 5 years of data, updated annually.
+Pixels are included in this layer if it was identified as cultivated in at least 2 of the last 5 years.
+
+## Soils Data
+
+### gSSURGO data
+
+1.  Navigate to the Geospatial Data Gateway's ["Direct DAta/NAIP Download"](https://gdg.sc.egov.usda.gov/GDGHome_DirectDownLoad.aspx) list\
+2.  Click link for [Soils Geographic Databases](https://nrcs.app.box.com/v/soils)
+3.  October 2021 gSSURGO by State\
+4.  Download ZIP file for MN
+
+Citation for gSSURGO data:
+
+Soil Survey Staff.
+Gridded Soil Survey Geographic (gSSURGO) Database for Minnesota.
+United States Department of Agriculture, Natural Resources Conservation Service.
+Available online at <https://gdg.sc.egov.usda.gov/>.
+November, 22, 2021 (2021 official release).
+
+```{r}
+# inspect layers in .gdb
+sf::st_layers("./data/gSSURGO_MN/gSSURGO_MN.gdb")
+
+
+```
+
+### Process for .gdb \> .tif
+
+When you unzip gSSURGO, the data is in ESRI geodatabase (.gdb) format.
+I had thought this was a proprietary format that you had to open in an ESRI program like ArcMap, but [this 2015 blog post](https://gis.ucla.edu/node/53) from UCLA suggests otherwise (and helpfully explains some GDAL drivers for opening .gdbs).
+Also [this blog post](https://www.northrivergeographic.com/qgis-using-esris-file-based-geodatabase) from 2021 walks through opening a .gdb in QGIS, but doesn't mention a maximum file size (which I thought was an issue?).
+Anyway, I think QGIS froze when I tried to open the .gdb, so I used ArcMap instead to save it is a .tif, as describe below.
+
+For future, [gis.stackexchange post](https://gis.stackexchange.com/questions/108670/how-can-i-work-with-very-large-shapefiles-1-gb-in-qgis) suggests that maybe using a database like spatialite or postgis would be helpful?
+Learn more about this, starting with the QGIS docs here (esp module 16 and 18).
+Also for future,[some breadcrumbs that maybe .gdb](https://gis.stackexchange.com/questions/360210/open-gdb-file-in-r) IS in fact proprietary and must be opened using ESRI software is necessary.
+Distinction that there is no GDAL **raster** driver for ESRI GeoDatabase files (for vector I believe there is a driver, stumbled on some posts about this).
+
+Other posts on this topic, both of which support the majority opinion that for **rasters** you really do need to open in ArcMap and export to get free of the .gdb :
+
+https://gis.stackexchange.com/questions/385255/how-to-extract-raster-from-gdb-instead-of-empty-polygons
+
+https://stackoverflow.com/questions/27821571/working-with-rasters-in-file-geodatabase-gdb-with-gdal
+
+(Side note, it is possible to access the **tabular** data in R without changing the .gdb format as demonstrated in the code chunk above, but for the spatial data I still needed to convert from .gdb to .tif).
+
+ArcMap [documentation explains](https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/export-or-convert-raster-datasets.htm) that there are two ways to export a dataset (which is when you would have the option to change the file type).
+These are:
+
+-   **export raster data** **dialog box**. I get this by right clicking the data layer listing in the side panel of ArcMap and selecting "export..."
+-   **copy raster tool**. this tool can be found in Data management toolbox \> raster toolset. The [documentation](https://desktop.arcgis.com/en/arcmap/latest/tools/data-management-toolbox/copy-raster.htm) is helpful. I used this to scale my pixels to a new bit depth (32bit -\> 16bit) after replacing the values with my shorter MUKEYs using a reclass (see below). This reduced the overall file size of the tif significantly.
+
+More about the **export raster data dialog box** (in ESRI's words, from documentation linked above:
+
+> The dialog box allows you to export a raster dataset or a portion of a raster dataset.
+> Unlike other raster import or export tools, the Export Raster Data dialog box gives you additional capabilities such as clipping via the current data frame area, clipping via a selected graphic, choosing the spatial reference of the data frame, using the current renderer, choosing the output cell size, or specifying the NoData value.
+> In addition, you will be able to choose the output format for the raster dataset: BMP, ENVI, Esri BIL, Esri BIP, Esri BSQ, GIF, GRID, IMG, JPEG, JPEG 2000, PNG, TIFF, or exporting to a geodatabase.
+
+I learned through trial and error about what happens when you lower the pixel depth even though you have values beyond the acceptable range: "If the pixel type is demoted (lowered), the raster **values outside the valid range for that pixel depth will be truncated and lost**"
+
+### Process for raster reclass (new MUKEYs) {#sec-reclass}
+
+Open .tif version of gSSURGO in ArcMap version XXX.
+
+First need to create a table of new (shorter) MUKEY values.
+The table I provided to the raster reclass tool below was a text file of our cross-walk between the original map unit keys and our new, shorter map unit keys that allowed us to reduce the file size by going down to 16bit pixel depth.
+I created this original crosswalk table by:
+
+1.  Build pyramids
+2.  Build attribute table in Data Management Toolbox \> Raster \> Raster Properties \> Build Raster Attribute Table
+3.  Open attribute table, add field called "new_mu" with "short integer type" (b/c only 2 bits to store short integers and we want to reduce size). Field properties "precision" leaving at 0. Now new_mu is the same as OID, just integers starting at 0 and going all the way to 7861
+4.  Saved attribute table as a .txt file for future reference.
+
+Then, I performed a [raster reclass](https://desktop.arcgis.com/en/arcmap/latest/tools/3d-analyst-toolbox/reclass-by-table.htm) by table.
+Had to **turn on** the 3D analyst tools before I could access them (they were grayed out).
+Using Customize menu \> Extensions, turned on the 3D analyst tools and spatial analyst tools
+
+Now in the ArcToolbox, going to 3D analyst tools \> Raster Reclass \> Reclass by Table
+
+Input raster: MapunitRaster_10m_Clip1\
+Input remap table: mukey_new_crosswalk.txt\
+From value field: MUKEY\
+To value field: MUKEY\
+Output value fuield: MUKEY_new\
+Change missing values to NoData: DATA?
+
+SUCCESS with raster reclass above.
+To save, I used "Export Raster Data"\
+Dialog box shows that the uncompressed size is 5.42 GB (!!), and the pixel depth is 16bit.
+I am assigning the NoData value as 7999 (our max MU value is 7861)
+
+Saving to `C:\Users\blair304\Desktop\MapunitRaster_10m_Clip1`, name `Reclass_tif1.tif`, compression type NONE, compression quality set at default 75 (can't see a way to change it?)
+
+## NCSS (Kellogg Lab) Data
+
+Navigate to this link: https://ncsslabdatamart.sc.egov.usda.gov/
+
+Click on "Advanced Query"
+
+Specify:
+
+-   Country: United States
+-   State: Minnesota
+-   Submission Date Jan 1, 2000 - Oct 17 2022
+
+This returns 145 records.
+
+Had to do the downloads separated by "data tiers" because I got a network timeout / server error when I tried highlighting everything.
+Here are the batches:
+
+-   Carbon and extractions
+-   PSDA & Rock frags, WAter content
+-   Bulk density & moisture, water content
+-   CEC and bases, salt, organic
+-   Phosphorus
+-   Taxonomy tier 1 & 2
+-   pH & carbonates
+
+### Accessing data
+
+-   For each chunk of data I downloaded (see bullet points above), have a folder with CSV files.
+    Each folder contains a data dictionary, a "site" csv, and a "pedon" csv
+
+-   latitude & longitude data are in the "site" files.
+    Not clear if there is usually 1 pedon per site, and so this lat/lon are probably right?
+    Or would there be multiple pedons at a given site, so the site location won't be quite right?
+
+-   with code in R/unzip_merge_ncss_data.R, created "NCSS_validation_point_key_site_pedon.csv", which is all pedons with location data (56 total)
+
+Need to match up the right lab methods from the NCSS dataset so they correspond with the data I pulled from gSSURGO.
+Looking up more info in the gSSURGO metadata about these to see if methods are listed
+
+| variable       | gSSURGO info                                                                                                              | Spreadsheet                                                                                               |
+|----------------|---------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| x clay         |                                                                                                                           |                                                                                                           |
+| x SOC (for OM) | OM (LOI), pull SOC data from NCSS and convert                                                                             |                                                                                                           |
+| x CEC          | pH 7                                                                                                                      |                                                                                                           |
+| x bulk density | 1/3 bar                                                                                                                   | `Db1/3_4A1d_Caj_g/cc_0_CMS_0_0` AND/OR `Db13b_3B1b_Caj_0_SSL_0_0` AND/OR `Db13b_DbWR1_Caj_g/cc_0_SSL_0_0` |
+| x EC           | saturated paste                                                                                                           |                                                                                                           |
+| x pH           | 1:1 H2O                                                                                                                   |                                                                                                           |
+| x carbonates   | weight percent CaCO3 equivalent                                                                                           |                                                                                                           |
+| x LEP          |                                                                                                                           | COLE?                                                                                                     |
+| O KSAT         |                                                                                                                           | See notes below on ksat, don't have this data for now, think it's not the most important for validation   |
+| x AWC          | volume fraction, diff b/t water contents at 1/10 or 1/3 and 15 bar                                                        | 0 or 1/3 bar and 15 bars tension                                                                          |
+| x fragvol_r    | volume percentage of horizon occupied by 2mm or larger fraction (20mm or larger for wood fragments) on a whole soil basis | ? I found weight fractions but not volume fractions in the PSDA and rock fragments table.                 |
+
+I couldn't find ksat data in any of the NCSS tables.
+Suspect it might be because it is estimated using some kind of pedotransfer function.
+I found a Masters thesis from 2017 by Joshua Randall Weaver that seems to confirm this based on references in their literature review.
+The thesis is "Comparison of Saturated Hydraulic Conductivity using Geospatial Analysis of Field and SSURGO data for septic tank suitability assessment", Clemson University.
+On pg 2 (introduction), Weaver states
+
+> "Currently, SSURGO-reported saturated hydraulic conductivity (Ksat) data are often estimated from particle-size analysis (PSA) data from specific locations and then extrapolated across large areas based on soil map units (O'Neal, 1952; Rawls and Brakensiek, 1983; Williamson et al., 2014)." Rare comparisons of SSURGO recorded PSA-derived Ksat values are often different from site-specific field Ksat measurements (Hart et al. 2008).
+> The freely available PSA-derived Ksat data from SSURGO is frequently used for regional and national modelling for the purposes of environmental management, but spatial variability associated with using SSURGO data instead of site-specific data is largely unknown (Hoos and McMahon, 2009).
+> "
+
+For now I'm not going to worry too much about Ksat data, as it doesn't seem like the most important thing to validate (very few SH studies collect it right now, it's highly variable, it will be related to particle size).
+So I'm leaving this aside for now, but wanted to document in case I come back in the future.
+
+## NOAA NCEI U.S. Climate Normals
+
+-   On January 9, 2023 Access the map interface for US Climate Normals Data at https://www.ncei.noaa.gov/maps/normals
+-   Select 1991-2020 Climate Normals in the side bar, Annual Normals (hourly, daily, and monthly are also available)
+-   Select the wrench icon next to the selected dataset in the sidebar to open the "Tools" for that dataset. Use the "identify" (i) tool to pick a station and learn it's name and ID number.
+-   I picked two stations:
+    -   One in the far northwest (Hallock, MN USC00213455) and one in the far southeast (Caledonia MN, USC00211198)
+
+    -   NW: Hallock, MN MAT is 39.1 F and MAP is 22.31 inches
+
+    -   SE: Caledonia, MN MAT is 45.5 F and MAP is 38.32 in
+-   Rather than download the full dataset, I used the station names I had identified to see a quick summary with the "[U.S. Climate Normals Quick Access](https://www.ncei.noaa.gov/access/us-climate-normals/)" Tool.
+    -   Selected the "Annual/Seasonal Tab" and 1991-2020 tab
+
+    -   
+-   Recommended dataset citation, per [metadata page](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C01619/html#), is Arguez, A., I. Durre, S. Applequist, R. Vose, M. Squires, X. Yin, R. Heim, and T. Owen, 2012: NOAA's 1981-2010 climate normals: An overview. Bull. Amer. Meteor. Soc., 93, 1687-1697. (this is saved in my Zotero library already)
+
+### Convert MAP and MAT values
+
+```{r}
+# MAT convert from F to C: subtract 32 and multiply by 5/9
+(39.1 - 32)*(5/9) # Hallock (NW)
+
+(45.5- 32)*(5/9) # Caledonia (SE)
+
+
+# MAP convert inches to mm (1in=2.54cm, 10mm = 1cm)
+22.31*2.54*10 # Hallock (NW)
+
+38.32*2.54*10 # Caledonia (SE)
+
+```

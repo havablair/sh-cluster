@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Minnesota Topsoil Classification for Soil Health Assessment - 9&nbsp; Additional Data Preparation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./11-implement-kmeans.html" rel="next">
+<link href="./09-plot-ec-lep.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10-additional-data-prep.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Additional Data Preparation</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Minnesota Topsoil Classification for Soil Health Assessment</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-data_sources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data Sources</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-mus_comp_in_aoi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Explore Map Units &amp; Components in AOI</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-subset-component-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Identify Target Components</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-horiz-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Horizon Data Averages</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-soil-prop-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Soil Property Exploratory Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-map-unit-agg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Map unit aggregation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-var-transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Variable Transformations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-plot-ec-lep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MAP EC and LEP with <code>{terra}</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-additional-data-prep.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Additional Data Preparation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-implement-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Implement k-means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-explore-clust-props.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Explore clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-sample-points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sample validation points</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-map-indiv-regions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mapping individual clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-pca-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Do PCA before k-means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-pca-kmeans-finalists.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">PCA-kmeans Clustering Finalists</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-compare-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Comparing k-means scenarios</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-pca-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">PCA Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-notes-pca6-8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Comparing PCA 6 &amp; PCA 8 Models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-pairwise-nonparametric.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">(non-parametric) PCA Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./28-compare-variation-demo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compare variation explained</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./29-welch-pairwise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./30-welch-compare-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Welch ANOVA - compare variation explained</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#anthroportic-udorthents" id="toc-anthroportic-udorthents" class="nav-link active" data-scroll-target="#anthroportic-udorthents"><span class="header-section-number">9.1</span> Anthroportic Udorthents</a>
+  <ul class="collapse">
+  <li><a href="#identify-mukeys-to-exclude" id="toc-identify-mukeys-to-exclude" class="nav-link" data-scroll-target="#identify-mukeys-to-exclude"><span class="header-section-number">9.1.1</span> Identify MUKEYs to exclude</a></li>
+  <li><a href="#compile-list-of-mukeys-to-exclude" id="toc-compile-list-of-mukeys-to-exclude" class="nav-link" data-scroll-target="#compile-list-of-mukeys-to-exclude"><span class="header-section-number">9.1.2</span> Compile list of MUKEYs to exclude</a></li>
+  <li><a href="#exclude" id="toc-exclude" class="nav-link" data-scroll-target="#exclude"><span class="header-section-number">9.1.3</span> Exclude</a></li>
+  </ul></li>
+  <li><a href="#update-ec-values" id="toc-update-ec-values" class="nav-link" data-scroll-target="#update-ec-values"><span class="header-section-number">9.2</span> Update EC Values</a></li>
+  <li><a href="#update-lep-values" id="toc-update-lep-values" class="nav-link" data-scroll-target="#update-lep-values"><span class="header-section-number">9.3</span> Update LEP Values</a></li>
+  <li><a href="#sec-fen" id="toc-sec-fen" class="nav-link" data-scroll-target="#sec-fen"><span class="header-section-number">9.4</span> High carbonates?</a></li>
+  <li><a href="#save-dataset" id="toc-save-dataset" class="nav-link" data-scroll-target="#save-dataset"><span class="header-section-number">9.5</span> Save dataset</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Additional Data Preparation</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Following the data exploration we did in <a href="08-var-transformations.html"><span>Chapter&nbsp;7</span></a> and <a href="09-plot-ec-lep.html"><span>Chapter&nbsp;8</span></a> , we are doing the following additional data preparation on the map-unit aggregated data before running k-means:</p>
+<ul>
+<li>Exclude MUKEYs that are <strong>Anthroportic Udorthents</strong> , check on pits (gravel/sand), dumps</li>
+<li>For MUKEYs with EC&gt;0 &amp; EC&lt;1, set EC to 0 (see <a href="08-var-transformations.html#sec-var-ec"><span>Section&nbsp;7.8</span></a> and <a href="09-plot-ec-lep.html#sec-ec-map"><span>Section&nbsp;8.6.3</span></a> )</li>
+<li>For MUKEYs with LEP = 0, set LEP to 0.5 (see <a href="08-var-transformations.html#sec-lep-var"><span>Section&nbsp;7.11</span></a> and <a href="09-plot-ec-lep.html#sec-lep-map"><span>Section&nbsp;8.6.4</span></a> )</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/mu_weighted_soil_props.csv"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>cmp_lookup <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/key_cokey_mukey_complete_cases_include.csv"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>cmp_details <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/component_list.csv"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>munames <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/target_mapunit_table.csv"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(mukey, muname, muacres)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># more rows than mu b/c there are multiple cmps</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># included in some mus</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>mu_cmp <span class="ot">&lt;-</span> <span class="fu">left_join</span>(mu, cmp_lookup, <span class="at">by =</span> <span class="st">"mukey"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># adds munames and muacres</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>mu_cmp_nm <span class="ot">&lt;-</span> <span class="fu">left_join</span>(mu_cmp, munames, <span class="at">by =</span> <span class="st">"mukey"</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># one row for each component (there can be multiple components</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># for an included mukey), now includes munames and component details</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>mu_detail <span class="ot">&lt;-</span> <span class="fu">left_join</span>(mu_cmp_nm, cmp_details, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"cokey"</span>,<span class="st">"mukey"</span>))</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># for translating MUKEY from gSSURGO to my shortened version</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>cwalk <span class="ot">&lt;-</span> aoi_mu <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="st">"data/gSSURGO_MN/mukey_new_crosswalk.txt"</span>, <span class="at">sep =</span> <span class="st">","</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(MUKEY, MUKEY_New, Count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="anthroportic-udorthents" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="anthroportic-udorthents"><span class="header-section-number">9.1</span> Anthroportic Udorthents</h2>
+<section id="identify-mukeys-to-exclude" class="level3" data-number="9.1.1">
+<h3 data-number="9.1.1" class="anchored" data-anchor-id="identify-mukeys-to-exclude"><span class="header-section-number">9.1.1</span> Identify MUKEYs to exclude</h3>
+<ul>
+<li>Exclude <code>taxsubgrp == Anthroportic Udorthent</code>
+<ul>
+<li>This covers some of the pits (see next bullet), and all of the MUNAME containing “dump”. It also covers everything with “landfill” in the MUNAME</li>
+</ul></li>
+<li>Exclude MUNAMEs that contain “Pit” or “pit”, but keep “pitted”, as below
+<ul>
+<li>This covers pits that are not classified as Anthroportic Udorthents</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># look at anything that includes "Anthro" in the subgroup</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>anthro <span class="ot">&lt;-</span> mu_detail <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(taxsubgrp, <span class="st">"Anthro"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(muname, taxsubgrp, muacres, mukey, cokey)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>anthro </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["muname"],"name":[1],"type":["chr"],"align":["left"]},{"label":["taxsubgrp"],"name":[2],"type":["chr"],"align":["left"]},{"label":["muacres"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["mukey"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["cokey"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"Anthroportic Udorthents, 2 to 9 percent slopes","2":"Anthroportic Udorthents","3":"987","4":"3057241","5":"21735554"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"475","4":"3057238","5":"21735557"},{"1":"Anthroportic Udorthents, 2 to 9 percent slopes","2":"Anthroportic Udorthents","3":"30","4":"3057252","5":"21736502"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"24","4":"3057250","5":"21736505"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"53","4":"3057256","5":"21737051"},{"1":"Anthroportic Udorthents, 2 to 9 percent slopes","2":"Anthroportic Udorthents","3":"421","4":"3057259","5":"21737676"},{"1":"Anthroportic Udorthents, sanitary landfill","2":"Anthroportic Udorthents","3":"65","4":"3057260","5":"21737677"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"469","4":"3057261","5":"21737680"},{"1":"Anthroportic Udorthents, 2 to 9 percent slopes","2":"Anthroportic Udorthents","3":"64","4":"3057242","5":"21758379"},{"1":"Anthroportic Udorthents, sanitary landfill","2":"Anthroportic Udorthents","3":"45","4":"3057243","5":"21758380"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"133","4":"3057244","5":"21758381"},{"1":"Anthroportic Udorthents, 2 to 9 percent slopes","2":"Anthroportic Udorthents","3":"725","4":"3057271","5":"21763550"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"148","4":"3057265","5":"21763551"},{"1":"Anthroportic Udorthents, 2 to 9 percent slopes","2":"Anthroportic Udorthents","3":"1266","4":"3057275","5":"21772923"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"147","4":"3057272","5":"21772924"},{"1":"Anthroportic Udorthents, 2 to 9 percent slopes","2":"Anthroportic Udorthents","3":"252","4":"3057278","5":"21780627"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"290","4":"3057276","5":"21780628"},{"1":"Anthroportic Udorthents, 2 to 9 percent slopes","2":"Anthroportic Udorthents","3":"154","4":"3057285","5":"21788480"},{"1":"Anthroportic Udorthents, sanitary landfill","2":"Anthroportic Udorthents","3":"30","4":"3057282","5":"21788481"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"96","4":"3057281","5":"21788482"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># all landfills in our "include" dataset </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># are classified as Anthroportic Udorthents </span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>mu_detail <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">str_detect</span>(muname, <span class="st">"landfill"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(muname, taxsubgrp, taxgrtgroup, muacres, mukey, cokey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["muname"],"name":[1],"type":["chr"],"align":["left"]},{"label":["taxsubgrp"],"name":[2],"type":["chr"],"align":["left"]},{"label":["taxgrtgroup"],"name":[3],"type":["chr"],"align":["left"]},{"label":["muacres"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["mukey"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["cokey"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"Anthroportic Udorthents, sanitary landfill","2":"Anthroportic Udorthents","3":"Udorthents","4":"65","5":"3057260","6":"21737677"},{"1":"Anthroportic Udorthents, sanitary landfill","2":"Anthroportic Udorthents","3":"Udorthents","4":"45","5":"3057243","6":"21758380"},{"1":"Anthroportic Udorthents, sanitary landfill","2":"Anthroportic Udorthents","3":"Udorthents","4":"30","5":"3057282","6":"21788481"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># not all munames that include "pit" (gravel or sand)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># include classification info, some have taxsubgrp </span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># entered as anthroportic udorthent and some don't </span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># this means we will also want to exclude based on </span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># some version of "pit" in the muname, but careful not to exclude # "pitted"</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>pits <span class="ot">&lt;-</span> mu_detail <span class="sc">%&gt;%</span> </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(muname, <span class="st">"Pit"</span>) <span class="sc">|</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>           <span class="fu">str_detect</span>(muname, <span class="st">"pit"</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(muname, <span class="st">"pitted"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(muname, taxsubgrp, taxgrtgroup, muacres, mukey, cokey) </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>pits</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["muname"],"name":[1],"type":["chr"],"align":["left"]},{"label":["taxsubgrp"],"name":[2],"type":["chr"],"align":["left"]},{"label":["taxgrtgroup"],"name":[3],"type":["chr"],"align":["left"]},{"label":["muacres"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["mukey"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["cokey"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"25","5":"2798049","6":"21696329"},{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"2970","5":"2798089","6":"21727291"},{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"43","5":"2798171","6":"21727975"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"Udorthents","4":"475","5":"3057238","6":"21735557"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"Udorthents","4":"24","5":"3057250","6":"21736505"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"Udorthents","4":"53","5":"3057256","6":"21737051"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"Udorthents","4":"469","5":"3057261","6":"21737680"},{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"197","5":"2798192","6":"21738901"},{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"989","5":"2798420","6":"21755975"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"Udorthents","4":"133","5":"3057244","6":"21758381"},{"1":"Udorthents, coteau (gravel pits)","2":"NA","3":"Udorthents","4":"14","5":"2765347","6":"21759590"},{"1":"Udorthents-Pits, gravel complex","2":"NA","3":"Udorthents","4":"1311","5":"399130","6":"21760273"},{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"1874","5":"2798954","6":"21760995"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"Udorthents","4":"148","5":"3057265","6":"21763551"},{"1":"Udorthents-Pits, gravel complex","2":"NA","3":"Udorthents","4":"671","5":"400564","6":"21767055"},{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"485","5":"2799073","6":"21769809"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"Udorthents","4":"147","5":"3057272","6":"21772924"},{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"49","5":"2799146","6":"21773022"},{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"1345","5":"2799223","6":"21774757"},{"1":"Udorthents, coteau (gravel pits)","2":"NA","3":"Udorthents","4":"13","5":"2765332","6":"21775319"},{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"3037","5":"2799697","6":"21775581"},{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"771","5":"2799820","6":"21779021"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"Udorthents","4":"290","5":"3057276","6":"21780628"},{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"877","5":"2799836","6":"21781496"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"Udorthents","4":"96","5":"3057281","6":"21788482"},{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"34","5":"2799914","6":"21788626"},{"1":"Udorthents, reclaimed pits, 0 to 6 percent slopes","2":"NA","3":"Udorthents","4":"456","5":"2799939","6":"21790167"},{"1":"Pits, gravel and sand","2":"NA","3":"NA","4":"465","5":"2800014","6":"21792543"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># it appears that all munames that include "dump"</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># are classified as anthroportic udorthents </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>dumps <span class="ot">&lt;-</span> mu_detail <span class="sc">%&gt;%</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(muname, <span class="st">"Dump"</span>) <span class="sc">|</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>           <span class="fu">str_detect</span>(muname, <span class="st">"dump"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(muname, taxsubgrp, muacres, mukey, cokey) </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>dumps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["muname"],"name":[1],"type":["chr"],"align":["left"]},{"label":["taxsubgrp"],"name":[2],"type":["chr"],"align":["left"]},{"label":["muacres"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["mukey"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["cokey"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"475","4":"3057238","5":"21735557"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"24","4":"3057250","5":"21736505"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"53","4":"3057256","5":"21737051"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"469","4":"3057261","5":"21737680"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"133","4":"3057244","5":"21758381"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"148","4":"3057265","5":"21763551"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"147","4":"3057272","5":"21772924"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"290","4":"3057276","5":"21780628"},{"1":"Anthroportic Udorthents-Pits-Dumps complex, abandoned, 2 to 45 percent slopes","2":"Anthroportic Udorthents","3":"96","4":"3057281","5":"21788482"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># look at the other Udorthents to be sure</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># excluding the Anthroportic Udorthents here</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># b/c they are already on the cut list</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>udorthents <span class="ot">&lt;-</span> mu_detail <span class="sc">%&gt;%</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(taxgrtgroup <span class="sc">==</span> <span class="st">"Udorthents"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(taxsubgrp, <span class="st">"Anthroportic"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#safer to do this because sometimes udorthent is singular, sometimes plural</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(muname, taxsubgrp, taxgrtgroup, muacres, mukey, cokey) </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># these all seem fine to keep</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>udorthents</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["muname"],"name":[1],"type":["chr"],"align":["left"]},{"label":["taxsubgrp"],"name":[2],"type":["chr"],"align":["left"]},{"label":["taxgrtgroup"],"name":[3],"type":["chr"],"align":["left"]},{"label":["muacres"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["mukey"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["cokey"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"Heyder complex, 4 to 12 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"252","5":"395933","6":"21694900"},{"1":"Heyder complex, 12 to 25 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"332","5":"395934","6":"21694903"},{"1":"Stonelake-Sanburn complex, 1 to 6 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"85","5":"733182","6":"21697114"},{"1":"Stonelake-Sanburn complex, 6 to 15 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"34","5":"733183","6":"21697119"},{"1":"Emmert-St. Francis complex, 6 to 25 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"515","5":"733188","6":"21697123"},{"1":"Bold-Truman silt loams, 6 to 12 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"256","5":"396211","6":"21724624"},{"1":"Bold-Truman silt loams, 12 to 18 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"286","5":"396212","6":"21724628"},{"1":"Emmert-Gerrish complex, 25 to 50 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"1646","5":"2732695","6":"21734058"},{"1":"Emmert-Gerrish complex, 12 to 25 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"685","5":"2732694","6":"21734061"},{"1":"Emmert very gravelly sandy loam, 3 to 15 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"185","5":"396779","6":"21735292"},{"1":"Timula-Bold silt loams, 6 to 12 percent slopes, eroded","2":"Typic Udorthents","3":"Udorthents","4":"821","5":"396909","6":"21735496"},{"1":"Timula-Bold silt loams, 12 to 18 percent slopes, eroded","2":"Typic Udorthents","3":"Udorthents","4":"832","5":"396910","6":"21735498"},{"1":"Timula-Bold silt loams, 18 to 25 percent slopes, eroded","2":"Typic Udorthents","3":"Udorthents","4":"606","5":"396911","6":"21735501"},{"1":"Truman-Bold complex, 6 to 12 percent slopes, eroded","2":"Typic Udorthents","3":"Udorthents","4":"2580","5":"397124","6":"21736188"},{"1":"Bold-Truman complex, 12 to 18 percent slopes, eroded","2":"Typic Udorthents","3":"Udorthents","4":"517","5":"397125","6":"21736194"},{"1":"Enstrom loamy fine sand, dense till, 0 to 2 percent slopes","2":"Aquic Udorthents","3":"Udorthents","4":"14069","5":"2798852","6":"21756239"},{"1":"Enstrom loamy fine sand","2":"Aquic Udorthents","3":"Udorthents","4":"722","5":"357114","6":"21761153"},{"1":"Enstrom loamy fine sand, 0 to 2 percent slopes","2":"Aquic Udorthents","3":"Udorthents","4":"1673","5":"2799014","6":"21761456"},{"1":"Enstrom loamy fine sand, dense till, 0 to 2 percent slopes","2":"Aquic Udorthents","3":"Udorthents","4":"392","5":"2798981","6":"21761574"},{"1":"Truman-Bold silt loams, 6 to 12 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"685","5":"400064","6":"21762431"},{"1":"Bold-Truman silt loams, 12 to 18 percent slopes, eroded","2":"Typic Udorthents","3":"Udorthents","4":"137","5":"400065","6":"21762435"},{"1":"Emmert gravelly loamy sand, 6 to 12 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"175","5":"400339","6":"21763174"},{"1":"Emmert gravelly loamy sand, 12 to 40 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"409","5":"400340","6":"21763178"},{"1":"Gardencity-Bold complex, 6 to 12 percent slopes, eroded","2":"Typic Udorthents","3":"Udorthents","4":"465","5":"436203","6":"21765835"},{"1":"Bold-Truman complex, 6 to 12 percent slopes, eroded","2":"Typic Udorthents","3":"Udorthents","4":"928","5":"436461","6":"21765966"},{"1":"Bold-Truman complex, 12 to 18 percent slopes, eroded","2":"Typic Udorthents","3":"Udorthents","4":"295","5":"436462","6":"21765968"},{"1":"Timula-Bold complex, 6 to 12 percent slopes, eroded","2":"Typic Udorthents","3":"Udorthents","4":"1191","5":"429744","6":"21780486"},{"1":"Timula-Bold complex, 12 to 18 percent slopes, eroded","2":"Typic Udorthents","3":"Udorthents","4":"200","5":"429746","6":"21780488"},{"1":"Enstrom loamy fine sand, 0 to 3 percent slopes","2":"Aquic Udorthents","3":"Udorthents","4":"5804","5":"394817","6":"21781317"},{"1":"Enstrom loamy fine sand, dense till, 0 to 2 percent slopes","2":"Aquic Udorthents","3":"Udorthents","4":"6816","5":"2799864","6":"21781701"},{"1":"Stonelake-Sanburn complex, 1 to 6 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"3442","5":"431438","6":"21784633"},{"1":"Stonelake-Sanburn complex, 6 to 15 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"3307","5":"431439","6":"21784640"},{"1":"Stonelake-Sanburn complex, 15 to 40 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"1758","5":"431440","6":"21784647"},{"1":"Stonelake-Nebish complex, 2 to 6 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"1835","5":"431448","6":"21784687"},{"1":"Stonelake-Nebish complex, 6 to 12 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"1332","5":"431449","6":"21784694"},{"1":"Stonelake-Nebish complex, 12 to 25 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"870","5":"431450","6":"21784701"},{"1":"Seaton-Bold soils, 12 to 18 percent slopes, moderately eroded","2":"Typic Udorthents","3":"Udorthents","4":"31","5":"2216431","6":"21790947"},{"1":"Bold-Truman silt loams, 5 to 12 percent slopes, eroded","2":"Typic Udorthents","3":"Udorthents","4":"626","5":"428968","6":"21792309"},{"1":"Stonelake-Nebish, moderately wet, complex, 2 to 6 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"298","5":"435037","6":"21793299"},{"1":"Stonelake-Nebish complex, 6 to 12 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"221","5":"435036","6":"21793437"},{"1":"Stonelake-Nebish complex, 12 to 25 percent slopes","2":"Typic Udorthents","3":"Udorthents","4":"169","5":"435087","6":"21793441"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="compile-list-of-mukeys-to-exclude" class="level3" data-number="9.1.2">
+<h3 data-number="9.1.2" class="anchored" data-anchor-id="compile-list-of-mukeys-to-exclude"><span class="header-section-number">9.1.2</span> Compile list of MUKEYs to exclude</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>anthro_mukeys <span class="ot">&lt;-</span> anthro <span class="sc">%&gt;%</span> <span class="fu">pull</span>(mukey)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>pit_mukeys <span class="ot">&lt;-</span> pits <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pull</span>(mukey)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># the "all" list contains duplicates, </span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># keep only unique mukeys</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>excl_mukeys_all <span class="ot">&lt;-</span> <span class="fu">c</span>(anthro_mukeys, pit_mukeys)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>excl_mukeys_unique <span class="ot">&lt;-</span> <span class="fu">unique</span>(excl_mukeys_all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="exclude" class="level3" data-number="9.1.3">
+<h3 data-number="9.1.3" class="anchored" data-anchor-id="exclude"><span class="header-section-number">9.1.3</span> Exclude</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mu_no_anthro <span class="ot">&lt;-</span> mu <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>mukey <span class="sc">%in%</span> excl_mukeys_unique)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We started with 6912 MUKEYs, after excluding the Anthroportic Udorthents and pits, we have 6873 MUKEYs, a difference of 39 .</p>
+</section>
+</section>
+<section id="update-ec-values" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="update-ec-values"><span class="header-section-number">9.2</span> Update EC Values</h2>
+<p>After reviewing maps of the EC values across the state in <a href="09-plot-ec-lep.html"><span>Chapter&nbsp;8</span></a> , we decided to set all EC values that were &gt;0 and &lt;1 to 0.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mu_ec_update <span class="ot">&lt;-</span> mu_no_anthro <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ec_r_value =</span> <span class="fu">case_when</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    (ec_r_value <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> ec_r_value <span class="sc">&lt;</span> <span class="dv">1</span>) <span class="sc">~</span> <span class="dv">0</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> ec_r_value</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># how many mukeys were set to zero with the above rule?</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>ec_set_zero <span class="ot">&lt;-</span> mu_no_anthro <span class="sc">%&gt;%</span> </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ec_r_value <span class="sc">&gt;</span> <span class="dv">0</span>, ec_r_value <span class="sc">&lt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(mukey) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There were 205 MUKEYs with EC value set to zero using the above rule.</p>
+</section>
+<section id="update-lep-values" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="update-lep-values"><span class="header-section-number">9.3</span> Update LEP Values</h2>
+<p>There are a small number of map units, covering a small area, that have LEP=0. Set these to 0.5 (based on the spatial pattern, we suspect these aren’t truly measured 0 values).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mu_lep_update <span class="ot">&lt;-</span> mu_ec_update <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lep_r_value =</span> <span class="fu">case_when</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    lep_r_value <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="fl">0.5</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> lep_r_value</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># how many mukeys were set to 0.5 with the above rule?</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>lep_update_mukeys <span class="ot">&lt;-</span> mu_ec_update <span class="sc">%&gt;%</span> </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(lep_r_value <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(mukey) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There were 117 affected by the above rule.</p>
+</section>
+<section id="sec-fen" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="sec-fen"><span class="header-section-number">9.4</span> High carbonates?</h2>
+<p>In <a href="12-explore-clust-props.html"><span>Chapter&nbsp;11</span></a> , I noticed some of our MUKEYs have REALLY high carbonates for topsoil (&gt;20% ). Look into these a little more, is it possible these are data entry errors?</p>
+<p>The one with 70% carbonates in particular seems goofy. I wonder if this is a <a href="https://mnatlas.org/resources/calcareous-fens/">calcareous fen</a>? Do we want to include it? Represents ~700 acres across the state. I mapped this and it appears to be mostly in Steele County (SE MN).</p>
+<p>Most of the others that have carbonates in the 20-30% range are rims on depressions in till plains or lake plains. So that seems reasonable given the setting.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>highcarb <span class="ot">&lt;-</span> mu_lep_update <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(caco3_r_value <span class="sc">&gt;</span> <span class="dv">20</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>highcarb <span class="sc">%&gt;%</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> ph1to1h2o_r_value, <span class="at">y =</span> caco3_r_value)) <span class="sc">+</span> </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="10-additional-data-prep_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>hc_mukeys <span class="ot">&lt;-</span> highcarb <span class="sc">%&gt;%</span> <span class="fu">pull</span>(mukey)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># clicked through these, to see if any seemed </span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># like data entry errors</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>mu_detail <span class="sc">%&gt;%</span> </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(mukey <span class="sc">%in%</span> hc_mukeys) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(mukey, caco3_r_value, </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>         muname, muacres, compname, geomdesc, <span class="fu">contains</span>(<span class="st">"tax"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["mukey"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["caco3_r_value"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["muname"],"name":[3],"type":["chr"],"align":["left"]},{"label":["muacres"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["compname"],"name":[5],"type":["chr"],"align":["left"]},{"label":["geomdesc"],"name":[6],"type":["chr"],"align":["left"]},{"label":["taxclname"],"name":[7],"type":["chr"],"align":["left"]},{"label":["taxorder"],"name":[8],"type":["chr"],"align":["left"]},{"label":["taxsuborder"],"name":[9],"type":["chr"],"align":["left"]},{"label":["taxgrtgroup"],"name":[10],"type":["chr"],"align":["left"]},{"label":["taxsubgrp"],"name":[11],"type":["chr"],"align":["left"]},{"label":["taxpartsize"],"name":[12],"type":["chr"],"align":["left"]},{"label":["taxpartsizemod"],"name":[13],"type":["chr"],"align":["left"]},{"label":["taxceactcl"],"name":[14],"type":["chr"],"align":["left"]},{"label":["taxreaction"],"name":[15],"type":["chr"],"align":["left"]},{"label":["taxtempcl"],"name":[16],"type":["chr"],"align":["left"]},{"label":["taxmoistscl"],"name":[17],"type":["chr"],"align":["left"]},{"label":["taxtempregime"],"name":[18],"type":["chr"],"align":["left"]},{"label":["soiltaxedition"],"name":[19],"type":["chr"],"align":["left"]}],"data":[{"1":"1529952","2":"22.0","3":"Mayer, ponded-Mayer complex, 0 to 2 percent slopes, flooded","4":"288","5":"Mayer","6":"-- Error in Exists On --","7":"Fine-loamy over sandy or sandy-skeletal, mixed, superactive, calcareous, mesic Typic Endoaquolls","8":"Mollisols","9":"Aquolls","10":"Endoaquolls","11":"Typic Endoaquolls","12":"fine-loamy over sandy or sandy-skeletal","13":"NA","14":"superactive","15":"calcareous","16":"mesic","17":"NA","18":"mesic","19":"NA"},{"1":"1529952","2":"22.0","3":"Mayer, ponded-Mayer complex, 0 to 2 percent slopes, flooded","4":"288","5":"Mayer","6":"-- Error in Exists On --","7":"Fine-loamy over sandy or sandy-skeletal, mixed, superactive, calcareous, mesic Typic Endoaquolls","8":"Mollisols","9":"Aquolls","10":"Endoaquolls","11":"Typic Endoaquolls","12":"fine-loamy over sandy or sandy-skeletal","13":"NA","14":"superactive","15":"calcareous","16":"mesic","17":"NA","18":"mesic","19":"NA"},{"1":"1529948","2":"22.0","3":"Mayer mucky clay loam, ponded, 0 to 1 percent slopes","4":"411","5":"Mayer","6":"-- Error in Exists On --","7":"Fine-loamy over sandy or sandy-skeletal, mixed, superactive, calcareous, mesic Typic Endoaquolls","8":"Mollisols","9":"Aquolls","10":"Endoaquolls","11":"Typic Endoaquolls","12":"fine-loamy over sandy or sandy-skeletal","13":"NA","14":"superactive","15":"calcareous","16":"mesic","17":"NA","18":"mesic","19":"NA"},{"1":"1529945","2":"22.0","3":"Mayer clay loam, ponded, 0 to 1 percent slopes, frequently flooded","4":"27","5":"Mayer","6":"-- Error in Exists On --","7":"Fine-loamy over sandy or sandy-skeletal, mixed, superactive, calcareous, mesic Typic Endoaquolls","8":"Mollisols","9":"Aquolls","10":"Endoaquolls","11":"Typic Endoaquolls","12":"fine-loamy over sandy or sandy-skeletal","13":"NA","14":"superactive","15":"calcareous","16":"mesic","17":"NA","18":"mesic","19":"NA"},{"1":"1671102","2":"20.5","3":"Mayer-Mayer, depressional, complex, 0 to 2 percent slopes","4":"354","5":"Mayer","6":"-- Error in Exists On --","7":"Fine-loamy over sandy or sandy-skeletal, mixed, superactive, calcareous, mesic Typic Endoaquolls","8":"Mollisols","9":"Aquolls","10":"Endoaquolls","11":"Typic Endoaquolls","12":"fine-loamy over sandy or sandy-skeletal","13":"NA","14":"superactive","15":"calcareous","16":"mesic","17":"NA","18":"mesic","19":"NA"},{"1":"1671102","2":"20.5","3":"Mayer-Mayer, depressional, complex, 0 to 2 percent slopes","4":"354","5":"Mayer","6":"-- Error in Exists On --","7":"Fine-loamy over sandy or sandy-skeletal, mixed, superactive, calcareous, mesic Typic Endoaquolls","8":"Mollisols","9":"Aquolls","10":"Endoaquolls","11":"Typic Endoaquolls","12":"fine-loamy over sandy or sandy-skeletal","13":"NA","14":"superactive","15":"calcareous","16":"mesic","17":"NA","18":"mesic","19":"NA"},{"1":"397870","2":"28.0","3":"Harpster silty clay loam","4":"539","5":"Harpster","6":"flats on lake plains","7":"Fine-silty, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-silty","13":"NA","14":"superactive","15":"not used","16":"mesic","17":"Typic","18":"mesic","19":"NA"},{"1":"397802","2":"25.0","3":"Harps clay loam, 0 to 2 percent slopes","4":"2731","5":"Harps","6":"rims on depressions on till plains","7":"Fine-loamy, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy","13":"not used","14":"superactive","15":"not used","16":"mesic","17":"Typic","18":"mesic","19":"eleventh edition"},{"1":"2510844","2":"25.0","3":"Crowriver loam, 0 to 2 percent slopes","4":"62","5":"Crowriver","6":"rims on moraines","7":"Coarse-loamy, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"coarse-loamy","13":"NA","14":"superactive","15":"not used","16":"mesic","17":"NA","18":"mesic","19":"NA"},{"1":"398670","2":"25.0","3":"Harps clay loam, 0 to 2 percent slopes","4":"3032","5":"Harps","6":"rims on depressions on till plains","7":"Fine-loamy, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy","13":"not used","14":"superactive","15":"not used","16":"mesic","17":"Typic","18":"mesic","19":"eleventh edition"},{"1":"398695","2":"28.0","3":"Harpster silty clay loam","4":"1104","5":"Harpster","6":"depressions on moraines, rims on moraines","7":"Fine-silty, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-silty","13":"NA","14":"superactive","15":"not used","16":"mesic","17":"NA","18":"mesic","19":"NA"},{"1":"1486243","2":"23.0","3":"Marysland loam, 0 to 2 percent slopes","4":"721","5":"Marysland","6":"rims on depressions on outwash plains, flats on outwash plains, drainageways on outwash plains","7":"Fine-loamy over sandy or sandy-skeletal, mixed, superactive, frigid Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy over sandy or sandy-skeletal","13":"NA","14":"superactive","15":"not used","16":"frigid","17":"NA","18":"frigid","19":"NA"},{"1":"1859030","2":"23.0","3":"Marysland loam","4":"3189","5":"Marysland","6":"flats","7":"Fine-loamy over sandy or sandy-skeletal, mixed, superactive, frigid Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy over sandy or sandy-skeletal","13":"NA","14":"superactive","15":"not used","16":"frigid","17":"NA","18":"frigid","19":"NA"},{"1":"399139","2":"25.0","3":"Harps clay loam, 0 to 2 percent slopes","4":"10591","5":"Harps","6":"rims on depressions on till plains","7":"Fine-loamy, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy","13":"not used","14":"superactive","15":"not used","16":"mesic","17":"Typic","18":"mesic","19":"eleventh edition"},{"1":"399136","2":"25.2","3":"Klossner, sandy substratum-Harps-Mayer complex","4":"1260","5":"Harps","6":"rims on moraines","7":"Fine-loamy, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy","13":"NA","14":"superactive","15":"not used","16":"mesic","17":"NA","18":"mesic","19":"NA"},{"1":"399136","2":"25.2","3":"Klossner, sandy substratum-Harps-Mayer complex","4":"1260","5":"Mayer","6":"flats on moraines","7":"Fine-loamy over sandy or sandy-skeletal, mixed, superactive, calcareous, mesic Typic Endoaquolls","8":"Mollisols","9":"Aquolls","10":"Endoaquolls","11":"Typic Endoaquolls","12":"fine-loamy over sandy or sandy-skeletal","13":"NA","14":"superactive","15":"calcareous","16":"mesic","17":"NA","18":"mesic","19":"NA"},{"1":"400021","2":"25.0","3":"Harps clay loam, 0 to 2 percent slopes","4":"1145","5":"Harps","6":"rims on depressions on till plains","7":"Fine-loamy, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy","13":"not used","14":"superactive","15":"not used","16":"mesic","17":"Typic","18":"mesic","19":"eleventh edition"},{"1":"2536659","2":"25.0","3":"Crowriver loam, 0 to 2 percent slopes","4":"1162","5":"Crowriver","6":"rims on moraines","7":"Coarse-loamy, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"coarse-loamy","13":"NA","14":"superactive","15":"not used","16":"mesic","17":"NA","18":"mesic","19":"NA"},{"1":"436185","2":"25.0","3":"Harps clay loam, 0 to 2 percent slopes","4":"1442","5":"Harps","6":"rims on depressions on till plains","7":"Fine-loamy, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy","13":"not used","14":"superactive","15":"not used","16":"mesic","17":"Typic","18":"mesic","19":"eleventh edition"},{"1":"1481318","2":"23.0","3":"Marysland loam, 0 to 2 percent slopes","4":"1503","5":"Marysland","6":"rims on depressions on outwash plains, flats on outwash plains, drainageways on outwash plains","7":"Fine-loamy over sandy or sandy-skeletal, mixed, superactive, frigid Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy over sandy or sandy-skeletal","13":"NA","14":"superactive","15":"not used","16":"frigid","17":"NA","18":"frigid","19":"NA"},{"1":"400571","2":"25.0","3":"Harps clay loam, 0 to 2 percent slopes","4":"13839","5":"Harps","6":"rims on depressions on till plains","7":"Fine-loamy, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy","13":"not used","14":"superactive","15":"not used","16":"mesic","17":"Typic","18":"mesic","19":"eleventh edition"},{"1":"1481619","2":"23.0","3":"Marysland loam, 0 to 2 percent slopes","4":"31","5":"Marysland","6":"rims on depressions on outwash plains, flats on outwash plains, drainageways on outwash plains","7":"Fine-loamy over sandy or sandy-skeletal, mixed, superactive, frigid Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy over sandy or sandy-skeletal","13":"NA","14":"superactive","15":"not used","16":"frigid","17":"NA","18":"frigid","19":"NA"},{"1":"352309","2":"23.0","3":"Wyrene sandy loam","4":"13","5":"Wyrene","6":"flats on beach plains, rises on beach plains","7":"Sandy, mixed, frigid Aeric Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Aeric Calciaquolls","12":"sandy","13":"NA","14":"not used","15":"not used","16":"frigid","17":"NA","18":"frigid","19":"NA"},{"1":"435999","2":"25.0","3":"Harps clay loam, 0 to 2 percent slopes","4":"29903","5":"Harps","6":"rims on depressions on till plains","7":"Fine-loamy, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy","13":"not used","14":"superactive","15":"not used","16":"mesic","17":"Typic","18":"mesic","19":"eleventh edition"},{"1":"436063","2":"25.0","3":"Danube silty clay, 0 to 2 percent slopes","4":"2993","5":"Danube","6":"flats on outwash plains","7":"Coarse-silty over sandy or sandy-skeletal, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"coarse-silty over sandy or sandy-skeletal","13":"NA","14":"superactive","15":"not used","16":"mesic","17":"NA","18":"mesic","19":"NA"},{"1":"431516","2":"25.0","3":"Harps clay loam, 0 to 2 percent slopes","4":"13877","5":"Harps","6":"rims on depressions on till plains","7":"Fine-loamy, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy","13":"not used","14":"superactive","15":"not used","16":"mesic","17":"Typic","18":"mesic","19":"eleventh edition"},{"1":"2536697","2":"25.0","3":"Crowriver loam, 0 to 2 percent slopes","4":"8","5":"Crowriver","6":"rims on moraines","7":"Coarse-loamy, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"coarse-loamy","13":"NA","14":"superactive","15":"not used","16":"mesic","17":"NA","18":"mesic","19":"NA"},{"1":"428275","2":"70.0","3":"Marsh","4":"762","5":"Marsh","6":"depressions on till plains","7":"Mixed, mesic Limnic Haplosaprists","8":"Histosols","9":"Saprists","10":"Haplosaprists","11":"Limnic Haplosaprists","12":"not used","13":"not used","14":"not used","15":"not used","16":"mesic","17":"Typic","18":"mesic","19":"twelfth edition"},{"1":"428911","2":"25.0","3":"Harps clay loam, 0 to 2 percent slopes","4":"504","5":"Harps","6":"rims on depressions on till plains","7":"Fine-loamy, mixed, superactive, mesic Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy","13":"not used","14":"superactive","15":"not used","16":"mesic","17":"Typic","18":"mesic","19":"eleventh edition"},{"1":"1481695","2":"23.0","3":"Marysland loam, 0 to 2 percent slopes","4":"204","5":"Marysland","6":"rims on depressions on outwash plains, flats on outwash plains, drainageways on outwash plains","7":"Fine-loamy over sandy or sandy-skeletal, mixed, superactive, frigid Typic Calciaquolls","8":"Mollisols","9":"Aquolls","10":"Calciaquolls","11":"Typic Calciaquolls","12":"fine-loamy over sandy or sandy-skeletal","13":"NA","14":"superactive","15":"not used","16":"frigid","17":"NA","18":"frigid","19":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is the really high one (Marsh) </span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>mu_detail <span class="sc">%&gt;%</span> <span class="fu">filter</span>(muname <span class="sc">==</span> <span class="st">"Marsh"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["mukey"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["claytotal_r_value"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["om_r_value"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["cec7_r_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["dbthirdbar_r_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ec_r_value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["ph1to1h2o_r_value"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["caco3_r_value"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["lep_r_value"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["ksat_r_value"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["awc_r_value"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["cokey"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["muname"],"name":[13],"type":["chr"],"align":["left"]},{"label":["muacres"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["comppct_l"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["comppct_r"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["comppct_h"],"name":[17],"type":["dbl"],"align":["right"]},{"label":["compname"],"name":[18],"type":["chr"],"align":["left"]},{"label":["compkind"],"name":[19],"type":["chr"],"align":["left"]},{"label":["majcompflag"],"name":[20],"type":["chr"],"align":["left"]},{"label":["otherph"],"name":[21],"type":["chr"],"align":["left"]},{"label":["localphase"],"name":[22],"type":["chr"],"align":["left"]},{"label":["slope_l"],"name":[23],"type":["dbl"],"align":["right"]},{"label":["slope_r"],"name":[24],"type":["dbl"],"align":["right"]},{"label":["slope_h"],"name":[25],"type":["dbl"],"align":["right"]},{"label":["slopelenusle_l"],"name":[26],"type":["dbl"],"align":["right"]},{"label":["slopelenusle_r"],"name":[27],"type":["dbl"],"align":["right"]},{"label":["slopelenusle_h"],"name":[28],"type":["dbl"],"align":["right"]},{"label":["runoff"],"name":[29],"type":["chr"],"align":["left"]},{"label":["tfact"],"name":[30],"type":["dbl"],"align":["right"]},{"label":["wei"],"name":[31],"type":["dbl"],"align":["right"]},{"label":["weg"],"name":[32],"type":["dbl"],"align":["right"]},{"label":["erocl"],"name":[33],"type":["chr"],"align":["left"]},{"label":["earthcovkind1"],"name":[34],"type":["chr"],"align":["left"]},{"label":["earthcovkind2"],"name":[35],"type":["chr"],"align":["left"]},{"label":["hydricon"],"name":[36],"type":["chr"],"align":["left"]},{"label":["hydricrating"],"name":[37],"type":["chr"],"align":["left"]},{"label":["drainagecl"],"name":[38],"type":["chr"],"align":["left"]},{"label":["elev_l"],"name":[39],"type":["dbl"],"align":["right"]},{"label":["elev_r"],"name":[40],"type":["dbl"],"align":["right"]},{"label":["elev_h"],"name":[41],"type":["dbl"],"align":["right"]},{"label":["aspectccwise"],"name":[42],"type":["dbl"],"align":["right"]},{"label":["aspectrep"],"name":[43],"type":["dbl"],"align":["right"]},{"label":["aspectcwise"],"name":[44],"type":["dbl"],"align":["right"]},{"label":["geomdesc"],"name":[45],"type":["chr"],"align":["left"]},{"label":["albedodry_l"],"name":[46],"type":["dbl"],"align":["right"]},{"label":["albedodry_r"],"name":[47],"type":["dbl"],"align":["right"]},{"label":["albedodry_h"],"name":[48],"type":["dbl"],"align":["right"]},{"label":["airtempa_l"],"name":[49],"type":["dbl"],"align":["right"]},{"label":["airtempa_r"],"name":[50],"type":["dbl"],"align":["right"]},{"label":["airtempa_h"],"name":[51],"type":["dbl"],"align":["right"]},{"label":["map_l"],"name":[52],"type":["dbl"],"align":["right"]},{"label":["map_r"],"name":[53],"type":["dbl"],"align":["right"]},{"label":["map_h"],"name":[54],"type":["dbl"],"align":["right"]},{"label":["reannualprecip_l"],"name":[55],"type":["dbl"],"align":["right"]},{"label":["reannualprecip_r"],"name":[56],"type":["dbl"],"align":["right"]},{"label":["reannualprecip_h"],"name":[57],"type":["dbl"],"align":["right"]},{"label":["ffd_l"],"name":[58],"type":["dbl"],"align":["right"]},{"label":["ffd_r"],"name":[59],"type":["dbl"],"align":["right"]},{"label":["ffd_h"],"name":[60],"type":["dbl"],"align":["right"]},{"label":["nirrcapcl"],"name":[61],"type":["dbl"],"align":["right"]},{"label":["nirrcapscl"],"name":[62],"type":["chr"],"align":["left"]},{"label":["nirrcapunit"],"name":[63],"type":["dbl"],"align":["right"]},{"label":["irrcapcl"],"name":[64],"type":["dbl"],"align":["right"]},{"label":["irrcapscl"],"name":[65],"type":["chr"],"align":["left"]},{"label":["irrcapunit"],"name":[66],"type":["lgl"],"align":["right"]},{"label":["cropprodindex"],"name":[67],"type":["dbl"],"align":["right"]},{"label":["constreeshrubgrp"],"name":[68],"type":["chr"],"align":["left"]},{"label":["wndbrksuitgrp"],"name":[69],"type":["lgl"],"align":["right"]},{"label":["rsprod_l"],"name":[70],"type":["dbl"],"align":["right"]},{"label":["rsprod_r"],"name":[71],"type":["dbl"],"align":["right"]},{"label":["rsprod_h"],"name":[72],"type":["dbl"],"align":["right"]},{"label":["foragesuitgrpid"],"name":[73],"type":["lgl"],"align":["right"]},{"label":["wlgrain"],"name":[74],"type":["lgl"],"align":["right"]},{"label":["wlgrass"],"name":[75],"type":["lgl"],"align":["right"]},{"label":["wlherbaceous"],"name":[76],"type":["lgl"],"align":["right"]},{"label":["wlshrub"],"name":[77],"type":["lgl"],"align":["right"]},{"label":["wlconiferous"],"name":[78],"type":["lgl"],"align":["right"]},{"label":["wlhardwood"],"name":[79],"type":["lgl"],"align":["right"]},{"label":["wlwetplant"],"name":[80],"type":["lgl"],"align":["right"]},{"label":["wlshallowwat"],"name":[81],"type":["lgl"],"align":["right"]},{"label":["wlrangeland"],"name":[82],"type":["lgl"],"align":["right"]},{"label":["wlopenland"],"name":[83],"type":["lgl"],"align":["right"]},{"label":["wlwoodland"],"name":[84],"type":["lgl"],"align":["right"]},{"label":["wlwetland"],"name":[85],"type":["lgl"],"align":["right"]},{"label":["soilslippot"],"name":[86],"type":["chr"],"align":["left"]},{"label":["frostact"],"name":[87],"type":["chr"],"align":["left"]},{"label":["initsub_l"],"name":[88],"type":["dbl"],"align":["right"]},{"label":["initsub_r"],"name":[89],"type":["dbl"],"align":["right"]},{"label":["initsub_h"],"name":[90],"type":["dbl"],"align":["right"]},{"label":["totalsub_l"],"name":[91],"type":["dbl"],"align":["right"]},{"label":["totalsub_r"],"name":[92],"type":["dbl"],"align":["right"]},{"label":["totalsub_h"],"name":[93],"type":["dbl"],"align":["right"]},{"label":["hydgrp"],"name":[94],"type":["chr"],"align":["left"]},{"label":["corcon"],"name":[95],"type":["chr"],"align":["left"]},{"label":["corsteel"],"name":[96],"type":["chr"],"align":["left"]},{"label":["taxclname"],"name":[97],"type":["chr"],"align":["left"]},{"label":["taxorder"],"name":[98],"type":["chr"],"align":["left"]},{"label":["taxsuborder"],"name":[99],"type":["chr"],"align":["left"]},{"label":["taxgrtgroup"],"name":[100],"type":["chr"],"align":["left"]},{"label":["taxsubgrp"],"name":[101],"type":["chr"],"align":["left"]},{"label":["taxpartsize"],"name":[102],"type":["chr"],"align":["left"]},{"label":["taxpartsizemod"],"name":[103],"type":["chr"],"align":["left"]},{"label":["taxceactcl"],"name":[104],"type":["chr"],"align":["left"]},{"label":["taxreaction"],"name":[105],"type":["chr"],"align":["left"]},{"label":["taxtempcl"],"name":[106],"type":["chr"],"align":["left"]},{"label":["taxmoistscl"],"name":[107],"type":["chr"],"align":["left"]},{"label":["taxtempregime"],"name":[108],"type":["chr"],"align":["left"]},{"label":["soiltaxedition"],"name":[109],"type":["chr"],"align":["left"]},{"label":["castorieindex"],"name":[110],"type":["lgl"],"align":["right"]},{"label":["flecolcomnum"],"name":[111],"type":["lgl"],"align":["right"]},{"label":["flhe"],"name":[112],"type":["lgl"],"align":["right"]},{"label":["flphe"],"name":[113],"type":["lgl"],"align":["right"]},{"label":["flsoilleachpot"],"name":[114],"type":["lgl"],"align":["right"]},{"label":["flsoirunoffpot"],"name":[115],"type":["lgl"],"align":["right"]},{"label":["fltemik2use"],"name":[116],"type":["chr"],"align":["left"]},{"label":["fltriumph2use"],"name":[117],"type":["chr"],"align":["left"]},{"label":["indraingrp"],"name":[118],"type":["lgl"],"align":["right"]},{"label":["innitrateleachi"],"name":[119],"type":["lgl"],"align":["right"]},{"label":["misoimgmtgrp"],"name":[120],"type":["lgl"],"align":["right"]},{"label":["vasoimgtgrp"],"name":[121],"type":["lgl"],"align":["right"]}],"data":[{"1":"428275","2":"15","3":"14","4":"11.3","5":"0.7","6":"0","7":"7.5","8":"70","9":"0.7","10":"0.92","11":"0.21","12":"21788606","13":"Marsh","14":"762","15":"NA","16":"90","17":"NA","18":"Marsh","19":"Family","20":"Yes","21":"NA","22":"ponded","23":"0","24":"1","25":"1","26":"NA","27":"210","28":"NA","29":"NA","30":"1","31":"0","32":"8","33":"Class 1","34":"Grass/herbaceous cover","35":"Other grass/herbaceous cover","36":"Neither wooded nor farmable under natural conditions","37":"Yes","38":"Very poorly drained","39":"300","40":"350","41":"400","42":"0","43":"90","44":"360","45":"depressions on till plains","46":"NA","47":"0.02","48":"NA","49":"6","50":"8","51":"10","52":"585","53":"738","54":"890","55":"NA","56":"NA","57":"NA","58":"155","59":"160","60":"200","61":"8","62":"w","63":"NA","64":"NA","65":"NA","66":"NA","67":"5","68":"10","69":"NA","70":"NA","71":"NA","72":"NA","73":"NA","74":"NA","75":"NA","76":"NA","77":"NA","78":"NA","79":"NA","80":"NA","81":"NA","82":"NA","83":"NA","84":"NA","85":"NA","86":"NA","87":"High","88":"0","89":"0","90":"0","91":"76","92":"89","93":"102","94":"C/D","95":"Low","96":"High","97":"Mixed, mesic Limnic Haplosaprists","98":"Histosols","99":"Saprists","100":"Haplosaprists","101":"Limnic Haplosaprists","102":"not used","103":"not used","104":"not used","105":"not used","106":"mesic","107":"Typic","108":"mesic","109":"twelfth edition","110":"NA","111":"NA","112":"NA","113":"NA","114":"NA","115":"NA","116":"N/A","117":"N/A","118":"NA","119":"NA","120":"NA","121":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I want to plot these Marsh areas in QGIS. What </span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># is the short MUKEY? </span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>mu_detail <span class="sc">%&gt;%</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(muname <span class="sc">==</span> <span class="st">"Marsh"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(., cwalk, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"mukey"</span> <span class="ot">=</span> <span class="st">"MUKEY"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(mukey, MUKEY_New)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["mukey"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["MUKEY_New"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"428275","2":"2682"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Given the very small area, and extreme carbonate values, I’m going to drop this one MUKEY (428275 in SSURGO; 2682 in my reclass).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dropmarsh <span class="ot">&lt;-</span> mu_lep_update <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(mukey <span class="sc">!=</span> <span class="dv">428275</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="save-dataset" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="save-dataset"><span class="header-section-number">9.5</span> Save dataset</h2>
+<p>This dataset is now ready for modeling.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(dropmarsh, <span class="st">"data/clean_mu_weighted_soil_props.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./09-plot-ec-lep.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MAP EC and LEP with <code>{terra}</code></span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./11-implement-kmeans.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Implement k-means</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

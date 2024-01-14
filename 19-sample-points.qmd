@@ -1,0 +1,189 @@
+# Sample validation points
+
+Now that we have our clustering candidates from the k-means models saved as raster files, to validate the models we need to sample the rasters at the locations where the soil samples were collected.
+This will tell us which "region" or cluster the sample falls into, based on its position on the map.
+We will do this for each raster we generated (different \# of clusters).
+
+After we have this information for our validation points, we can compare the expected means and ranges of soil properties from the SSURGO data (by summarizing our model results, probably spatially weighted) with the soil property values measured at the validation points.
+
+## Validation datasets
+
+There are 3 main validation datasets that I currently have access to:
+
+-   NRCS SHI project (Jess). Validation completed by Joe Brennan, saved in data \> validation data \> NCRS-SHI \> shi_site_allvar_validation_20221116.csv
+-   CIG field data
+-   NCSS data from KSSL. I completed the data cleaning and merging process with the script `unqip_merge_ncss_data.R`. The dataset (all props averaged to 0-20cm) is saved in data \> validation data \> NCSS-KSSL \> validation_ncss_kssl_0-20cm_aggr.csv
+
+```{r setup}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(terra)
+
+# points to validate
+ncss_dat <- read_csv("data/validation_data/NCSS-KSSL/validation_ncss_kssl_0-20cm_aggr.csv")
+
+# ended up making these matrices so I can add ids as an "attribute" (atts) in the vect function 
+ncss_pts <- ncss_dat %>% 
+  select(longitude_decimal_degrees, latitude_decimal_degrees) %>% 
+  rename(lon = longitude_decimal_degrees,
+         lat = latitude_decimal_degrees) %>% 
+  as.matrix()
+
+cig_dat <- read_csv("../CIG/cig-main/cig_lab_data_all_20221129.csv")
+
+cig_pts <- cig_dat %>% 
+  select(lon, lat) %>% 
+  as.matrix()
+
+# I am using these dfs to see if setting sample ID as an attribute in the
+# SpatVector below will allow me to identify the points more readily after
+# extract()
+cig_ids <- data.frame(sample_id = cig_dat$sample_id,
+                      row.names = NULL)
+
+ncss_ids <- data.frame(pedon_key = ncss_dat$pedon_key)
+```
+
+## Reproject points to NAD 83 Albers
+
+My rasters are in NAD 1983 Albers projection (EPSG: 5070).
+My points are in WGS 84 (EPSG: 4326, they are lon/lat).
+I need to reproject the points before I extract the raster values.
+This involves two steps:
+
+-   Turn my 2-column dataframes (lon, lat) into SpatVector objects
+-   Reproject the SpatVector objects to the correction CRS
+
+From the `{terra}` documentation: "You can use a data.frame to make a SpatVector of points; or a"geom" matrix to make a SpatVector of any supported geometry (see examples and `geom`)
+
+```{r}
+
+# turn the CIG and NCSS points dfs to SpatVectors
+cig_spat <- vect(x = cig_pts,
+     type = "points",
+     # EPSG:4326 is WGS84 long/lat
+     crs = "epsg:4326",
+     atts = cig_ids
+     )
+
+ncss_spat <- vect(x = ncss_pts,
+                  type = "points",
+                  # EPSG:4326 is WGS84 long/lat
+                  crs = "epsg:4326",
+                  atts = ncss_ids)
+
+# reproject the CIG and NCSS points to NAD 83 (EPSG 5070)
+cig_reproj <- project(x = cig_spat,
+                      y = "epsg:5070")
+
+cig_reproj
+
+ncss_reproj <- project(x = ncss_spat,
+                    y = "epsg:5070")
+
+ncss_reproj
+
+
+```
+
+## Sample Rasters (Extract value)
+
+Need to review relevant function/s from `{terra}` for doing the raster sampling.
+Otherwise I know how to do it already in QGIS.
+
+Looks like I want the `extract()` function.
+"Sample" has a different meaning in `{terra}`, (taking a spatial sample / regular sample)
+
+Important arguments:
+
+-   `x` is the SpatRaster
+-   `y` (in my case) is a SpatVector, re-projected above
+-   `method` should be "simple", because I want the value of the cell the point falls into
+-   `xy` set to TRUE (return coordinates with results)
+-   `ID` set to TRUE (return IDs, record numbers, of input SpatVector y)
+
+### An example
+
+OK, got this working after some silly troubleshooting with attributes and CRS (had the wrong EPSG code for NAD 1983 Albers to start out).
+
+```{r}
+# start with the k=2 model
+test_rast <- rast("E:/big-files-backup/ch03-sh-groups/clust2_allvar.tif")
+
+ext_df <- extract(x = test_rast,
+        y = cig_reproj,
+        method = "simple",
+        xy = TRUE,
+        ID = TRUE)  
+
+# also try it with the NCSS points, just to see:
+extract(x = test_rast,
+        y = ncss_reproj,
+        method = "simple", 
+        xy = TRUE,
+        ID = TRUE)
+
+```
+
+### Brainstorm process to iterate with "extract"
+
+Again, thinking about how I want to be able to set up the steps of this process in a `{targets}` pipeline, the meat of this process of extracting raster values will be done in a separate R script.
+Here I am thinking through how I would structure that.
+
+-   Setup: Like above, load the locations and sample IDs for the points I want to use in my validation. Combine the CIG and NCSS points into a single dataframe. Then do Data.frame \> matrix \> spat vector w/ ID attribute
+-   Write a custom function that will:
+    -   Load a raster for a given value of `k`
+
+    -   Extract raster values at our target points -\> this is a dataframe.
+        Make sure the raster value column has an informative name that includes the `k` value so we can distinguish it
+
+    -   Remove the raster (it's big, we dont need it any more)
+
+    -   Return the dataframe
+-   Use map to run the custom function above, iterating over values of `k` from 2-20 and column-binding the results, so we end up with a dataframe that has rows = validation points, and columns = raster values for different `k` cluster sizes
+
+### Finished raster extract process (CIG, NCSS)
+
+The script `R/extract_raster_values_at_validation_points.R` implements the process described above.
+At the end of that script, I save a CSV file in wide format with the CIG and NCSS_KSSl validation data `cig_ncss-kssl_allvar_validation_20221230.csv`.
+
+The next step is to combine the validation data, which identifies the cluster assignments, with the soil property data.
+I will do this in the next chapter.
+
+## Number points per dataset & soil property
+
+In the manuscript, I'd like to report how many points came from each of our three datasets.
+Here is some code to determine this.
+The best place to start is the dataset that I prepped for pairwise comparisons using `R/prep_validation_data_for_pairwise_comparisons.R`.
+It has NA values removed and the CIG points have been reduced to independent points only.
+
+```{r nval}
+
+val_dat <-  read_csv("data/validation_data_clusters_and_soil_props.csv") %>% 
+  mutate(proj_id = case_when(
+    str_detect(val_unit_id, "CC$") ~ "NRCS-SHI",
+    str_detect(val_unit_id, "[:digit:]{3}$") ~ "KSSL",
+    TRUE ~ "CIG"
+  ))
+
+# number of validation pts per project
+val_dat %>% 
+  group_by(proj_id) %>% 
+  count()
+
+# number of validation points overall
+nrow(val_dat)
+```
+
+OK, so how many points do we have for each of the soil properties we are using to calculate cluster means?
+
+```{r}
+
+val_dat %>% 
+  select(val_unit_id, claytotal, dbthirdbar, ph1to1h2o, caco3, om_loi) %>% 
+  summarise(across(.cols = -val_unit_id,
+                   .fns = \(xcol) sum(!is.na(xcol))))
+
+```

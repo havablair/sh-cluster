@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Minnesota Topsoil Classification for Soil Health Assessment - 10&nbsp; Implement k-means</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./12-explore-clust-props.html" rel="next">
+<link href="./10-additional-data-prep.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11-implement-kmeans.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Implement k-means</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Minnesota Topsoil Classification for Soil Health Assessment</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-data_sources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data Sources</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-mus_comp_in_aoi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Explore Map Units &amp; Components in AOI</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-subset-component-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Identify Target Components</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-horiz-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Horizon Data Averages</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-soil-prop-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Soil Property Exploratory Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-map-unit-agg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Map unit aggregation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-var-transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Variable Transformations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-plot-ec-lep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MAP EC and LEP with <code>{terra}</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-additional-data-prep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Additional Data Preparation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-implement-kmeans.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Implement k-means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-explore-clust-props.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Explore clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-sample-points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sample validation points</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-map-indiv-regions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mapping individual clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-pca-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Do PCA before k-means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-pca-kmeans-finalists.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">PCA-kmeans Clustering Finalists</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-compare-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Comparing k-means scenarios</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-pca-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">PCA Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-notes-pca6-8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Comparing PCA 6 &amp; PCA 8 Models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-pairwise-nonparametric.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">(non-parametric) PCA Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./28-compare-variation-demo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compare variation explained</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./29-welch-pairwise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./30-welch-compare-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Welch ANOVA - compare variation explained</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">10.1</span> Overview</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">10.2</span> Setup</a></li>
+  <li><a href="#pre-process-data-recipe" id="toc-pre-process-data-recipe" class="nav-link" data-scroll-target="#pre-process-data-recipe"><span class="header-section-number">10.3</span> Pre-process data (recipe)</a>
+  <ul class="collapse">
+  <li><a href="#check-that-it-worked" id="toc-check-that-it-worked" class="nav-link" data-scroll-target="#check-that-it-worked"><span class="header-section-number">10.3.1</span> Check that it worked</a></li>
+  </ul></li>
+  <li><a href="#sec-mod-opt" id="toc-sec-mod-opt" class="nav-link" data-scroll-target="#sec-mod-opt"><span class="header-section-number">10.4</span> Set model options</a></li>
+  <li><a href="#set-up-data-structure" id="toc-set-up-data-structure" class="nav-link" data-scroll-target="#set-up-data-structure"><span class="header-section-number">10.5</span> Set up data structure</a></li>
+  <li><a href="#specify-model-for-each-value-of-k" id="toc-specify-model-for-each-value-of-k" class="nav-link" data-scroll-target="#specify-model-for-each-value-of-k"><span class="header-section-number">10.6</span> Specify model (for each value of k)</a></li>
+  <li><a href="#fit-the-models" id="toc-fit-the-models" class="nav-link" data-scroll-target="#fit-the-models"><span class="header-section-number">10.7</span> Fit the models</a>
+  <ul class="collapse">
+  <li><a href="#notes-about-model-fit-troubleshooting" id="toc-notes-about-model-fit-troubleshooting" class="nav-link" data-scroll-target="#notes-about-model-fit-troubleshooting"><span class="header-section-number">10.7.1</span> Notes about model fit troubleshooting</a></li>
+  <li><a href="#view-messages-warnings" id="toc-view-messages-warnings" class="nav-link" data-scroll-target="#view-messages-warnings"><span class="header-section-number">10.7.2</span> View messages &amp; warnings</a></li>
+  <li><a href="#look-at-one-fit-object" id="toc-look-at-one-fit-object" class="nav-link" data-scroll-target="#look-at-one-fit-object"><span class="header-section-number">10.7.3</span> Look at one fit object</a></li>
+  </ul></li>
+  <li><a href="#sec-mod-metrics" id="toc-sec-mod-metrics" class="nav-link" data-scroll-target="#sec-mod-metrics"><span class="header-section-number">10.8</span> Model metrics</a>
+  <ul class="collapse">
+  <li><a href="#extract-metrics" id="toc-extract-metrics" class="nav-link" data-scroll-target="#extract-metrics"><span class="header-section-number">10.8.1</span> Extract metrics</a></li>
+  <li><a href="#plot-total-wss" id="toc-plot-total-wss" class="nav-link" data-scroll-target="#plot-total-wss"><span class="header-section-number">10.8.2</span> Plot Total WSS</a></li>
+  <li><a href="#average-silhouette" id="toc-average-silhouette" class="nav-link" data-scroll-target="#average-silhouette"><span class="header-section-number">10.8.3</span> Average Silhouette</a></li>
+  <li><a href="#not-used-gap-statistic" id="toc-not-used-gap-statistic" class="nav-link" data-scroll-target="#not-used-gap-statistic"><span class="header-section-number">10.8.4</span> Not used: Gap statistic</a></li>
+  <li><a href="#calinski-harabasz-index" id="toc-calinski-harabasz-index" class="nav-link" data-scroll-target="#calinski-harabasz-index"><span class="header-section-number">10.8.5</span> Calinski-Harabasz index</a></li>
+  <li><a href="#hopkins-statistic" id="toc-hopkins-statistic" class="nav-link" data-scroll-target="#hopkins-statistic"><span class="header-section-number">10.8.6</span> Hopkins Statistic</a></li>
+  <li><a href="#wss-and-silhouette-metrics-on-one-plot" id="toc-wss-and-silhouette-metrics-on-one-plot" class="nav-link" data-scroll-target="#wss-and-silhouette-metrics-on-one-plot"><span class="header-section-number">10.8.7</span> WSS and Silhouette metrics on one plot</a></li>
+  </ul></li>
+  <li><a href="#save-model-fits" id="toc-save-model-fits" class="nav-link" data-scroll-target="#save-model-fits"><span class="header-section-number">10.9</span> Save model fits</a></li>
+  <li><a href="#save-cluster-assignments" id="toc-save-cluster-assignments" class="nav-link" data-scroll-target="#save-cluster-assignments"><span class="header-section-number">10.10</span> Save cluster assignments</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-run-km" class="quarto-section-identifier"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Implement k-means</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="overview" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">10.1</span> Overview</h2>
+<p>In this section, I will use the cleaned dataset created in the last chapter to build a k-means pipeline that runs a model for a range of different cluster sizes (<code>k</code>).</p>
+<p>After fitting the models, I review some common metrics for determining best cluster sizes, and save the model objects for further investigation in the next chapter.</p>
+</section>
+<section id="setup" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="setup"><span class="header-section-number">10.2</span> Setup</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(workflows)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parsnip)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyclust)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra) <span class="co"># trying fviz_nbclust(), which gives elbow, silhouette, and gap statistic</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hopkins)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fpc)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"./data/clean_mu_weighted_soil_props.csv"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">contains</span>(<span class="st">"comp_pct"</span>))</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>old_names <span class="ot">&lt;-</span> <span class="fu">colnames</span>(d)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>new_names <span class="ot">&lt;-</span> <span class="fu">str_replace_all</span>(old_names, <span class="st">"_r_value"</span>, <span class="st">""</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(d) <span class="ot">&lt;-</span> new_names</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Reminder of what the data look like:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["mukey"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["claytotal"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["om"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["cec7"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["dbthirdbar"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ec"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["ph1to1h2o"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["caco3"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["lep"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["ksat"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["awc"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"395973","2":"3.000000","3":"1.50","4":"4.50000","5":"1.600","6":"0","7":"6.000000","8":"0","9":"0.3","10":"282.00000","11":"0.0800000"},{"1":"395975","2":"3.000000","3":"1.00","4":"4.50000","5":"1.600","6":"0","7":"6.000000","8":"0","9":"0.3","10":"282.00000","11":"0.0800000"},{"1":"395900","2":"5.000000","3":"4.50","4":"11.37500","5":"1.435","6":"0","7":"7.250000","8":"0","9":"1.5","10":"74.75000","11":"0.0975000"},{"1":"395948","2":"19.500000","3":"5.00","4":"21.00000","5":"1.400","6":"0","7":"6.500000","8":"0","9":"1.5","10":"9.00000","11":"0.2200000"},{"1":"885885","2":"7.155556","3":"4.95","4":"17.81667","5":"1.437","6":"0","7":"6.416667","8":"0","9":"1.5","10":"38.27778","11":"0.1396111"},{"1":"395974","2":"3.000000","3":"1.00","4":"4.50000","5":"1.600","6":"0","7":"6.000000","8":"0","9":"0.3","10":"282.00000","11":"0.0800000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Reminder of the transformations I chose to improve variable distributions and make them normal-ish.</p>
+<ul>
+<li>Square root: clay, carbonates</li>
+<li>Log10: organic matter, cec, lep, ksat, awc</li>
+<li>Cube (^3): bulk density</li>
+<li>None: ec, ph</li>
+</ul>
+</section>
+<section id="pre-process-data-recipe" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="pre-process-data-recipe"><span class="header-section-number">10.3</span> Pre-process data (recipe)</h2>
+<p>This is something specific to the <code>tidymodels</code> modeling workflow, and I like it because it’s very explicit about how variables are transformed (pre-processed) prior to initializing the model.</p>
+<p>Here I apply some transformations to achieve more normal distributions, and then standardize (<code>step_normalize</code>) by subtracting the mean and dividing by 1 sd.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rec_spec <span class="ot">&lt;-</span>   <span class="fu">recipe</span>(<span class="sc">~</span>., <span class="at">data =</span> d) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">update_role</span>(mukey, <span class="at">new_role =</span> <span class="st">"ID"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># note this is log10 (the default is ln)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_log</span>(om, cec7, ksat, awc, lep, <span class="at">base =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_mutate</span>(<span class="at">dbthirdbar =</span> dbthirdbar<span class="sc">^</span><span class="dv">3</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_sqrt</span>(claytotal, caco3) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>())</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>rec_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Recipe
+
+Inputs:
+
+      role #variables
+        ID          1
+ predictor         10
+
+Operations:
+
+Log transformation on om, cec7, ksat, awc, lep
+Variable mutation for dbthirdbar^3
+Square root transformation on claytotal, caco3
+Centering and scaling for all_numeric_predictors()</code></pre>
+</div>
+</div>
+<section id="check-that-it-worked" class="level3" data-number="10.3.1">
+<h3 data-number="10.3.1" class="anchored" data-anchor-id="check-that-it-worked"><span class="header-section-number">10.3.1</span> Check that it worked</h3>
+<p>Although I did make plots of the data distributions after transforming in <a href="08-var-transformations.html"><span>Chapter&nbsp;7</span></a> , I wanted to do it again here as a check that the pre-processing that I am specifying is working as intended. Here, I do that with two functions from <code>{recipes}</code> :</p>
+<ul>
+<li><code>prep()</code> estimates a pre-processing recipe. It takes my input dataset (“training set”) , and estimates the parameters (model inputs), reporting back on the specific operations and missing data</li>
+<li><code>bake()</code> to return the training data (because I set <code>new_data</code> to NULL)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># retain argument here tells prep to keep </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the pre-processed training data </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># note this can make the final recipe size large, </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># so this is not the recipe object I probably want to use</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># in my list col below</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>check_prep <span class="ot">&lt;-</span> <span class="fu">prep</span>(rec_spec, <span class="at">retain=</span><span class="cn">TRUE</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># using NULL here for new_data b/c I want the </span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># pre-processed training data </span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>check_prepped_df <span class="ot">&lt;-</span> <span class="fu">bake</span>(check_prep, <span class="at">new_data =</span> <span class="cn">NULL</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(check_prepped_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["mukey"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["claytotal"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["om"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["cec7"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["dbthirdbar"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ec"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["ph1to1h2o"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["caco3"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["lep"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["ksat"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["awc"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"395973","2":"-2.22113438","3":"-1.2629310","4":"-2.2652615","5":"2.0029620","6":"-0.2585251","7":"-1.3797942","8":"-0.6709124","9":"-2.4016031","10":"2.8156237","11":"-2.7471204"},{"1":"395975","2":"-2.22113438","3":"-1.8661187","4":"-2.2652615","5":"2.0029620","6":"-0.2585251","7":"-1.3797942","8":"-0.6709124","9":"-2.4016031","10":"2.8156237","11":"-2.7471204"},{"1":"395900","2":"-1.78551370","3":"0.3714129","4":"-0.6369944","5":"0.4852741","6":"-0.2585251","7":"0.6811591","8":"-0.6709124","9":"-0.2975952","10":"1.6217541","11":"-2.0423657"},{"1":"395948","2":"0.09849231","3":"0.5281519","4":"0.4395225","5":"0.2046342","6":"-0.2585251","7":"-0.5554129","8":"-0.6709124","9":"-0.2975952","10":"-0.2817043","11":"0.8567094"},{"1":"885885","2":"-1.40615716","3":"0.5132006","4":"0.1508824","5":"0.5017313","6":"-0.2585251","7":"-0.6928099","8":"-0.6709124","9":"-0.2975952","10":"1.0199632","11":"-0.7633977"},{"1":"395974","2":"-2.22113438","3":"-1.8661187","4":"-2.2652615","5":"2.0029620","6":"-0.2585251","7":"-1.3797942","8":"-0.6709124","9":"-2.4016031","10":"2.8156237","11":"-2.7471204"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save the pre-processed data for making a </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># correlation matrix</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(check_prepped_df, <span class="st">"./data/data_preprocessed_all_var.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>OK, now making a plot of the transformed variables to take a look at their distributions:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>check_prepped_df <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>mukey) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"var"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>)  <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value)) <span class="sc">+</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span><span class="dv">25</span>) <span class="sc">+</span> </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(var), <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Distributions of transformed and standardized vars"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11-implement-kmeans_files/figure-html/dist-plot-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-mod-opt" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="sec-mod-opt"><span class="header-section-number">10.4</span> Set model options</h2>
+<p>Do I need to think about the initializer here? Based on what I was reading in the book chapter by Tan et al., 2018 (“Cluster Analysis: Basic Concepts and Algorithms”), it sounds like using kmeans++ for the initialization could results in better clustering (lower SSE). See page 543. See also <a href="http://theory.stanford.edu/~sergei/papers/kMeansPP-soda.pdf">this paper</a> referenced in the clusterR documentation about seeding (initialization).</p>
+<p><code>stats::kmeans()</code> the default seems to be Hartigan-Wong method, which uses <strong>random partition</strong> for the initialization. From <a href="https://emilhvitfeldt.github.io/tidyclust/articles/k_means.html#a-brief-introduction-to-the-k-means-algorithm">the {tidyclust} documentation</a>:</p>
+<blockquote class="blockquote">
+<p>The observations are assigned to a cluster uniformly at random. The centroid of each cluster is computed, and these are used as the initial centers.</p>
+</blockquote>
+<p>I guess the other benefit of the Hartigan-Wong method is that it results in more consistent human-verified clusters (again, per tidyclust documentation listed above). Could read <a href="https://towardsdatascience.com/three-versions-of-k-means-cf939b65f4ea">this blog post</a> for a deeper dive into these methods if needed.</p>
+<p><code>ClusterR::KMeans_rcpp()</code> uses the Lloyd/Forgy method (per the tidyclust docs, this info wasn’t easy to find in the ClusterR docs)</p>
+<p>For now I’m going with <code>stats::kmeans</code>, and setting the nstart to 10. Because the random initial configuration (random starting centroids) can have an impact on the final clusters, it sounds like it’s a good idea to do multiple starts, and then let kmeans return the best one (using lowest within cluster SSE as the metric for “best”)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># writing a custom function here so I can be explicit </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># about the options I'm choosing, and also use within the </span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># list-col framework I set up with map() below. </span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>km_spec <span class="ot">&lt;-</span> <span class="cf">function</span>(nclust){</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  tidyclust<span class="sc">::</span><span class="fu">k_means</span>(<span class="at">num_clusters =</span> nclust) <span class="sc">%&gt;%</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    parsnip<span class="sc">::</span><span class="fu">set_engine</span>(<span class="at">engine =</span> <span class="st">"stats"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">nstart =</span> <span class="dv">10</span>, <span class="co"># 1 is default, &gt;1 recommended</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">algorithm =</span> <span class="st">"Hartigan-Wong"</span>, <span class="co"># H-W is default</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">iter.max =</span> <span class="dv">20</span>) <span class="co"># default is 10, wasn't always enough</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="set-up-data-structure" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="set-up-data-structure"><span class="header-section-number">10.5</span> Set up data structure</h2>
+<p>Here I set up a dataframe that will catch my modeling results in list columns of the different model objects and return values. The first column I define specifies the range of different cluster sizes (k) that we will try.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>try_clusts <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">20</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>km_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">n_clust =</span> try_clusts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="specify-model-for-each-value-of-k" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="specify-model-for-each-value-of-k"><span class="header-section-number">10.6</span> Specify model (for each value of k)</h2>
+<p>For each unique value of k (2-20), this returns a model specification object (in the <code>kmeans_spec</code> column) based on the custom function I wrote above. The model specification has all the options set about how we want the algorithm to run (methods, number of starts, etc.). We need a different one for each value of k.</p>
+<p>The <code>kmeans_wflow</code> column here holds our workflow objects. These objects combine our model specification (from <code>kmeans_spec</code>) with the data recipe (preprocessor) we made above (<code>rec_spec</code>, is same for all models).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for each unique value of clusters (2:20), returns a model</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># specification (kmeans_spec) and a workflow (kmeans_wflow) </span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># note that the workflow </span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>km_df <span class="ot">&lt;-</span> km_df <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">kmeans_spec =</span> <span class="fu">map</span>(n_clust, <span class="sc">~</span> <span class="fu">km_spec</span>(<span class="at">nclust =</span> .x)),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">kmeans_wflow =</span> <span class="fu">map</span>(kmeans_spec,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                       <span class="sc">~</span> <span class="fu">workflow</span>(</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">preprocessor =</span> rec_spec, <span class="at">spec =</span> .x</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                       ))</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># our current data structure</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(km_df, <span class="at">n=</span>3L )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["n_clust"],"name":[1],"type":["int"],"align":["right"]},{"label":["kmeans_spec"],"name":[2],"type":["list"],"align":["right"]},{"label":["kmeans_wflow"],"name":[3],"type":["list"],"align":["right"]}],"data":[{"1":"2","2":"<S3: k_means>","3":"<S3: workflow>","_rn_":"1"},{"1":"3","2":"<S3: k_means>","3":"<S3: workflow>","_rn_":"2"},{"1":"4","2":"<S3: k_means>","3":"<S3: workflow>","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># take a look at an example workflow</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>km_df<span class="sc">$</span>kmeans_wflow[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+══ Workflow ════════════════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: k_means()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+4 Recipe Steps
+
+• step_log()
+• step_mutate()
+• step_sqrt()
+• step_normalize()
+
+── Model ───────────────────────────────────────────────────────────────────────
+K Means Cluster Specification (partition)
+
+Main Arguments:
+  num_clusters = nclust
+
+Engine-Specific Arguments:
+  nstart = 10
+  algorithm = Hartigan-Wong
+  iter.max = 20
+
+Computational engine: stats </code></pre>
+</div>
+</div>
+</section>
+<section id="fit-the-models" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="fit-the-models"><span class="header-section-number">10.7</span> Fit the models</h2>
+<p>All the steps above were related to specifying different aspects of this model. Now we can actually fit the models.</p>
+<p>Some troubleshooting here:</p>
+<ul>
+<li>Started by specifying <code>tidyclust::fit()</code> but something weird was happening where my <code>step_normalize()</code> wasn’t included in the pre-processor recipe when I looked at the fitted model object.</li>
+<li>If I specify <code>parsnip::fit()</code> , then <code>step_normalize()</code> is included and the values of the cluster centroids are in the expected ranges (centered, scaled).</li>
+<li>I also tried this without explicitly specifying the package (so just <code>fit()</code> ) and it worked as expected.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make a quiet version of fit(), so we can capture results </span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and any warning messages from the models </span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># see troubleshooting notes below</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>quiet_fit <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">quietly</span>(<span class="at">.f =</span> parsnip<span class="sc">::</span>fit)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4</span>) <span class="co"># for reproducibility </span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>km_fit_df <span class="ot">&lt;-</span> km_df <span class="sc">%&gt;%</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">km_result =</span> <span class="fu">map</span>(<span class="at">.x =</span> kmeans_wflow,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">.f =</span> quiet_fit,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>       <span class="co"># data comes after .f b/c not vectorized over            </span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data =</span> d),</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">km_fit =</span> <span class="fu">map</span>(km_result, <span class="sc">~</span><span class="fu">pluck</span>(.x, <span class="st">'result'</span>)),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">warn =</span> <span class="fu">map</span>(km_fit, <span class="sc">~</span><span class="fu">pluck</span>(.x, <span class="st">'warnings'</span>)),</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">msg =</span> <span class="fu">map</span>(km_fit, <span class="sc">~</span><span class="fu">pluck</span>(.x, <span class="st">'messages'</span>)),</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">n_iter =</span> <span class="fu">map_dbl</span>(km_fit, </span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>                      <span class="sc">~</span><span class="fu">pluck</span>(.x, <span class="st">'fit'</span>, <span class="st">'fit'</span>, <span class="st">'fit'</span>, <span class="st">'iter'</span> ))) </span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>         </span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co"># check out current data structure</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(km_fit_df, <span class="at">n =</span> 3L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["n_clust"],"name":[1],"type":["int"],"align":["right"]},{"label":["kmeans_spec"],"name":[2],"type":["list"],"align":["right"]},{"label":["kmeans_wflow"],"name":[3],"type":["list"],"align":["right"]},{"label":["km_result"],"name":[4],"type":["list"],"align":["right"]},{"label":["km_fit"],"name":[5],"type":["list"],"align":["right"]},{"label":["warn"],"name":[6],"type":["list"],"align":["right"]},{"label":["msg"],"name":[7],"type":["list"],"align":["right"]},{"label":["n_iter"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"<S3: k_means>","3":"<S3: workflow>","4":"<named list [4]>","5":"<S3: workflow>","6":"<NULL>","7":"<NULL>","8":"1","_rn_":"1"},{"1":"3","2":"<S3: k_means>","3":"<S3: workflow>","4":"<named list [4]>","5":"<S3: workflow>","6":"<NULL>","7":"<NULL>","8":"4","_rn_":"2"},{"1":"4","2":"<S3: k_means>","3":"<S3: workflow>","4":"<named list [4]>","5":"<S3: workflow>","6":"<NULL>","7":"<NULL>","8":"3","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># don't need anymore, cleaning up</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(km_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="notes-about-model-fit-troubleshooting" class="level3" data-number="10.7.1">
+<h3 data-number="10.7.1" class="anchored" data-anchor-id="notes-about-model-fit-troubleshooting"><span class="header-section-number">10.7.1</span> Notes about model fit troubleshooting</h3>
+<p>If I <code>set.seed(123)</code> and run kmeans with <code>max.iter=10</code>, get warnings about ‘no convergence at 10 iterations’, for k = 17 and k = 20. Changed to <code>max.iter=20</code> and ran again, this time no convergence warnings.</p>
+<p>As a result of this experience, I added some additional columns to the <code>km_fit_df</code> object using <code>{purrr}</code> ’s function <code>quietly()</code> so I could capture warnings and messages that would otherwise only appear in the console (and are hard to trace when I’m iterating through all these models at once). <a href="https://aosmith.rbind.io/2020/08/31/handling-errors/#using-quietly-to-capture-messages">This blog post</a> was very helpful for an example of how to do this.</p>
+<p>In an earlier troubleshooting attempt, I was trying to see if the warning messages were stored anywhere in the fitted <code>{tidyclust}</code> model object? It seemed like maybe they would have been in <code>ifault</code>, but those values were all 0, even when I had model convergence warnings. In that case I tried indexing into the fitted model objects with <code>map(km_fit, ~pluck(.x, 'result', 'fit', 'fit', 'fit', 'ifault' ))</code></p>
+</section>
+<section id="view-messages-warnings" class="level3" data-number="10.7.2">
+<h3 data-number="10.7.2" class="anchored" data-anchor-id="view-messages-warnings"><span class="header-section-number">10.7.2</span> View messages &amp; warnings</h3>
+<p>We can look at any warnings or messages from the modeling process:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>km_fit_df <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(n_clust, warn, msg, n_iter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["n_clust"],"name":[1],"type":["int"],"align":["right"]},{"label":["warn"],"name":[2],"type":["list"],"align":["right"]},{"label":["msg"],"name":[3],"type":["list"],"align":["right"]},{"label":["n_iter"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"<NULL>","3":"<NULL>","4":"1"},{"1":"3","2":"<NULL>","3":"<NULL>","4":"4"},{"1":"4","2":"<NULL>","3":"<NULL>","4":"3"},{"1":"5","2":"<NULL>","3":"<NULL>","4":"4"},{"1":"6","2":"<NULL>","3":"<NULL>","4":"5"},{"1":"7","2":"<NULL>","3":"<NULL>","4":"5"},{"1":"8","2":"<NULL>","3":"<NULL>","4":"6"},{"1":"9","2":"<NULL>","3":"<NULL>","4":"6"},{"1":"10","2":"<NULL>","3":"<NULL>","4":"6"},{"1":"11","2":"<NULL>","3":"<NULL>","4":"5"},{"1":"12","2":"<NULL>","3":"<NULL>","4":"5"},{"1":"13","2":"<NULL>","3":"<NULL>","4":"8"},{"1":"14","2":"<NULL>","3":"<NULL>","4":"7"},{"1":"15","2":"<NULL>","3":"<NULL>","4":"5"},{"1":"16","2":"<NULL>","3":"<NULL>","4":"6"},{"1":"17","2":"<NULL>","3":"<NULL>","4":"5"},{"1":"18","2":"<NULL>","3":"<NULL>","4":"6"},{"1":"19","2":"<NULL>","3":"<NULL>","4":"7"},{"1":"20","2":"<NULL>","3":"<NULL>","4":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="look-at-one-fit-object" class="level3" data-number="10.7.3">
+<h3 data-number="10.7.3" class="anchored" data-anchor-id="look-at-one-fit-object"><span class="header-section-number">10.7.3</span> Look at one fit object</h3>
+<p>As an example, these are what the fitted objects look like.</p>
+<p><strong>NOTE</strong> the clustering vector here is using the cluster numbers directly from <code>kmeans()</code>. <code>tidyclust</code> assigns names like “Cluster_1”, “Cluster_2” etc. , but the numbers do NOT necessarily match with what <code>kmeans()</code> returns. The CLUSTERINGS are the same, but the numbers are not necessarily so. So 2 in this “Clustering Vector” below is NOT necessarily equal to tidyclust “Cluster_2” that you might get by using the <code>extract_cluster_assignment</code> function. To keep things consistent, I’m always using the cluster names assigned by <code>tidyclust</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>examp_fit <span class="ot">&lt;-</span> km_fit_df<span class="sc">$</span>km_result[[<span class="dv">4</span>]][[<span class="st">'result'</span>]]</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>examp_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow [trained] ══════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: k_means()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+4 Recipe Steps
+
+• step_log()
+• step_mutate()
+• step_sqrt()
+• step_normalize()
+
+── Model ───────────────────────────────────────────────────────────────────────
+K-means clustering with 5 clusters of sizes 479, 2019, 1832, 1065, 1477
+
+Cluster means:
+   claytotal         om       cec7 dbthirdbar         ec  ph1to1h2o      caco3
+1  0.5174494  0.3745308  0.3208957 -0.6376723  3.3283137  1.1660203  1.0228662
+2 -0.3814723 -0.3465904 -0.2722727  0.3236714 -0.2571456 -0.5186223 -0.5279703
+3  0.7722551  0.6366879  0.8147342 -0.5735785 -0.2463628 -0.2631583 -0.5750294
+4 -1.5118222 -1.1990889 -1.6374004  1.0687407 -0.2271428 -0.7273531 -0.5026188
+5  0.4858861  0.4272060  0.4382179 -0.2948278 -0.2585251  1.1816599  1.4656479
+         lep       ksat        awc
+1  0.4284214 -0.5251382  0.2167607
+2 -0.4841584  0.2713584  0.0553920
+3  0.6939805 -0.7350181  0.5806865
+4 -0.9544845  1.5123302 -1.7551062
+5  0.3503424 -0.3794245  0.3992591
+
+Clustering vector:
+   [1] 4 4 4 2 2 4 4 4 4 4 2 4 4 2 4 3 2 2 4 4 2 2 4 4 2 4 4 4 4 4 2 2 4 4 4 4 4
+  [38] 2 2 2 4 4 4 4 4 2 4 4 4 4 4 2 2 2 3 5 5 2 3 3 3 3 3 1 4 4 4 4 5 5 3 3 4 4
+  [75] 5 4 5 3 2 2 3 3 3 1 5 4 4 4 4 4 4 4 3 4 4 5 2 4 4 4 3 3 5 5 5 5 4 4 2 2 2
+ [112] 4 4 4 3 5 4 4 4 4 5 3 3 3 3 4 4 4 4 2 2 4 2 4 4 2 4 2 5 2 4 4 4 4 4 4 5 4
+ [149] 4 4 5 2 2 3 1 2 1 4 2 2 2 4 5 5 5 5 2 2 4 4 4 2 2 4 4 2 2 5 5 5 2 3 2 2 3
+ [186] 5 5 3 3 3 2 2 5 3 3 2 2 2 4 4 4 4 4 4 4 2 3 3 3 3 3 3 3 3 3 3 3 3 3 5 3 5
+ [223] 5 3 4 4 3 3 3 5 4 4 4 3 3 4 5 2 3 3 4 2 5 5 2 3 4 3 3 1 4 4 4 2 1 2 4 4 5
+ [260] 4 5 4 4 4 4 2 4 4 2 4 4 4 4 4 4 4 4 2 2 2 2 4 4 2 2 4 4 4 2 4 4 4 4 2 2 2
+ [297] 2 2 4 4 4 4 2 4 2 4 4 2 2 2 2 2 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 2 4 4 4 4 4
+ [334] 2 2 2 1 3 5 5 1 1 1 1 5 1 5 5 3 3 5 5 3 1 5 1 3 5 5 1 2 5 3 5 5 2 1 5 5 3
+ [371] 2 2 3 2 2 3 3 1 2 3 4 4 5 5 3 3 3 3 3 3 3 3 3 3 3 3 3 5 3 5 5 3 3 3 5 5 5
+ [408] 5 5 3 2 2 3 3 3 3 2 2 2 2 3 3 3 2 2 5 5 5 3 2 3 2 2 2 3 3 3 4 4 4 3 3 4 2
+ [445] 2 3 3 3 3 3 5 3 3 3 3 5 4 3 4 4 2 3 3 3 3 2 3 3 3 5 5 3 3 3 3 3 5 3 3 3 3
+ [482] 5 3 2 2 2 5 2 2 3 3 2 3 3 3 5 2 3 3 3 5 3 3 5 5 5 3 3 3 5 3 3 3 3 3 3 3 5
+ [519] 2 2 5 5 5 3 3 3 3 3 4 4 2 2 3 3 3 2 2 3 3 2 2 5 3 2 5 5 2 4 2 5 5 1 2 4 2
+ [556] 2 5 2 5 3 5 5 5 5 2 2 5 5 5 5 5 3 5 2 5 2 3 3 5 2 5 5 5 3 5 3 5 5 5 2 2 2
+ [593] 3 3 5 5 5 3 3 5 2 4 5 3 3 2 3 3 5 3 4 2 2 3 5 2 5 2 3 3 3 3 3 3 5 5 5 5 5
+ [630] 2 3 3 3 3 2 2 2 2 3 2 2 2 5 3 3 3 2 2 2 2 3 3 3 3 2 5 5 5 4 4 4 4 2 2 2 2
+ [667] 3 5 2 2 2 2 2 2 2 2 2 2 3 2 2 2 4 3 3 3 3 3 3 3 3 3 4 4 4 4 4 4 2 2 2 2 4
+ [704] 4 2 4 4 4 4 4 4 4 4 4 4 4 4 2 4 4 4 4 4 4 4 4 2 4 4 4 5 3 2 4 4 2 4 4 2 4
+ [741] 4 4 4 4 2 4 4 2 4 4 5 5 5 5 5 2 5 2 2 4 5 3 2 3 2 5 3 5 5 3 2 3 3 2 3 3 5
+ [778] 5 1 5 5 5 5 5 5 2 2 2 2 5 3 3 5 3 3 2 3 5 3 3 5 5 5 5 5 5 5 5 2 3 5 5 5 5
+ [815] 3 5 5 5 5 5 5 5 5 2 2 2 3 3 2 2 3 3 3 5 3 3 5 5 2 2 2 2 2 4 5 5 5 3 1 3 3
+ [852] 3 1 5 5 1 5 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 2 4 4 1 3 1 1 4 4 4 1 2 2 4 2
+ [889] 2 5 1 3 3 5 3 5 3 5 1 5 5 3 3 1 4 1 2 5 5 1 3 4 5 5 5 5 5 1 1 1 2 1 1 2 1
+ [926] 1 1 1 1 1 3 2 2 3 4 2 1 1 1 3 3 5 3 4 4 4 4 3 3 1 5 5 1 1 1 4 4 5 4 4 2 2
+ [963] 2 3 5 3 5 4 4 4 3 3 5 5 2 2 4 4 5 2 3 4 2 4 4 4 2 5 5 2 4 4 4 4 3 3 3 1 4
+[1000] 4 2 3 1 2 1 2 4 5 4 4 4 4 4 5 2 2 5 5 2 2 2 2 5 3 3 3 5 5 5 2 5 2 2 3 5 5
+[1037] 5 5 3 3 5 3 5 5 5 2 2 5 3 3 5 3 4 4 5 3 3 3 3 3 3 3 5 3 2 5 5 3 3 3 5 2 2
+[1074] 5 3 3 2 3 5 3 3 5 5 5 2 2 5 5 5 5 3 3 3 3 3 3 3 3 5 5 5 3 5 5 3 3 5 5 5 2
+[1111] 2 2 3 2 3 3 5 5 5 3 3 5 3 3 3 4 5 3 3 3 4 4 4 4 4 5 4 2 4 4 4 4 4 4 4 4 4
+[1148] 4 4 4 3 4 4 4 4 2 4 4 4 2 3 2 4 4 4 4 4 4 4 4 3 2 5 2 4 3 2 3 2 2 4 4 4 4
+[1185] 4 4 4 2 2 2 2 2 4 2 4 4 4 3 3 2 2 2 2 2 2 4 4 4 3 3 4 4 4 2 2 3 3 3 3 2 2
+
+...
+and 162 more lines.</code></pre>
+</div>
+</div>
+<p>A nicer way to look at the results is by accessing specific parts of the fitted model object, as below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># some basic model metrics</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(examp_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["totss"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["tot.withinss"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["betweenss"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["iter"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"68710","2":"29211.84","3":"39498.16","4":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># centroid data (transformed/standardized scale)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>centroids <span class="ot">&lt;-</span> tidyclust<span class="sc">::</span><span class="fu">extract_centroids</span>(examp_fit)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>centroids</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[".cluster"],"name":[1],"type":["fct"],"align":["left"]},{"label":["claytotal"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["om"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["cec7"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["dbthirdbar"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ec"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["ph1to1h2o"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["caco3"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["lep"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["ksat"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["awc"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"Cluster_1","2":"0.4858861","3":"0.4272060","4":"0.4382179","5":"-0.2948278","6":"-0.2585251","7":"1.1816599","8":"1.4656479","9":"0.3503424","10":"-0.3794245","11":"0.3992591"},{"1":"Cluster_2","2":"-0.3814723","3":"-0.3465904","4":"-0.2722727","5":"0.3236714","6":"-0.2571456","7":"-0.5186223","8":"-0.5279703","9":"-0.4841584","10":"0.2713584","11":"0.0553920"},{"1":"Cluster_3","2":"0.7722551","3":"0.6366879","4":"0.8147342","5":"-0.5735785","6":"-0.2463628","7":"-0.2631583","8":"-0.5750294","9":"0.6939805","10":"-0.7350181","11":"0.5806865"},{"1":"Cluster_4","2":"0.5174494","3":"0.3745308","4":"0.3208957","5":"-0.6376723","6":"3.3283137","7":"1.1660203","8":"1.0228662","9":"0.4284214","10":"-0.5251382","11":"0.2167607"},{"1":"Cluster_5","2":"-1.5118222","3":"-1.1990889","4":"-1.6374004","5":"1.0687407","6":"-0.2271428","7":"-0.7273531","8":"-0.5026188","9":"-0.9544845","10":"1.5123302","11":"-1.7551062"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># helpful to add to future plots for examining indiv. clusters</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>clust_stat <span class="ot">&lt;-</span> tidyclust<span class="sc">::</span><span class="fu">sse_within</span>(examp_fit)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>clust_stat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[".cluster"],"name":[1],"type":["fct"],"align":["left"]},{"label":["wss"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["n_members"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"Cluster_1","2":"5962.365","3":"1477"},{"1":"Cluster_2","2":"6669.121","3":"2019"},{"1":"Cluster_3","2":"7930.378","3":"1832"},{"1":"Cluster_4","2":"4204.982","3":"479"},{"1":"Cluster_5","2":"4444.992","3":"1065"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-mod-metrics" class="level2" data-number="10.8">
+<h2 data-number="10.8" class="anchored" data-anchor-id="sec-mod-metrics"><span class="header-section-number">10.8</span> Model metrics</h2>
+<p>See also section 7.5 in the Chapter by Tan et al.&nbsp;for more about cluster evaluation.</p>
+<section id="extract-metrics" class="level3" data-number="10.8.1">
+<h3 data-number="10.8.1" class="anchored" data-anchor-id="extract-metrics"><span class="header-section-number">10.8.1</span> Extract metrics</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>metrics_df <span class="ot">&lt;-</span> km_fit_df <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># tot_sse = total sum of squared error</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">tot_sse =</span> <span class="fu">map_dbl</span>(km_fit, <span class="sc">~</span> <span class="fu">sse_total_vec</span>(.x)),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># tot_wss = sum of within-cluster sse</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">tot_wss =</span> <span class="fu">map_dbl</span>(km_fit, <span class="sc">~</span><span class="fu">sse_within_total_vec</span>(.x)),</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># sse ratio = wss / total sse, </span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">sse_ratio =</span> <span class="fu">map_dbl</span>(km_fit, <span class="sc">~</span><span class="fu">sse_ratio_vec</span>(.x))</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(km_fit_df)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>metrics_simple <span class="ot">&lt;-</span> metrics_df <span class="sc">%&gt;%</span> </span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(n_clust, tot_sse, tot_wss, sse_ratio)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>metrics_simple</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["n_clust"],"name":[1],"type":["int"],"align":["right"]},{"label":["tot_sse"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["tot_wss"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sse_ratio"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"68710","3":"45880.29","4":"0.6677381"},{"1":"3","2":"68710","3":"37880.57","4":"0.5513109"},{"1":"4","2":"68710","3":"33293.29","4":"0.4845480"},{"1":"5","2":"68710","3":"29211.84","4":"0.4251468"},{"1":"6","2":"68710","3":"25898.12","4":"0.3769192"},{"1":"7","2":"68710","3":"23301.32","4":"0.3391256"},{"1":"8","2":"68710","3":"21657.03","4":"0.3151948"},{"1":"9","2":"68710","3":"20461.49","4":"0.2977949"},{"1":"10","2":"68710","3":"19494.50","4":"0.2837215"},{"1":"11","2":"68710","3":"18319.31","4":"0.2666179"},{"1":"12","2":"68710","3":"17905.45","4":"0.2605945"},{"1":"13","2":"68710","3":"17095.40","4":"0.2488051"},{"1":"14","2":"68710","3":"16511.05","4":"0.2403005"},{"1":"15","2":"68710","3":"15973.99","4":"0.2324842"},{"1":"16","2":"68710","3":"15361.98","4":"0.2235771"},{"1":"17","2":"68710","3":"14928.80","4":"0.2172726"},{"1":"18","2":"68710","3":"14611.63","4":"0.2126565"},{"1":"19","2":"68710","3":"14153.53","4":"0.2059894"},{"1":"20","2":"68710","3":"13589.21","4":"0.1977763"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="plot-total-wss" class="level3" data-number="10.8.2">
+<h3 data-number="10.8.2" class="anchored" data-anchor-id="plot-total-wss"><span class="header-section-number">10.8.2</span> Plot Total WSS</h3>
+<p>Not a clear “elbow” here, although by the time we get to 10-11 it does seem to be leveling off.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>metrics_simple <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n_clust, <span class="at">y =</span> tot_wss)) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>)) <span class="sc">+</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"k (number clusters)"</span>) <span class="sc">+</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"sum of within-cluster sse"</span>) <span class="sc">+</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Compare values of k: looking for elbow"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11-implement-kmeans_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>metrics_simple <span class="sc">%&gt;%</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n_clust <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">12</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n_clust, <span class="at">y =</span> tot_wss)) <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)) <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"k (number clusters)"</span>) <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"sum of within-cluster sse"</span>) <span class="sc">+</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Zoom in a bit: looking for elbow"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11-implement-kmeans_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="average-silhouette" class="level3" data-number="10.8.3">
+<h3 data-number="10.8.3" class="anchored" data-anchor-id="average-silhouette"><span class="header-section-number">10.8.3</span> Average Silhouette</h3>
+<p>From the <code>{tidyclust}</code> documentation:</p>
+<blockquote class="blockquote">
+<p>Another common measure of cluster structure is called the <strong>silhouette</strong>. The silhouette of a single observation is proportional to the average distance from that observation to within-cluster observations minus the average distance to outside-cluster observations; normalized by the greater of these two average.<br>
+</p>
+<p>In principle, a large silhouette (close to 1) suggests that an observation is more similar to those within its cluster than those outside its cluster.</p>
+</blockquote>
+<p>See also pg. 581 in Tan2018 Chap 7 Cluster Analysis: Basic Concepts and Algorithms</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>prepped_rec <span class="ot">&lt;-</span> <span class="fu">prep</span>(rec_spec, <span class="at">retain=</span><span class="cn">TRUE</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># using NULL here for new_data b/c I want the </span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pre-processed training data </span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>baked_df <span class="ot">&lt;-</span> <span class="fu">bake</span>(prepped_rec, <span class="at">new_data =</span> <span class="cn">NULL</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>mukey) </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>dists <span class="ot">&lt;-</span> baked_df <span class="sc">%&gt;%</span> <span class="fu">as.matrix</span>() <span class="sc">%&gt;%</span> <span class="fu">dist</span>(<span class="at">method =</span> <span class="st">"euclidean"</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>silh_df <span class="ot">&lt;-</span> metrics_df <span class="sc">%&gt;%</span> </span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">avg_sil =</span> <span class="fu">map_dbl</span>(km_fit, </span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>                       tidyclust<span class="sc">::</span>silhouette_avg_vec,</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">dists =</span> dists),</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">indiv_sil =</span> <span class="fu">map</span>(km_fit, </span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>                         tidyclust<span class="sc">::</span>silhouette,</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>                         <span class="at">dists =</span> dists))</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>indiv_sil_df <span class="ot">&lt;-</span> silh_df <span class="sc">%&gt;%</span> <span class="fu">select</span>(n_clust, indiv_sil) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(indiv_sil) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="fu">c</span>(cluster, neighbor),</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>                <span class="at">.fns =</span> as.character))</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(indiv_sil_df, <span class="st">"data/kmeans_points_silhouettes.csv"</span>)</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(metrics_df)  </span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(dists)</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(prepped_rec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Higher silhouette is better (means observations are closer to their centroids than to other observations). Seems to suggest that 4, 6, 10-12 would be OK (those are local maxima), but not greater than 12.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>silh_df <span class="sc">%&gt;%</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n_clust, <span class="at">y =</span> avg_sil)) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>)) <span class="sc">+</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Overall Average Silhouette"</span>) <span class="sc">+</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"Higher is better, possible values [-1,1]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11-implement-kmeans_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Can also plot the individual silhouettes. For each clustering (model version), we have a silhouette value per observation in the dataset (n=6872). We also have the closest “neighbor” cluster, or the cluster that specific observation would belong to if its home cluster didn’t exist.</p>
+<p>Here’s an example of this data for the k=6 clustering. The</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>neighbor_counts <span class="ot">&lt;-</span> indiv_sil_df <span class="sc">%&gt;%</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(n_clust, cluster, neighbor) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>()  <span class="sc">%&gt;%</span> </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cluster =</span> <span class="fu">str_replace</span>(cluster, <span class="st">"Cluster_"</span>, <span class="st">"c"</span>),</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">neighbor =</span> <span class="fu">str_replace</span>(neighbor, <span class="st">"Cluster_"</span>, <span class="st">"c"</span>))</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>k6_neighbor_counts <span class="ot">&lt;-</span> neighbor_counts <span class="sc">%&gt;%</span> </span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n_clust <span class="sc">==</span> <span class="dv">6</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>indiv_sil_df <span class="sc">%&gt;%</span> </span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="fu">c</span>(cluster, neighbor),</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>         <span class="sc">~</span><span class="fu">str_replace</span>(.x, <span class="st">"Cluster_"</span>, <span class="st">"c"</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n_clust <span class="sc">==</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> neighbor, <span class="at">y =</span> sil_width)) <span class="sc">+</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> neighbor, <span class="at">y =</span> sil_width),</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>),</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">alpha =</span> <span class="fl">0.2</span>,</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"pink"</span>) <span class="sc">+</span> </span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> k6_neighbor_counts,</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> neighbor, <span class="at">y =</span> <span class="fl">0.7</span>, <span class="at">label =</span> n),</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(cluster), <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"k=6 silhouettes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11-implement-kmeans_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>clust_sil_avgs <span class="ot">&lt;-</span> indiv_sil_df <span class="sc">%&gt;%</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cluster,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>           n_clust) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_sil =</span> <span class="fu">mean</span>(sil_width),</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_sil =</span> <span class="fu">sd</span>(sil_width), </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>clust_sil_avgs <span class="sc">%&gt;%</span> </span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cluster =</span> <span class="fu">str_replace</span>(cluster, <span class="st">"Cluster_"</span>, <span class="st">"c0"</span>),</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">cluster =</span> <span class="fu">case_when</span>(</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>           cluster <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"c010"</span>, <span class="st">"c011"</span>, <span class="st">"c012"</span>, <span class="st">"c013"</span>, <span class="st">"c014"</span>, <span class="st">"c015"</span>, <span class="st">"c016"</span>,</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"c017"</span>, <span class="st">"c018"</span>, <span class="st">"c019"</span>, <span class="st">"c020"</span>) <span class="sc">~</span> <span class="fu">str_replace</span>(cluster, <span class="st">"c0"</span>, <span class="st">"c"</span>),</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>           <span class="cn">TRUE</span> <span class="sc">~</span> cluster</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>         )) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n_clust <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">6</span><span class="sc">:</span><span class="dv">12</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">y =</span> cluster, <span class="at">x =</span> mean_sil)) <span class="sc">+</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(n_clust), <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span> </span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Average silhouette width per cluster for k=6-12"</span>) <span class="sc">+</span></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11-implement-kmeans_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="not-used-gap-statistic" class="level3" data-number="10.8.4">
+<h3 data-number="10.8.4" class="anchored" data-anchor-id="not-used-gap-statistic"><span class="header-section-number">10.8.4</span> Not used: Gap statistic</h3>
+<p>For <code>fviz_nbclust()</code>, first couple times running this, got <code>Warning: Quick-TRANSFER stage steps exceeded maximum…</code> Looking online, this seems to be a problem with the model not converging. I added some arguments here that are passed on to <code>kmeans()</code>, to make sure that the algorithm settings here match what I run above, including <code>set.seed()</code></p>
+<p>Continued to get warnings, even though I’m using all the same settings as I use for kmeans up above. Not sure why this is, but I’m not going to spend any more time on it right now. Maybe see if getting the gap statistic through <code>NbClust</code> works better? (Later note: NbClust won’t be a good option either, I can’t alter important kmeans() settings in NbClust). Expect it will take a long time either way, consider running this in a separate script and pulling in the results.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_gap_stat</span>(<span class="at">x =</span> baked_df, </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">FUNcluster =</span> kmeans,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"gap_stat"</span>),</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">k.max =</span> <span class="dv">10</span>, <span class="co"># only considering 2-10 clusters</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">nboot =</span> <span class="dv">50</span>, <span class="co"># default is 100</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">verbose =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">iter.max =</span> <span class="dv">20</span>, <span class="co"># passed to kmeans</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">nstart =</span> <span class="dv">10</span> <span class="co"># passed to kmeans</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>             )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="calinski-harabasz-index" class="level3" data-number="10.8.5">
+<h3 data-number="10.8.5" class="anchored" data-anchor-id="calinski-harabasz-index"><span class="header-section-number">10.8.5</span> Calinski-Harabasz index</h3>
+<p><strong>Not used: <code>{NbClust}</code></strong> <strong>, using <code>{fpc}</code> instead.</strong></p>
+<ul>
+<li>For Calinski-Harabasz index, higher values are better</li>
+<li>Realized after setting this up with <code>NbClust</code> that I don’t have the option to pass additional arguments to the <code>kmeans</code> function here. So I can’t make the algorithm settings exactly match my main clustering pipeline above (where I implement k-means using <code>tidyclust</code> and the <code>tidymodels</code> framework, and where I save the results for further analysis). This is a problem because I know from my original tests that I need to change the iter.max value to avoid non-convergence issues, and I also want to change nstart because nstart &gt;1 is typically known to be best practice (find citation for this).</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># keeping this here as a record, but I"m NOT USING this function for the C-H index. </span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>nbc_indices <span class="ot">&lt;-</span> NbClust<span class="sc">::</span><span class="fu">NbClust</span>(<span class="at">data =</span> baked_df,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">distance =</span> <span class="st">"euclidean"</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"kmeans"</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">min.nc =</span> <span class="dv">2</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">max.nc =</span> <span class="dv">20</span>,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">index =</span> <span class="st">"ch"</span>) <span class="co"># Calinski and Harabasz</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co"># enframe turns a named vector into a dataframe</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>ch_index_vals <span class="ot">&lt;-</span> <span class="fu">enframe</span>(nbc_indices<span class="sc">$</span>All.index) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">as.integer</span>(name)) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">n_clust =</span> name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Trying a different implementation of the Calinski-Harabasz index from the <code>{fpc}</code> package. This is preferred to the above approach, where I originally used the <code>NbClust</code> function from <code>{NbClust}</code> package because I can give this function my clustering generated above (NbClust does its own run of kmeans but I can’t customize it to keep it consistent with</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calinhara wants an observations/variables matrix</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># as first argument (as opposed to a distance matrix)</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>obsvar_mx <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(baked_df)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># function to extract and modify tidyclust clusters</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># into a integer vector, which I will pass to calinhara()</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>create_clust_vec <span class="ot">&lt;-</span> <span class="cf">function</span>(fit_obj){</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_cluster_assignment</span>(fit_obj) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>(.cluster) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_replace</span>(., <span class="st">"Cluster_"</span>, <span class="st">""</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.integer</span>()</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co"># apply function to extract clusterings as integer vectors</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co"># map to get a c-h index value for every value of k (2-20)</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>ch_metrics <span class="ot">&lt;-</span> silh_df <span class="sc">%&gt;%</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(n_clust, km_fit) <span class="sc">%&gt;%</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">clustering_vec =</span> <span class="fu">map</span>(km_fit, create_clust_vec),</span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">ch_index =</span> <span class="fu">map_dbl</span>(clustering_vec,</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>                       <span class="sc">~</span> fpc<span class="sc">::</span><span class="fu">calinhara</span>(<span class="at">x =</span> obsvar_mx,</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">clustering =</span> .x)</span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>ch_metrics <span class="sc">%&gt;%</span> </span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n_clust, <span class="at">y =</span> ch_index)) <span class="sc">+</span> </span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Calinski-Harabasz index"</span>) <span class="sc">+</span> </span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Calinski-Harabasz"</span>) <span class="sc">+</span></span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"Higher is better"</span>) <span class="sc">+</span></span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11-implement-kmeans_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="hopkins-statistic" class="level3" data-number="10.8.6">
+<h3 data-number="10.8.6" class="anchored" data-anchor-id="hopkins-statistic"><span class="header-section-number">10.8.6</span> Hopkins Statistic</h3>
+<p>Using the <a href="https://kwstat.github.io/hopkins/reference/hopkins.html"><code>{hopkins}</code></a> package for this. Citations included in the package documentation (also cite Tan et al., 2019 who give an example of using this for evaluating kmeans clusters).</p>
+<ul>
+<li>Hopkins, B. and Skellam, J.G., 1954. A new method for determining the type of distribution of plant individuals. Annals of Botany, 18(2), pp.213-227.</li>
+<li>Cross, G. R., and A. K. Jain. (1982). Measurement of clustering tendency. Theory and Application of Digital Control. Pergamon, 1982. 315-320.</li>
+</ul>
+<p>And a third citation, helpful illustrations:</p>
+<ul>
+<li>Lawson, R. G., &amp; Jurs, P. C. (1990). New index for clustering tendency and its application to chemical problems. Journal of Chemical Information and Computer Sciences, 30(1), 36–41. https://doi.org/10.1021/ci00065a010</li>
+</ul>
+<p>Apparently <code>{factoextra}</code> also has a Hopkins statistic, try that here too. (It takes a very long time to run, but returns 0.93, similar to 0.99 returned by <code>hopkins::hopkins()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>hstat <span class="ot">&lt;-</span> <span class="fu">hopkins</span>(<span class="at">X =</span> baked_df,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>                 <span class="co"># default, number of rows to sample from the df</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">m =</span> <span class="fu">ceiling</span>(<span class="fu">nrow</span>(baked_df)<span class="sc">/</span><span class="dv">10</span>), </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                 <span class="co"># default, dimension of the data</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">d =</span> <span class="fu">ncol</span>(baked_df),</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>                 <span class="co"># default, kth nearest neighbor to find</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">k =</span> <span class="dv">1</span>) </span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>hstat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9999999</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hopkins.pval</span>(<span class="at">x =</span> hstat,</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>             <span class="co"># this is the default for hopkins() above</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">n =</span> <span class="fu">ceiling</span>(<span class="fu">nrow</span>(baked_df)<span class="sc">/</span><span class="dv">10</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># commenting out because it takes a very long time to run</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># factoextra::get_clust_tendency(data = baked_df,</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                                n = 687, </span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                                graph = FALSE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="wss-and-silhouette-metrics-on-one-plot" class="level3" data-number="10.8.7">
+<h3 data-number="10.8.7" class="anchored" data-anchor-id="wss-and-silhouette-metrics-on-one-plot"><span class="header-section-number">10.8.7</span> WSS and Silhouette metrics on one plot</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>sil_totwss <span class="ot">&lt;-</span> silh_df <span class="sc">%&gt;%</span> </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(n_clust, avg_sil, tot_wss, tot_sse, sse_ratio)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>ch <span class="ot">&lt;-</span> ch_metrics <span class="sc">%&gt;%</span> </span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(n_clust, ch_index)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>met_combined <span class="ot">&lt;-</span> <span class="fu">left_join</span>(sil_totwss, ch, <span class="at">by =</span> <span class="st">"n_clust"</span>)</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(met_combined, <span class="st">"data/kmeans_cluster_metrics.csv"</span>)</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>met2 <span class="ot">&lt;-</span> met_combined <span class="sc">%&gt;%</span> </span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(<span class="st">'n_clust'</span>), <span class="at">names_to =</span> <span class="st">"metric"</span>,</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"value"</span>)</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>met2 <span class="sc">%&gt;%</span> </span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n_clust, <span class="at">y =</span> value)) <span class="sc">+</span> </span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">20</span>)) <span class="sc">+</span> </span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(metric), <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11-implement-kmeans_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="save-model-fits" class="level2" data-number="10.9">
+<h2 data-number="10.9" class="anchored" data-anchor-id="save-model-fits"><span class="header-section-number">10.9</span> Save model fits</h2>
+<p>Will save these as Rdata so I can call them up and investigate the cluster centroids more closely in the next chapter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>mods <span class="ot">&lt;-</span> silh_df <span class="sc">%&gt;%</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(n_clust, km_fit)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(mods, <span class="at">file =</span> <span class="st">"data/fitted_kmeans_mods.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="save-cluster-assignments" class="level2" data-number="10.10">
+<h2 data-number="10.10" class="anchored" data-anchor-id="save-cluster-assignments"><span class="header-section-number">10.10</span> Save cluster assignments</h2>
+<p>For each version of the model (each value of k, different numbers of clusters), a MUKEY is assigned to a specific cluster. Here, I’m pulling that data, shaping it into one dataframe (one row per MUKEY, cluster assingments in separate columns). I’m also adding back in the soil property data so we can use this in the next step when evaluating different cluster sizes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>clust_assign_df <span class="ot">&lt;-</span> mods <span class="sc">%&gt;%</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clust_assign =</span> <span class="fu">map</span>(km_fit, <span class="sc">~</span><span class="fu">augment</span>(.x, <span class="at">new_data =</span> d)),</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">mukey_clust =</span> <span class="fu">map</span>(clust_assign, <span class="sc">~</span><span class="fu">select</span>(.x, mukey, .pred_cluster)))</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>assign_mukey_df <span class="ot">&lt;-</span> clust_assign_df <span class="sc">%&gt;%</span> </span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(n_clust, mukey_clust) <span class="sc">%&gt;%</span> </span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(mukey_clust) <span class="sc">%&gt;%</span> <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> n_clust, <span class="at">values_from =</span> .pred_cluster, <span class="at">names_prefix =</span> <span class="st">"k_"</span>)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>clust_props <span class="ot">&lt;-</span> <span class="fu">full_join</span>(d, assign_mukey_df, <span class="at">by =</span> <span class="st">"mukey"</span>)</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(clust_props, <span class="st">"data/mukey_cluster_assignments_and_soilprops.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./10-additional-data-prep.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Additional Data Preparation</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./12-explore-clust-props.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Explore clusters</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

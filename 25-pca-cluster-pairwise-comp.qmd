@@ -1,0 +1,466 @@
+# PCA Cluster pairwise comparisons
+
+## Overview
+
+Pairwise comparisons with the validation data for the clusterings produced with PCA model version.
+We have 140 validation points
+
+```{r setup}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(glue)
+library(emmeans)
+
+clust_cols_to_character <- function(kcol){
+  
+  glue("clust_{kcol}")
+  
+}
+
+# this dataset was created with script 
+# 'prep_validation_data_for_pca_version.R'
+val_dat <- read_csv("data/validation_data_pca_clusters_and_soil_props.csv") %>%
+  # drop validation points not in target area
+  # (will have value = clust_0 or clust_NA, I am
+  # filtering on k_6 here but could use any of the k columns)
+  filter(k_6 != "0",
+         !is.na(k_6)) %>%
+  mutate(across(contains("k_"), .fns = clust_cols_to_character),
+         source = case_when(
+           str_detect(val_unit_id, "-") ~ "CIG",
+           str_detect(val_unit_id, "CC$") ~ "SHI",
+           TRUE ~ "KSSL"
+         )) %>% 
+  # note: these are not in our AOI, but b/c I did the validation
+  # for the PCA models based on MUKEY, had to filter them out 
+  # here b/c there was no spatial component to the validation
+  # (whereas the validation JB did w/ tifs for orig model
+  # version DID have a spatial component)
+  filter(val_unit_id != "47CC", 
+         val_unit_id != "47NCC")
+
+
+# also want to load the input data (gSSURGO soil props
+# associated w/ depth- and component-averaged MUKEYs)
+mu_dat <- read_csv("data/mukey_cluster_assignments_and_soilprops.csv")
+
+```
+
+## Validation points per cluster
+
+Here I am illustrating how many independent validation points we have for each cluster assignment, for the different model options from k = 6, 8, 11.
+
+```{r}
+#| echo: false
+
+# make full cluster assignment df 
+#  to make sure clusters with zero members 
+# are still plotted (they are not included when we
+# group by below)
+
+make_clust_member_list <- function(k_val){
+  
+  num_rows <- k_val 
+  
+  data.frame(k = rep(glue("k_{k_val}"), num_rows),
+             cluster_assignment = glue("clust_{1:num_rows}"))
+  
+}
+
+clust_member_list <- map_dfr(.x = c(4, 5, 6, 7, 8, 9, 10, 11),
+        .f = make_clust_member_list)
+
+```
+
+```{r}
+#| echo: false
+
+clust_counts <- val_dat %>%
+  select(val_unit_id, contains("k_")) %>%
+  pivot_longer(cols = contains("k_"),
+               names_to = "k",
+               values_to = "cluster_assignment") %>%
+  group_by(k, cluster_assignment) %>%
+  count() %>%
+  right_join(x = .,
+             y = clust_member_list,
+             by = c("k", "cluster_assignment")) %>%
+  mutate(
+    # make sure clusters with zero members have n=0 so they appear on the plots
+    # below
+    n = replace_na(n, 0),
+    # add leading zeros for nice sorting
+    k = case_when(
+      k == "k_4" ~ "k_04",
+      k == "k_5" ~ "k_05",
+      k == "k_6" ~ "k_06",
+      k == "k_7" ~ "k_07",
+      k == "k_8" ~ "k_08",
+      k == "k_9" ~ "k_09",
+      k == "k_10" ~ "k_10",
+      k == "k_11" ~ "k_11",
+      TRUE ~ k
+    ),
+    cluster_assignment = str_replace(cluster_assignment, "clust_", ""),
+    cluster_assignment = case_when(
+      cluster_assignment %in% as.character(c(1:9)) ~ glue("0{cluster_assignment}"), 
+      TRUE ~ cluster_assignment
+    ))
+    
+  
+
+```
+
+Note that clusters with only 1 member won't be included in pairwise comparison b/c not possible to calculate variance..
+
+```{r}
+#| echo: false
+
+
+clust_counts %>% 
+  ggplot() +
+  geom_col(aes(x = cluster_assignment, y = n)) +
+  geom_text(aes(x = cluster_assignment, y = n+3, label = n),
+            color = "blue") +
+  facet_wrap(vars(k), scales = "free") +
+  theme_minimal() +
+  ggtitle("Validation points") 
+
+
+
+```
+
+## Soil properties for pairwise comparisons
+
+Because our validation data points are coming from different projects / datasets, we don't have exactly the same variables from each one.
+This is a reminder of which variables exist in the three sources we used for validation points:
+
+-   KSSL : clay, bulk density, lep, awc, ec, cec, pH, carbonates, organic matter, (est org C)
+-   CIG: clay, bulk density, pH, carbonates, organic matter, (est org C)
+-   SHI: clay, bulk density, pH, organic matter
+
+In summary: all three datasets include bulk density, pH, organic matter, and clay, and KSSL and CIG include carbonates.
+So I think it makes sense to focus on plotting and doing pairwise comparisons with these variables specifically
+
+## Example pairwise: OM, k=6
+
+Working out the steps I need to include in a function to do the pairwise comparisons.
+
+```{r}
+
+# test case k=6 version and organic matter
+
+test_dat <- val_dat %>% 
+  select(val_unit_id, k_6, om_loi, claytotal, source) %>% 
+  drop_na(om_loi)
+
+# note only 1 observation for clust_1, need to drop it
+# b/c can't calculate variance for the pairwise comparison w/ only 1 obx.
+test_dat %>% count(k_6)
+
+test_dat_mult <- test_dat %>% filter(k_6 != "clust_1")
+
+# plot to see distributions 
+test_dat_mult %>% 
+  ggplot(aes(x = k_6, y = om_loi)) + 
+  geom_boxplot() + 
+  geom_point() + 
+  theme_bw()
+
+test_lm <- lm(formula = om_loi ~ k_6,
+   data = test_dat_mult)
+
+# look at some diagnostic plots for our model 
+# note homogeneity of variance looks sketchy
+performance::check_model(test_lm, check = c("normality", "homogeneity", "linearity"))
+
+performance::check_homogeneity(test_lm)
+
+```
+
+This shows how I would do pairwise t-tests with unpooled variance.
+This might be more appropriate than the ANOVA approach I originally tried, because the diagnostic plots above suggest that we don't have homogeneity of variance for our validation dataset.
+
+*"For some examples, one can use both the pooled t-procedure and the separate variances (non-pooled) t-procedure and obtain results that are close to each other. However, when the sample standard deviations are very different from each other, and the sample sizes are different, the separate variances 2-sample t-procedure is more reliable." Penn State [STAT 800 "Applied Research Methods"](https://online.stat.psu.edu/stat800/lesson/5/5.6/5.6.1/5.6.1.2) 5.6.1.2*
+
+Note that the p-value adjustment method here is "holm".
+
+```{r}
+
+# view the standard (console) output
+with(test_dat_mult, pairwise.t.test(om_loi, k_6, pool.sd = FALSE)) 
+
+test_obj <- with(test_dat_mult, pairwise.t.test(om_loi, k_6, pool.sd = FALSE)) 
+
+class(test_obj)
+
+biostat::make_cld(test_obj)
+
+# tidy output, filter to significant comparisons only
+with(test_dat_mult, pairwise.t.test(om_loi, k_6, pool.sd = FALSE)) %>% broom::tidy() %>% 
+  filter(p.value < 0.05)
+
+```
+
+## Function for pairwise comparisons
+
+Arguments: soil property and k option (model version / number of clusters) and validation dataframe.
+
+Returns: all pairwise comparisons in a dataframe
+
+```{r}
+
+compare_clust_pairwise <- function(soil_var, k_opt, df) {
+  
+  dat_no_na <- df %>%
+    select(val_unit_id,
+           all_of(k_opt),
+           all_of(soil_var)) %>%
+    drop_na(all_of(soil_var))
+  
+  # can't do pairwise t-tests with only 1 obs in a 
+  # group, so need to filter those out 
+  
+  n_obs_per_cluster <- dat_no_na %>%
+    count(.data[[k_opt]])
+  
+  single_obs_clusters <- n_obs_per_cluster %>% 
+    filter(n == 1) %>% 
+    pull(.data[[k_opt]])
+  
+  if(length(single_obs_clusters) == 0){
+    
+    dat_subset <- dat_no_na
+    
+  }else{
+    
+    dat_subset <- dat_no_na %>% 
+      filter(!(.data[[k_opt]] %in% single_obs_clusters))
+    
+  } 
+  
+  soil_var_vec <- dat_subset %>% pull(soil_var)
+  clust_vec <- dat_subset %>% pull(k_opt)
+
+  pairs_obj <- pairwise.t.test(soil_var_vec,
+                              clust_vec,
+                              pool.sd = FALSE)
+  
+  tidy_pairs_df <- pairs_obj %>%
+    broom::tidy()
+  
+  cld_df <- biostat::make_cld(pairs_obj)
+  
+  results_list <- list(pairs_df = tidy_pairs_df,
+                       cld = cld_df)
+
+  return(results_list)
+  
+}
+
+
+```
+
+## Example function output
+
+This is what the pairwise function I wrote above returns:
+
+```{r}
+
+compare_clust_pairwise(soil_var = "ph1to1h2o",
+                       k_opt = "k_8",
+                       df = val_dat) 
+
+```
+
+## Run pairwise comparisons
+
+Here I create a dataframe to hold the results of the pairwise comparisons, then use `map2()` to iterate over the variables and cluster sizes, running all the tests.
+
+```{r}
+# vars to compare on 
+var_names <- c("claytotal", "ph1to1h2o", "om_loi", "caco3", "dbthirdbar")
+
+# all possible values of k (number of clusters)
+cluster_opts <- glue("k_{c(4, 5, 6, 7, 8, 9, 10, 11)}")
+
+# create df with all combinations of var_names x clusters
+comp_template <- tidyr::crossing(var_names, cluster_opts)
+
+# run the pairwise comparisons for each var and cluster size
+diffs_df <- comp_template %>%
+  mutate(comps_all = map2(.x = var_names,
+                          .y = cluster_opts,
+                          .f = compare_clust_pairwise,
+                          df = val_dat))
+
+# unnest once to get the pairs_df and cld_df dfs 
+# as their own columns
+diffs_unnest <- diffs_df %>% 
+  unnest(comps_all) %>% 
+  mutate(obj_names = names(comps_all))
+
+# want to save pairs_df and cld_df dat separately, so filtering
+# and then unnesting again to get rectangular data 
+pairs_dat <- diffs_unnest %>% 
+  filter(obj_names == "pairs_df") %>% 
+  unnest(comps_all) %>% 
+  select(-obj_names)
+
+write_csv(pairs_dat, "data/pca_pairwise_results_all.csv")
+
+cld_dat <- diffs_unnest %>% 
+  filter(obj_names == "cld") %>% 
+  unnest(comps_all) %>% 
+  select(-obj_names)
+
+write_csv(cld_dat, "data/cld_display.csv")
+
+
+```
+
+Now need to count how many of the tests have an adjusted p-value \< 0.05.
+All of the p-values are adjusted with the Holm method.
+
+```{r}
+
+count_sig_comps <- function(df){
+  
+  df %>% 
+    filter(p.value<0.05) %>% 
+    nrow()
+  
+}
+
+sig_diffs_df <- pairs_dat %>%
+  group_by(cluster_opts, var_names) %>%
+  nest(data = c(group1, group2, p.value)) %>%
+  mutate(n_sig_comps = map_int(data, count_sig_comps)) %>%
+  mutate(
+    num_regions = as.numeric(str_extract(cluster_opts, "[:digit:]+")),
+    possible_comps = (num_regions * (num_regions - 1)) / 2,
+    alpha_comps = round(possible_comps * 0.05, digits = 0)
+  ) %>%
+  select(var_names,
+         cluster_opts,
+         num_regions,
+         data,
+         n_sig_comps,
+         possible_comps,
+         alpha_comps)
+
+sig_diffs_summary <- sig_diffs_df %>% 
+  select(var_names,
+         cluster_opts,
+         num_regions,
+         n_sig_comps,
+         possible_comps,
+         alpha_comps)
+
+write_csv(sig_diffs_summary, "data/pca_pairwise_comparisons_summary.csv")
+
+```
+
+## Plot comparisons
+
+### All clusters
+
+```{r}
+#| echo: false
+
+# plot n significant diffs vs. values of k
+sig_diffs_summary %>% 
+  ggplot() +
+  geom_point(aes(x = num_regions,
+                 y = n_sig_comps,
+                 color = var_names)) +
+  geom_line(aes(x = num_regions,
+                 y = n_sig_comps,
+                 color = var_names)) + 
+  theme_minimal() +
+  xlab("Number of Clusters/Regions") +
+  ylab("Sig. pairwise contrasts (validation)") + 
+  ggtitle("Pairwise contrasts") +
+  scale_x_continuous(breaks = c(4:11))
+
+
+```
+
+For context, this plot shows a black line for the total number of **possible** contrasts.
+Note that because we are showing each soil property variable separately, the "total possible" line illustrates the total number of possible comparisons for a single variable
+
+```{r}
+#| echo: false
+
+sig_diffs_summary %>% 
+  ggplot() +
+  geom_point(aes(x = num_regions,
+                 y = n_sig_comps,
+                 color = var_names)) +
+  geom_line(aes(x = num_regions,
+                 y = n_sig_comps,
+                 color = var_names)) +
+  geom_line(aes(x = num_regions, y = possible_comps, lty = "Tot. Possible (1 variable)")) +
+  theme_minimal() +
+  xlab("Number of Clusters/Regions") +
+  ylab("Sig. pairwise contrasts (validation)") + 
+  ggtitle("Pairwise contrasts vs. total possible per variable") +
+  scale_x_continuous(breaks = c(4:11)) +
+  scale_linetype('') 
+
+```
+
+Two other ways to contextualize the number of significant contrasts: 1) with a table, and 2) with a plot showing how the % significant contrasts (as a function of total possible) changes as the number of clusters goes up.
+
+```{r}
+#| echo: false
+
+comps_tbl <- sig_diffs_summary %>% 
+  group_by(num_regions) %>% 
+  summarise(across(.cols = c(n_sig_comps, possible_comps),
+                   .fns = sum)) %>% 
+  mutate(percent_sig = round((n_sig_comps/possible_comps)*100, digits = 0),
+         alpha_5perc = round(possible_comps*0.05)) 
+
+comps_tbl
+
+comps_tbl %>% 
+  ggplot() +
+  geom_point(aes(x = num_regions, y = percent_sig),
+             size = 3) + 
+  geom_text(aes(x = num_regions, y = percent_sig+5, label = percent_sig),
+            color = "red",
+            size = 3) +
+  scale_x_continuous(breaks = c(2:20)) +
+  theme_minimal() +
+  ylab("% significant contrasts") +
+  xlab("Number of regions") +
+  ggtitle("% significant contrasts out of total possible") 
+
+```
+
+```{r}
+#| echo: false
+
+
+sig_diffs_df %>% 
+  mutate(perc_sig_indiv = (n_sig_comps / possible_comps)*100) %>% 
+  ggplot() +
+  geom_point(aes(x = num_regions,
+                 y = perc_sig_indiv,
+                 group = var_names,
+                 color = var_names)) +
+  geom_line(aes(x = num_regions,
+                 y = perc_sig_indiv,
+                 group = var_names,
+                 color = var_names)) +
+  theme_minimal() +
+  scale_x_continuous(breaks = c(4:11)) +
+  ggtitle("% sig contrasts by variable") +
+  ylab("% significant contrasts") +
+  xlab("Number of clusters/regions")
+
+```

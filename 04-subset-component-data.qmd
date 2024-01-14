@@ -1,0 +1,190 @@
+# Identify Target Components {#sec-id-comp}
+
+## Setup
+
+First, load the list of **MUKEYs** generated in `mus_comp_in_aoi.qmd`
+
+```{r setup-4}
+#| echo: false 
+#| message: false
+#| warning: false
+
+ 
+library(tidyverse)
+library(terra)
+library(sf)
+library(soilDB)
+library(aqp) 
+
+mus <- read_csv("data/target_mapunit_table.csv")
+
+
+```
+
+We will use our MUKEYs to get the relevant components.
+I've created a list column with all the components for each MUKEY in it.
+There are `r nrow(mus)` unique mapunits in my area of interest (AOI).
+
+```{r load-4}
+mn_gdb <- "data/gSSURGO_MN/gSSURGO_MN.gdb" 
+
+# read only component table, as dataframe
+mn_comp <- sf::st_read(dsn = mn_gdb, layer = "component")
+
+target_comp <- mn_comp %>% 
+  dplyr::filter(mukey %in% mus$mukey)
+
+comp_nest <- target_comp %>% 
+  dplyr::group_by(mukey) %>% 
+  nest() %>% 
+  dplyr::mutate(n_comp = map_dbl(data, nrow), 
+                max_comp_pct = map_dbl(data,
+                                       ~max(.x["comppct_r"])),
+                min_comp_pct = map_dbl(data, ~min(.x["comppct_r"])))
+
+head(comp_nest)
+
+```
+
+After some troubleshooting in later steps, I came back and decided it makes the most sense to **save a key of the dominant component percent** in each map unit here, before anything gets dropped in the conversion to an `aqp` object, see @sec-missing for more on this.
+
+This is relevant because we will use the dominant component percentage (which component has highest `comppct_r` as one of our "data sufficiency" checks to determine if a given MUKEY is included in the clustering analysis. In doing some exploratory work in @sec-dom-eda, I noticed that we had some
+
+```{r save-dom}
+
+dom_cmp_key <- target_comp %>% 
+  dplyr::select(cokey, mukey, comppct_r) %>% 
+  dplyr::group_by(mukey) %>% 
+  dplyr::summarise(dom_comppct = max(comppct_r))
+
+write_csv(dom_cmp_key, "./data/key_dominant_component_percent.csv")  
+  
+# remove b/c this is big, we are done with it
+rm(mn_comp)
+
+```
+
+## Components per mapunit
+
+Out of curiosity, what does the distribution look like for number of components in a mapunit?
+
+```{r comp-mu}
+#| echo: false
+
+comp_nest %>% 
+  dplyr::group_by(n_comp) %>% 
+  dplyr::count() %>% 
+  ggplot() + 
+  geom_col(aes(x = as.factor(n_comp), y = n)) +
+  theme_minimal() +
+  ggtitle("Number Components per Mapunit") +
+  xlab("n components") +
+  ylab("n mapunits")
+
+```
+
+## Subset to components \>15%
+
+```{r sub-15}
+
+comp_sub <- comp_nest %>%
+  dplyr::mutate(data_maj15 = map(data, ~ filter(.x, comppct_r >= 15))) %>%
+  dplyr::select(mukey, data_maj15) %>%
+  dplyr::mutate(
+    n_comp_maj = map_dbl(data_maj15, nrow),
+    max_pct = map_dbl(data_maj15,
+                           ~ max(.x["comppct_r"])),
+    min_pct = map_dbl(data_maj15, ~ min(.x["comppct_r"]))
+  )
+  
+
+head(comp_sub)
+```
+
+Now how many **major** components are we working with per map unit?
+
+```{r nmaj-comp}
+#| echo: false
+
+comp_sub %>% 
+  dplyr::group_by(n_comp_maj) %>% 
+  dplyr::count() %>% 
+  ggplot() + 
+  geom_col(aes(x = as.factor(n_comp_maj), y = n)) +
+  theme_minimal() +
+  ggtitle("Number Major Components per Mapunit") +
+  xlab("n components") +
+  ylab("n mapunits")
+
+```
+
+I'm saving this simple list of map units and number of components, max component percent for a later step where we determine if there is enough data to include that map unit in our final analysis.
+
+```{r major-mu}
+
+major_mu_summary <- comp_sub %>% 
+  dplyr::select(mukey, n_comp_maj, max_pct, min_pct)
+
+write_csv(major_mu_summary, "./data/mu_summary_maj_only.csv")
+
+```
+
+## Identify unique components
+
+```{r unique-co}
+comp_unnest <- comp_sub %>% 
+  dplyr::select(data_maj15, mukey) %>% 
+  tidyr::unnest(cols = c(data_maj15))
+
+write_csv(comp_unnest, "./data/component_list.csv")
+```
+
+I have `r length(unique(comp_unnest$mukey))` unique MUKEYs and `r length(unique(comp_unnest$cokey))` and unique COKEYs.
+It appears that there are no repeated COKEYs shared between mapunits.
+
+## Pull Horizon Data
+
+```{r hz-dat}
+# most of the soil property data we want is in the
+# chorizon table, om, pH, clay, etc.
+choriz <- sf::st_read(dsn = mn_gdb, layer = "chorizon")
+
+target_choriz <- choriz %>% 
+  dplyr::filter(cokey %in% comp_unnest$cokey)
+
+
+```
+
+## Coarse Fragments
+
+-   Need to pull `fragvol_r` from the `chfrags` table, this is the volume percentage of horizon occupied by 2mm or larger fraction (20mm or larger for wood fragments) on a whole soil basis
+-   Turns out I need to aggregate this by `chkey`, there can be multiple `fragvol_r` entries for a given component-horizon.
+
+```{r frag-dat}
+
+# some coarse frag data in the chfrag table
+chfrag <- sf::st_read(dsn = mn_gdb, layer = "chfrags")
+
+# keep only the component horizons I'm interested in
+target_chfrag <-  chfrag %>% 
+  dplyr::filter(chkey %in% target_choriz$chkey)
+
+# sum volume of coarse frags in a given horizon
+frag_hz_summary <- target_chfrag %>% 
+  dplyr::group_by(chkey) %>% 
+  dplyr::summarise(fragvol_r_sum = sum(fragvol_r, na.rm = TRUE),
+            .groups = "drop") %>% 
+  dplyr::select(chkey, fragvol_r_sum) 
+
+# add coarse frag col to my df
+target_choriz_frag <- left_join(target_choriz, frag_hz_summary, by = "chkey")
+
+
+```
+
+## Save Data
+
+```{r save-horiz-frag}
+
+write_csv(target_choriz_frag, "data/target_choriz_all.csv")
+```

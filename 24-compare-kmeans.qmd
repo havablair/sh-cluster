@@ -1,0 +1,447 @@
+# Comparing k-means scenarios
+
+Now that I've completed versions of the k-means process with AND without PCA as a data reduction step, I'd like to compare the models.
+In the reading I did over the course of Jan 10-13, 2023, I found some good examples of other papers where they do this:
+
+| 
+
+Lasantha, V., Oki, T., & Tokuda, D.
+(2022).
+Data-Driven versus Köppen--Geiger Systems of Climate Classification.
+*Advances in Meteorology*, *2022*, e3581299.
+<https://doi.org/10.1155/2022/3581299>
+
+Fovell, R. G., & Fovell, M.-Y. C.
+(1993).
+Climate Zones of the Conterminous United States Defined Using Cluster Analysis.
+*Journal of Climate*, *6*(11), 2103--2135.
+<https://doi.org/10.1175/1520-0442(1993)006%3C2103:CZOTCU%3E2.0.CO;2>
+
+Green, P. E., & Krieger, A. M.
+(1995).
+A comparison of alternative approaches to cluster-based market segmentation.
+*Market Research Society. Journal.*, *37*(3), 1--19.
+\|
+
+```{r setup}
+#| message: false
+#| echo: false
+#| warning: false
+
+library(tidyverse)
+library(gt)
+
+d_orig <- read_csv("data/mukey_cluster_assignments_and_soilprops.csv") %>% 
+  select(mukey, k_6, k_8, k_11) %>% 
+  mutate(across(.cols = contains("k_"), ~str_replace(.x, "Cluster_", "c")))
+
+d_pca <- read_csv("data/pca_mukey_cluster_assignments_and_soilprops.csv") %>% 
+  select(
+    mukey,
+    pk_6 = k_6, 
+    pk_8 = k_8,
+    pk_11 = k_11
+  ) %>% 
+  mutate(across(contains("pk_"), ~str_replace(.x, "Cluster_", "p")))
+
+d <- left_join(d_orig, d_pca, by = "mukey")
+
+```
+
+## Which clusters are we comparing?
+
+**Original k-means:** silhouette suggests 6, 9-11.
+C-H suggests 6, 11.
+Pairwise comparisons suggest 6, 8, or 11
+
+**PCA before k-means:** silhouette suggests 4, 6, 8, 11.
+C-H 4-8 would be similar, 9-11 would be similar
+
+## Compare model metrics
+
+```{r}
+#| message: false
+
+orig_metrics <- read_csv("data/kmeans_cluster_metrics.csv") %>% 
+  mutate(version = "original")
+
+pca_metrics <- read_csv("data/pca_kmeans_cluster_metrics.csv") %>% 
+  mutate(version = "pca")
+
+all_metrics <- bind_rows(orig_metrics, pca_metrics)
+
+```
+
+### Sum of within-cluster SSE
+
+It doesn't make sense to plot these two on the same graph, because the errors are in different units (z-score for the original, PCA score for the PCA).
+
+```{r}
+#| echo: false
+
+all_metrics %>% 
+  ggplot(aes(x = n_clust, y = tot_wss, group = version)) + 
+  geom_point(aes(color = version)) + 
+  geom_line(aes(color = version)) +
+  theme_bw() + 
+  ylab("Sum of Within-Cluster SSE") + 
+  xlab("Number of Clusters (k)") +
+  ggtitle("Comparing Sum of Within-Cluster SSE") +
+  labs(subtitle = "Lower values indicate that observations (MUKEYs) are closer\nto their cluster centroid (more similar to other MUKEYs in their cluster)") +
+  theme(plot.subtitle = element_text(size = 9)) +
+  scale_x_continuous(breaks = c(2:20)) + facet_wrap(vars(version))
+
+```
+
+### Average Silhouette
+
+From the `{tidyclust}` documentation:
+
+> Another common measure of cluster structure is called the **silhouette**.
+>
+> The silhouette of a single observation is proportional to the average distance from that observation to within-cluster observations minus the average distance to outside-cluster observations; normalized by the greater of these two average.
+>
+> In principle, a large silhouette (close to 1) suggests that an observation is more similar to those within its cluster than those outside its cluster.
+
+```{r}
+#| echo: false
+
+all_metrics %>% 
+  ggplot(aes(x = n_clust, y = avg_sil, group = version)) + 
+  geom_point(aes(color = version)) + 
+  geom_line(aes(color = version)) +
+  theme_bw() + 
+  ylab("Average Silhouette") + 
+  xlab("Number of Clusters (k)") +
+  ggtitle("Comparing Average Silhouette") + 
+  labs(subtitle = "Higher is better, possible values [-1,1]") +
+  theme(plot.subtitle = element_text(size = 9)) +
+  scale_x_continuous(breaks = c(2:20))
+
+```
+
+### Comparing Calinski-Harabasz index
+
+Higher values are better.
+This is also known as the "Variance Ratio Criterion,", which is how Calinski & Harabasz refer to it in their 1974 paper introducing it.
+The paper title is "A dendrite method for cluster analysis"
+
+Nice summary [from PyShark](https://pyshark.com/calinski-harabasz-index-for-k-means-clustering-evaluation-using-python/):\
+
+"The Calinski-Harabasz index (also known as the Variance Ratio Criterion) is calculated as a ratio of the sum of inter-cluster dispersion and the sum of intra-cluster dispersion for all clusters (where the dispersion is the sum of squared distances).
+
+A high CH means better clustering since observations in each cluster are closer together (more dense), while clusters themselves are further away from each other (well separated)."
+
+```{r}
+#| echo: false
+
+all_metrics %>% 
+  ggplot(aes(x = n_clust, y = ch_index, group = version)) + 
+  geom_point(aes(color = version)) + 
+  geom_line(aes(color = version)) +
+  theme_bw() + 
+  ylab("Calinski Harabasz Index") + 
+  xlab("Number of Clusters (k)") +
+  ggtitle("Comparing Calinski Harabasz Index") + 
+  labs(subtitle = "Higher is better") +
+  theme(plot.subtitle = element_text(size = 9)) +
+  scale_x_continuous(breaks = c(2:20))
+
+```
+
+## Jaccard similarity coefficient
+
+So what am I comparing?
+Visually, I'd like to make an alluvial plot or Sankey-type plot to see how the two compare (and I did this, see PDFS in `_refs/`. But I'd also like to compare membership between the different clusterings. In Lasantha et al., (2022), they use the Jaccard similarity coefficient.
+
+> "The Jaccard similarity coefficient is the ratio between the intersection and union of two sets; it has values ranging from zero for non-intersection to one for exact similarity. This is index is widely used in the evaluation of similarity in clustering in addition to applications such as image recognition and text analysis" *Lasantha et al., 2022*
+
+This appears to be the citation for the original coefficient:
+
+P. Jaccard, "The distribution of the flora in the alpine zone zone" New Phytologist, vol.
+11, no. 2, pp. 37--50, 1912.
+
+From Tan et al. (2018): "... the simple matching coefficient, which is known as the Rand statistic in this context, and the Jaccard coefficient are two of the most frequently used cluster validity measures."
+
+Additional relevant Jaccard citation:
+
+Hennig, C.
+(2007).
+Cluster-wise assessment of cluster stability.
+*Computational Statistics & Data Analysis*, *52*(1), 258--271.
+<https://doi.org/10.1016/j.csda.2006.11.025>
+
+Tan, P.-N., Steinbach, M., Karpatne, A., & Kumar, V. (2018).
+*Introduction to data mining* (2nd ed.).
+Pearson.
+
+Equation:
+
+Jaccard coefficient = f11 / (f01 + f10 + f11)
+
+|                 | Same Cluster | Different Cluster |
+|-----------------|--------------|-------------------|
+| Same Class      | f11          | f10               |
+| Different Class | f01          | f00               |
+
+So in words, when we are comparing to sets of classes (like two different clusterings produced by k-means), the Jaccard coefficient is telling us the ratio of : objects that are in both sets (the intersection) divided by the union (total number of objects in both sets, subtracting the number they share)
+
+Apparently the `{vegan}` package can do this with the `vegdist()` function, `method = 'jaccard'` .
+
+The thing I didn't understand at first was that the Jaccard index is for use on a specific **pair of clusters**.
+So I need to do this pairwise for all the clusters in the original and PCA versions
+
+### Example from online tutorial
+
+Jaccard index example from [UC Riverside GEN 242 Course](https://girke.bioinformatics.ucr.edu/GEN242/tutorials/rclustering/rclustering/#jaccard-index-for-cluster-sets)
+
+```{r}
+
+source("R/cindex_tgirke.R") 
+
+library(cluster)
+
+y <- matrix(rnorm(5000), 1000, 5, dimnames=list(paste("g", 1:1000, sep=""), paste("t", 1:5, sep="")))
+
+clarax <- clara(y, 49)
+
+# length = 1000, 49 classes (numeric 1:49)
+clV1 <- clarax$clustering
+
+clarax <- clara(y, 50)
+
+clV2 <- clarax$clustering 
+
+ci <- cindex(clV1=clV1, clV2=clV2, self=FALSE, minSZ=1, method="jaccard")
+
+
+
+ci[2:3] # Returns Jaccard index and variables used to compute it
+
+  n_intersect <- length(intersect(clV1, clV2))
+  
+  jac_index <- n_intersect/(length(clV1) + length(clV2) - n_intersect)
+
+```
+
+### My Jaccard function
+
+This was a [helpful blog post](https://www.r-bloggers.com/2021/11/how-to-calculate-jaccard-similarity-in-r-2/) (Jaccard Index is quite simple to calculate).
+
+Recall that what I want here is the MUKEYs.
+That allows us to calculate an intersection (so how many MUKEYs appear in both clusters?).
+
+```{r}
+
+jaccard <- function(orig_clust, pca_clust, dat, orig_col, pca_col){
+  
+  orig_sym <- rlang::sym(orig_col)
+  pca_sym <- rlang::sym(pca_col)
+  
+  orig_members <- d %>% 
+    filter(!!orig_sym == orig_clust) %>% 
+    pull(mukey)
+  
+  pca_members <- d %>% 
+    filter(!!pca_sym == pca_clust) %>% 
+    pull(mukey)
+  
+  n_intersect <- length(intersect(orig_members, pca_members))
+  
+  jac_index <- n_intersect/(length(orig_members) + length(pca_members) - n_intersect)
+  
+  return(jac_index)
+}
+
+
+```
+
+Try it for k=6, calculating the Jaccard similarity coefficient for Cluster 1 from the original model set and Cluster 1 from the PCA model set.
+
+To see if the result I'm getting makes sense, I'm looking at the alluvial diagram I made comparing original clusters and the PCA clusters.
+What I see is that Cluster 1 from the original version is split between Cluster 1 and Cluster 2 in the PCA version, with roughly 2/3 of the MUKEYs shared between Cluster 1 (original) and Cluster 1 (PCA).
+So it makes sense that the value below is 0.68.
+
+```{r}
+
+jaccard(orig_clust = "c1", 
+        pca_clust = "p1",
+        dat = d,
+        orig_col = "k_6",
+        pca_col = "pk_6"
+        )
+
+
+```
+
+## Calculate Jaccard similarity coefficients
+
+I think it makes the most sense to do this with three dataframes, one for each value of K we are interested in evaluating.
+So that would be: 6, 8, 11.
+
+### Set up data structure
+
+```{r}
+
+# data structure for k=6
+clust_orig_k6 <- unique(d$k_6)
+clust_pca_k6 <- unique(d$pk_6)
+
+k6_pairs <- tidyr::crossing(k6_orig = clust_orig_k6,
+            k6_pca = clust_pca_k6)
+
+# data structure for k=8
+clust_orig_k8 <- unique(d$k_8)
+clust_pca_k8 <- unique(d$pk_8)
+
+k8_pairs <- tidyr::crossing(k8_orig = clust_orig_k8,
+            k8_pca = clust_pca_k8)
+
+# data structure for k=11
+clust_orig_k11 <- unique(d$k_11)
+clust_pca_k11 <- unique(d$pk_11)
+
+k11_pairs <- tidyr::crossing(k11_orig = clust_orig_k11,
+            k11_pca = clust_pca_k11)
+```
+
+### Map over Jaccard function
+
+```{r}
+
+jac_k6 <- k6_pairs %>% 
+  mutate(jaccard_coef = map2_dbl(.x = k6_orig,
+                                 .y = k6_pca,
+                                 .f = jaccard,
+                                 dat = d,
+                                 orig_col = "k_6",
+                                 pca_col = "pk_6"),
+         k = "k_6") %>% 
+  rename(orig = k6_orig,
+         pca = k6_pca)
+
+jac_k8 <- k8_pairs %>% 
+  mutate(jaccard_coef = map2_dbl(.x = k8_orig,
+                                 .y = k8_pca,
+                                 .f = jaccard,
+                                 dat = d,
+                                 orig_col = "k_8",
+                                 pca_col = "pk_8"),
+         k = "k_8") %>% 
+  rename(orig = k8_orig,
+         pca = k8_pca)
+
+  
+  
+jac_k11 <- k11_pairs %>% 
+  mutate(jaccard_coef = map2_dbl(.x = k11_orig,
+                                 .y = k11_pca,
+                                 .f = jaccard,
+                                 dat = d,
+                                 orig_col = "k_11",
+                                 pca_col = "pk_11"), 
+         k = "k_11") %>% 
+  rename(orig = k11_orig,
+         pca = k11_pca)
+
+
+jac_all <- bind_rows(jac_k6, jac_k8, jac_k11)
+
+write_csv(jac_all, "data/jaccard_coefficients_k6_k8_k11.csv")
+
+```
+
+### Visualize Results
+
+```{r}
+#| echo: false
+
+jac_k6 %>% 
+  select(-k) %>% 
+  pivot_wider(names_from = "pca",
+              values_from = "jaccard_coef") %>% 
+  mutate(orig_label = "Full-6 Clusters") %>% 
+  gt(rowname_col = "orig",
+     groupname_col = "orig_label") %>% 
+  data_color(
+    columns = contains("p"),
+    colors = scales::col_numeric(
+      palette = colorRamp(c("#FFFFFF", "#31A354"),
+                          interpolate="spline"),
+      domain = c(0:1)
+    ),
+    apply_to = "fill"
+  ) %>% 
+  fmt_number(
+    columns = contains("p"),
+    decimals = 3
+  ) %>% 
+  tab_spanner(
+    columns = contains("p"),
+    label = "PCA-6 Clusters"
+  ) %>% 
+  tab_options(row_group.as_column = TRUE)
+  
+```
+
+```{r}
+#| echo: false
+
+jac_k8 %>% 
+  select(-k) %>% 
+  pivot_wider(names_from = "pca",
+              values_from = "jaccard_coef") %>% 
+  mutate(orig_label = "Full-8 Clusters") %>% 
+  gt(rowname_col = "orig",
+     groupname_col = "orig_label") %>% 
+  data_color(
+    columns = contains("p"),
+    colors = scales::col_numeric(
+      palette = colorRamp(c("#FFFFFF", "#31A354"),
+                          interpolate="spline"),
+      domain = c(0:1)
+    ),
+    apply_to = "fill"
+  ) %>% 
+  fmt_number(
+    columns = contains("p"),
+    decimals = 3
+  ) %>% 
+  tab_spanner(
+    columns = contains("p"),
+    label = "PCA-8 Clusters"
+  ) %>% 
+  tab_options(row_group.as_column = TRUE)
+
+```
+
+```{r}
+#| echo: false
+
+jac_k11 %>% 
+  select(-k) %>% 
+  pivot_wider(names_from = "pca",
+              values_from = "jaccard_coef") %>% 
+  mutate(orig_label = "Full-11 Clusters") %>% 
+  gt(rowname_col = "orig",
+     groupname_col = "orig_label") %>% 
+  data_color(
+    columns = contains("p"),
+    colors = scales::col_numeric(
+      palette = colorRamp(c("#FFFFFF", "#31A354"),
+                          interpolate="spline"),
+      domain = c(0:1)
+    ),
+    apply_to = "fill"
+  ) %>% 
+  fmt_number(
+    columns = contains("p"),
+    decimals = 3
+  ) %>% 
+  tab_spanner(
+    columns = contains("p"),
+    label = "PCA-11 Clusters"
+  ) %>% 
+  tab_options(row_group.as_column = TRUE)
+
+```

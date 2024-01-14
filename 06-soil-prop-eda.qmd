@@ -1,0 +1,208 @@
+# Soil Property Exploratory Analysis {#sec-prop-eda}
+
+Goals:
+
+-   Explore distributions of soil properties
+-   Determine appropriate transformations
+
+```{r setup6}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(glue)
+library(ggtern)
+
+dwide <- read_csv("./data/wide_slab_aggregated_soil_props_20220920.csv")
+
+dlong <- read_csv("./data/long_slab_aggregated_soil_props_20220920.csv")
+
+labunits <- read_csv("./data/ssurgo_col_names_labels_subset.csv")
+
+varunits <- labunits$units %>% set_names(labunits$colname)
+
+
+```
+
+```{r funs}
+#| echo: false
+
+# why can't I get {{}} to work here so I can pass the unquoted var name?
+# https://www.njtierney.com/post/2019/07/06/jq-bare-vars/
+# using aes_string for now...
+plot_soil_hist <- function(prop, label_name) {
+  
+  p <- dwide %>% 
+    ggplot(aes_string(x = prop)) +
+    geom_histogram(bins = 40,
+                   na.rm = TRUE) +
+    theme_minimal() +
+    ggtitle(glue("{label_name}"))
+  
+  return(p)
+}
+
+plot_facet_hist <- function(var_char_vec, nbins = 40){
+  
+  p <- dlong %>% 
+  filter(variable %in% var_char_vec)%>% 
+  ggplot() +
+  geom_histogram(aes(x = value), bins = nbins, na.rm = TRUE) +
+  theme_minimal() +
+  facet_wrap(vars(variable), scales = "free", nrow = 1)
+  
+  return(p)
+  
+}
+
+```
+
+## Soil Texture Classes
+
+```{r texcl}
+#| echo: false
+#| message: false
+#| warning: false
+
+# tex class boundaries
+# comes with ggtern package
+data("USDA")
+
+# calulate center pts for labels
+USDA_text <- USDA %>% dplyr::group_by(Label) %>% 
+  summarise_if(is.numeric, mean, na.rm = TRUE)
+
+
+
+ggplot(data = USDA, aes( y = Clay, x = Sand, z = Silt)) +
+  coord_tern(L = "x", T = "y", R = "z") + 
+  geom_polygon(
+    aes(fill = Label),
+    alpha = 0.0,
+    size = 0.5,
+    color = "black"
+  ) + 
+  geom_text(data = USDA_text,
+            aes(label = Label),
+            color = "black",
+            size = 2.5) + 
+  geom_point(
+    data = dwide,
+    aes(
+      x = sandtotal_r_value,
+      y = claytotal_r_value,
+      z = silttotal_r_value
+    ),
+    alpha = 0.1, 
+    na.rm = TRUE
+  ) + 
+  theme_showarrows() +
+  theme_clockwise() + 
+  guides(fill = "none") +
+  theme_bw() +
+  ggtitle("Soil Texture Classes")
+
+```
+
+## Clay, Sand, and Silt
+
+```{r s-si-cl}
+
+plot_facet_hist(c("claytotal_r", "sandtotal_r", "silttotal_r")) +
+  xlab("Weight %")
+
+
+```
+
+## Carbonates
+
+```{r carbs}
+
+plot_facet_hist(c("claysizedcarb_r", "caco3_r")) +
+  xlab("Weight Percent")
+
+```
+
+## pH and EC {#sec-ph-ec}
+
+```{r ph-ec}
+
+plot_facet_hist(c("ph1to1h2o_r", 
+                  "ec_r"), 
+                nbins = 20) + 
+  xlab("dS/m  ~~~~  unitless")
+
+```
+
+## Organic Matter
+
+```{r}
+plot_facet_hist(c("om_r")) +
+  xlab("% LOI")
+```
+
+## Bulk Density
+
+```{r db}
+
+plot_facet_hist(c("dbthirdbar_r")) +
+  xlab("g/cm3")
+
+```
+
+## CEC pH 7
+
+```{r cec}
+
+plot_facet_hist(c("cec7_r")) +
+  xlab("meq/100g")
+
+```
+
+## Ksat and AWC
+
+In Devine et al., they calculated AWC as a sum by soil component (so they multiplied the weighted average AWC by the depth to get a volume of water).
+Nic and I talked about this, and decided it's not necessary.
+We can just use the AWC value from the database (the volume fraction), because we are always using the same depth (20cm).
+So multiplying by a constant wouldn't change the distribution of values at all.
+
+**AWC column description:** The amount of water that an increment of soil depth, inclusive of fragments, can store that is available to plants.
+AWC is expressed as a volume fraction, and is commonly estimated as the difference between the water contents at 1/10 or 1/3 bar (field capacity) and 15 bars (permanent wilting point) tension and adjusted for salinity, and fragments.
+
+```{r ksat-awc}
+
+plot_facet_hist(c("ksat_r", 
+                  "awc_r")) + 
+  xlab("um/s  ~~~~  cm/cm")
+
+```
+
+## Linear Extensibility and SAR
+
+```{r lep-sar}
+
+plot_facet_hist(c("lep_r", 
+                  "sar_r")) + 
+  xlab("%  ~~~~  unitless")
+
+
+```
+
+## Volume Coarse Fragments
+
+```{r coarse}
+
+plot_facet_hist(c("fragvol_r_sum")) +
+  xlab("Volume %")
+
+```
+
+## Erodibility Factor
+
+```{r erode}
+
+plot_facet_hist(c("kwfact"),
+                nbins = 20) +
+  xlab("Unitless")
+
+```

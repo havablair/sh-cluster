@@ -1,0 +1,7 @@
+# Overview {.unnumbered}
+
+This is an analysis notebook with code and notes on the analysis presented in Blair et al. (2024) manuscript "A data-driven topsoil classification to support soil health assessment in Minnesota, USA"
+
+Manuscript authors: Hava K Blair, Jessica M. Gutknecht, Anna M. Cates, A. Marcelle Lewandowski, Nicolas A. Jelinski
+
+## 

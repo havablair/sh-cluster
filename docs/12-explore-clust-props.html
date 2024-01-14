@@ -1,0 +1,2404 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Minnesota Topsoil Classification for Soil Health Assessment - 11&nbsp; Explore clusters</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./19-sample-points.html" rel="next">
+<link href="./11-implement-kmeans.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./12-explore-clust-props.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Explore clusters</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Minnesota Topsoil Classification for Soil Health Assessment</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-data_sources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data Sources</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-mus_comp_in_aoi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Explore Map Units &amp; Components in AOI</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-subset-component-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Identify Target Components</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-horiz-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Horizon Data Averages</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-soil-prop-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Soil Property Exploratory Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-map-unit-agg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Map unit aggregation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-var-transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Variable Transformations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-plot-ec-lep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MAP EC and LEP with <code>{terra}</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-additional-data-prep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Additional Data Preparation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-implement-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Implement k-means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-explore-clust-props.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Explore clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-sample-points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sample validation points</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-map-indiv-regions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mapping individual clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-pca-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Do PCA before k-means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-pca-kmeans-finalists.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">PCA-kmeans Clustering Finalists</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-compare-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Comparing k-means scenarios</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-pca-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">PCA Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-notes-pca6-8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Comparing PCA 6 &amp; PCA 8 Models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-pairwise-nonparametric.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">(non-parametric) PCA Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./28-compare-variation-demo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compare variation explained</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./29-welch-pairwise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./30-welch-compare-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Welch ANOVA - compare variation explained</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#extract-centroids" id="toc-extract-centroids" class="nav-link active" data-scroll-target="#extract-centroids"><span class="header-section-number">11.1</span> Extract Centroids</a></li>
+  <li><a href="#about-individual-clusters" id="toc-about-individual-clusters" class="nav-link" data-scroll-target="#about-individual-clusters"><span class="header-section-number">11.2</span> About individual clusters</a></li>
+  <li><a href="#cluster-stats-overall" id="toc-cluster-stats-overall" class="nav-link" data-scroll-target="#cluster-stats-overall"><span class="header-section-number">11.3</span> Cluster Stats Overall</a></li>
+  <li><a href="#clusters-split-the-difference" id="toc-clusters-split-the-difference" class="nav-link" data-scroll-target="#clusters-split-the-difference"><span class="header-section-number">11.4</span> 2 Clusters “Split the difference”</a></li>
+  <li><a href="#clusters-distinguishing-nw" id="toc-clusters-distinguishing-nw" class="nav-link" data-scroll-target="#clusters-distinguishing-nw"><span class="header-section-number">11.5</span> 3 Clusters “Distinguishing NW?”</a></li>
+  <li><a href="#clusters" id="toc-clusters" class="nav-link" data-scroll-target="#clusters"><span class="header-section-number">11.6</span> 4 Clusters</a></li>
+  <li><a href="#clusters-ec-artefacts-ec-om-clay-spread" id="toc-clusters-ec-artefacts-ec-om-clay-spread" class="nav-link" data-scroll-target="#clusters-ec-artefacts-ec-om-clay-spread"><span class="header-section-number">11.7</span> 5 Clusters “EC artefacts? EC-OM-Clay spread”</a></li>
+  <li><a href="#clusters-histosols-break-free" id="toc-clusters-histosols-break-free" class="nav-link" data-scroll-target="#clusters-histosols-break-free"><span class="header-section-number">11.8</span> 6 Clusters “Histosols break free”</a></li>
+  <li><a href="#clusters-1" id="toc-clusters-1" class="nav-link" data-scroll-target="#clusters-1"><span class="header-section-number">11.9</span> 7 Clusters</a></li>
+  <li><a href="#clusters-2" id="toc-clusters-2" class="nav-link" data-scroll-target="#clusters-2"><span class="header-section-number">11.10</span> 8 Clusters</a></li>
+  <li><a href="#clusters-3" id="toc-clusters-3" class="nav-link" data-scroll-target="#clusters-3"><span class="header-section-number">11.11</span> 9 Clusters</a></li>
+  <li><a href="#clusters-4" id="toc-clusters-4" class="nav-link" data-scroll-target="#clusters-4"><span class="header-section-number">11.12</span> 10 Clusters</a></li>
+  <li><a href="#clusters-5" id="toc-clusters-5" class="nav-link" data-scroll-target="#clusters-5"><span class="header-section-number">11.13</span> 11 Clusters</a></li>
+  <li><a href="#different-plot-example" id="toc-different-plot-example" class="nav-link" data-scroll-target="#different-plot-example"><span class="header-section-number">11.14</span> Different plot example</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-clust-full" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Explore clusters</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Based on the model metrics in <a href="22-pca-kmeans.html#sec-mod-metrics"><span>Section&nbsp;15.11</span></a> , k = 4, 6, or 9 seem like reasonable places to start. These are local maxima in the average silhouette metric. For the Calinski-Harabasz index, we see a steady decrease from 2-7, then similar index values for 7-9, then decreasing again. In general higher is better, which would suggest something in the lower range. Really don’t have a clear elbow in the WSS plot, I could see an argument for the 8-11 region being where it starts to flatten out more.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(workflows)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parsnip)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyclust)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally) <span class="co"># for ggparcoor</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gganimate)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggradar)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># our fitted models, created in chap 11</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/fitted_kmeans_mods.RData"</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># mukeys, cluster assignments, and soil properties </span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># note these are the untransformed soil prop values</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>prop <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/mukey_cluster_assignments_and_soilprops.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="extract-centroids" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="extract-centroids"><span class="header-section-number">11.1</span> Extract Centroids</h2>
+<p>Recall that these are still the standardized values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cent_df <span class="ot">&lt;-</span> mods <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">centroids =</span> <span class="fu">map</span>(km_fit, <span class="sc">~</span><span class="fu">extract_centroids</span>(.x))) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(n_clust, centroids) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(centroids) <span class="co"># debated whether to also rescale here, as I did below for the radar plots? </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cent_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["n_clust"],"name":[1],"type":["int"],"align":["right"]},{"label":[".cluster"],"name":[2],"type":["fct"],"align":["left"]},{"label":["claytotal"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["om"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["cec7"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["dbthirdbar"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["ec"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["ph1to1h2o"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["caco3"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["lep"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["ksat"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["awc"],"name":[12],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"Cluster_1","3":"-1.0390212","4":"-0.7690860","5":"-1.0101470","6":"0.7588767","7":"-0.1955766","8":"-0.5552919","9":"-0.4721513","10":"-0.8125267","11":"0.9888608","12":"-0.9687257"},{"1":"2","2":"Cluster_2","3":"0.5382162","4":"0.3983889","5":"0.5232592","6":"-0.3931005","7":"0.1013093","8":"0.2876429","9":"0.2445758","10":"0.4208914","11":"-0.5122330","12":"0.5018029"},{"1":"3","2":"Cluster_1","3":"-1.1090486","4":"-0.8350427","5":"-1.0919031","6":"0.8305072","7":"-0.2304595","8":"-0.6060815","9":"-0.5181838","10":"-0.7962464","11":"1.0771030","12":"-1.1153142"},{"1":"3","2":"Cluster_2","3":"0.4982188","4":"0.3026695","5":"0.5234842","6":"-0.3452295","7":"-0.1533887","8":"-0.3513140","9":"-0.5511171","10":"0.3595311","11":"-0.5256609","12":"0.5661619"},{"1":"3","2":"Cluster_3","3":"0.4574641","4":"0.4624978","5":"0.3966768","6":"-0.3879633","7":"0.5136638","8":"1.2660200","9":"1.4909717","10":"0.3254523","11":"-0.3761927","12":"0.3539332"},{"1":"4","2":"Cluster_1","3":"0.4574235","4":"0.3065871","5":"0.5016407","6":"-0.3484024","7":"-0.2565083","8":"-0.4037959","9":"-0.6127389","10":"0.2825014","11":"-0.4939956","12":"0.5762512"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># scaled 0-1 for radar plot</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sc_cent <span class="ot">&lt;-</span> cent_df <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="fu">c</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">12</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">round</span>(<span class="fu">rescale</span>(.x,<span class="at">to =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)), <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="about-individual-clusters" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="about-individual-clusters"><span class="header-section-number">11.2</span> About individual clusters</h2>
+<p>We can also extract information about how many members (unique MUKEYs) have been allocated to each cluster, and the sum of squared error <strong>within</strong> each cluster. This tells us about how how “cohesive” each cluster is (lower SSE means points are closer to their cluster centroid, more tightly packed).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>iclust <span class="ot">&lt;-</span> mods <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clust_stat =</span> <span class="fu">map</span>(km_fit, <span class="sc">~</span><span class="fu">within_cluster_sse</span>(.x))) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(n_clust, clust_stat) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(clust_stat) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">.cluster =</span> <span class="fu">str_replace_all</span>(.cluster, <span class="st">"er_"</span>, <span class="st">""</span>))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(iclust)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["n_clust"],"name":[1],"type":["int"],"align":["right"]},{"label":[".cluster"],"name":[2],"type":["chr"],"align":["left"]},{"label":["wss"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["n_members"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"2","2":"Clust1","3":"13314.76","4":"2345"},{"1":"2","2":"Clust2","3":"32565.53","4":"4527"},{"1":"3","2":"Clust1","3":"10395.55","4":"2084"},{"1":"3","2":"Clust2","3":"14057.82","4":"2967"},{"1":"3","2":"Clust3","3":"13427.21","4":"1821"},{"1":"4","2":"Clust1","3":"12567.18","4":"2762"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="cluster-stats-overall" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="cluster-stats-overall"><span class="header-section-number">11.3</span> Cluster Stats Overall</h2>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="clusters-split-the-difference" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="clusters-split-the-difference"><span class="header-section-number">11.4</span> 2 Clusters “Split the difference”</h2>
+<ul>
+<li>Cluster 1: sandy, high Ksat and low AWC. Low OM and clay.</li>
+<li>Cluster 2: high clay, CEC, OM, AWC, LEP.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>coord2 <span class="ot">&lt;-</span> <span class="fu">parcoor_plot</span>(<span class="at">nclust =</span> <span class="dv">2</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>stat2 <span class="ot">&lt;-</span> <span class="fu">plot_cluster_stats</span>(<span class="dv">2</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>coord2 <span class="sc">+</span> stat2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/pc2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">create_summary_table</span>(<span class="st">"k_2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="vhhorvzabt" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#vhhorvzabt .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#vhhorvzabt .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vhhorvzabt .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#vhhorvzabt .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#vhhorvzabt .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vhhorvzabt .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vhhorvzabt .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#vhhorvzabt .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#vhhorvzabt .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#vhhorvzabt .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#vhhorvzabt .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#vhhorvzabt .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#vhhorvzabt .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#vhhorvzabt .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#vhhorvzabt .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#vhhorvzabt .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#vhhorvzabt .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vhhorvzabt .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#vhhorvzabt .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#vhhorvzabt .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vhhorvzabt .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#vhhorvzabt .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#vhhorvzabt .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vhhorvzabt .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vhhorvzabt .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#vhhorvzabt .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#vhhorvzabt .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vhhorvzabt .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vhhorvzabt .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vhhorvzabt .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vhhorvzabt .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vhhorvzabt .gt_left {
+  text-align: left;
+}
+
+#vhhorvzabt .gt_center {
+  text-align: center;
+}
+
+#vhhorvzabt .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#vhhorvzabt .gt_font_normal {
+  font-weight: normal;
+}
+
+#vhhorvzabt .gt_font_bold {
+  font-weight: bold;
+}
+
+#vhhorvzabt .gt_font_italic {
+  font-style: italic;
+}
+
+#vhhorvzabt .gt_super {
+  font-size: 65%;
+}
+
+#vhhorvzabt .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#vhhorvzabt .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#vhhorvzabt .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#vhhorvzabt .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#vhhorvzabt .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#vhhorvzabt .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#vhhorvzabt .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+
+<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true">
+<thead class="gt_col_headings">
+<tr class="header">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Cluster_1</strong>, N = 2,345<sup>1</sup></th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Cluster_2</strong>, N = 4,527<sup>1</sup></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left">claytotal</td>
+<td class="gt_row gt_center">10 (4)</td>
+<td class="gt_row gt_center">25 (8)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">om</td>
+<td class="gt_row gt_center">2.40 (1.30)</td>
+<td class="gt_row gt_center">5.84 (8.29)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">cec7</td>
+<td class="gt_row gt_center">10 (4)</td>
+<td class="gt_row gt_center">24 (16)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">dbthirdbar</td>
+<td class="gt_row gt_center">1.46 (0.10)</td>
+<td class="gt_row gt_center">1.30 (0.19)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">ec</td>
+<td class="gt_row gt_center">0.02 (0.19)</td>
+<td class="gt_row gt_center">0.13 (0.42)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">ph1to1h2o</td>
+<td class="gt_row gt_center">6.50 (0.51)</td>
+<td class="gt_row gt_center">7.01 (0.58)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">caco3</td>
+<td class="gt_row gt_center">0.7 (2.1)</td>
+<td class="gt_row gt_center">4.0 (5.7)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">lep</td>
+<td class="gt_row gt_center">1.18 (0.50)</td>
+<td class="gt_row gt_center">3.08 (1.92)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">ksat</td>
+<td class="gt_row gt_center">48 (36)</td>
+<td class="gt_row gt_center">9 (7)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">awc</td>
+<td class="gt_row gt_center">0.14 (0.04)</td>
+<td class="gt_row gt_center">0.20 (0.03)</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="odd">
+<td colspan="3" class="gt_footnote"><sup>1</sup> Mean (SD)</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">radar_plot</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/rad2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>prop <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(k_2, claytotal, om, ph1to1h2o, caco3) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>k_2) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="fu">aes</span>(<span class="at">x =</span> name, <span class="at">y =</span> value, <span class="at">color =</span> k_2)) <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(name), <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="clusters-distinguishing-nw" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="clusters-distinguishing-nw"><span class="header-section-number">11.5</span> 3 Clusters “Distinguishing NW?”</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>coord3 <span class="ot">&lt;-</span> <span class="fu">parcoor_plot</span>(<span class="at">nclust =</span> <span class="dv">3</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>stat3 <span class="ot">&lt;-</span> <span class="fu">plot_cluster_stats</span>(<span class="dv">3</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>coord3 <span class="sc">+</span> stat3 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/pc3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">radar_plot</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/rad3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">create_summary_table</span>(<span class="st">"k_3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="ioonuqtvbx" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#ioonuqtvbx .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ioonuqtvbx .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ioonuqtvbx .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ioonuqtvbx .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ioonuqtvbx .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ioonuqtvbx .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ioonuqtvbx .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ioonuqtvbx .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ioonuqtvbx .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ioonuqtvbx .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ioonuqtvbx .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ioonuqtvbx .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ioonuqtvbx .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ioonuqtvbx .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ioonuqtvbx .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ioonuqtvbx .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ioonuqtvbx .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ioonuqtvbx .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ioonuqtvbx .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ioonuqtvbx .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ioonuqtvbx .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ioonuqtvbx .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ioonuqtvbx .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ioonuqtvbx .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ioonuqtvbx .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ioonuqtvbx .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ioonuqtvbx .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ioonuqtvbx .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ioonuqtvbx .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ioonuqtvbx .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ioonuqtvbx .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ioonuqtvbx .gt_left {
+  text-align: left;
+}
+
+#ioonuqtvbx .gt_center {
+  text-align: center;
+}
+
+#ioonuqtvbx .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ioonuqtvbx .gt_font_normal {
+  font-weight: normal;
+}
+
+#ioonuqtvbx .gt_font_bold {
+  font-weight: bold;
+}
+
+#ioonuqtvbx .gt_font_italic {
+  font-style: italic;
+}
+
+#ioonuqtvbx .gt_super {
+  font-size: 65%;
+}
+
+#ioonuqtvbx .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#ioonuqtvbx .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ioonuqtvbx .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ioonuqtvbx .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ioonuqtvbx .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ioonuqtvbx .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ioonuqtvbx .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+
+<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true">
+<thead class="gt_col_headings">
+<tr class="header">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Cluster_1</strong>, N = 2,084<sup>1</sup></th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Cluster_2</strong>, N = 2,967<sup>1</sup></th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Cluster_3</strong>, N = 1,821<sup>1</sup></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left">claytotal</td>
+<td class="gt_row gt_center">9 (4)</td>
+<td class="gt_row gt_center">24 (8)</td>
+<td class="gt_row gt_center">24 (9)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">om</td>
+<td class="gt_row gt_center">2.30 (1.21)</td>
+<td class="gt_row gt_center">5.82 (9.79)</td>
+<td class="gt_row gt_center">5.50 (4.01)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">cec7</td>
+<td class="gt_row gt_center">10 (4)</td>
+<td class="gt_row gt_center">25 (19)</td>
+<td class="gt_row gt_center">22 (10)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">dbthirdbar</td>
+<td class="gt_row gt_center">1.47 (0.10)</td>
+<td class="gt_row gt_center">1.31 (0.18)</td>
+<td class="gt_row gt_center">1.30 (0.18)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">ec</td>
+<td class="gt_row gt_center">0.01 (0.12)</td>
+<td class="gt_row gt_center">0.04 (0.20)</td>
+<td class="gt_row gt_center">0.28 (0.60)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">ph1to1h2o</td>
+<td class="gt_row gt_center">6.47 (0.49)</td>
+<td class="gt_row gt_center">6.62 (0.36)</td>
+<td class="gt_row gt_center">7.60 (0.30)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">caco3</td>
+<td class="gt_row gt_center">0.4 (1.4)</td>
+<td class="gt_row gt_center">0.3 (0.9)</td>
+<td class="gt_row gt_center">9.9 (4.9)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">lep</td>
+<td class="gt_row gt_center">1.18 (0.48)</td>
+<td class="gt_row gt_center">2.99 (1.84)</td>
+<td class="gt_row gt_center">2.94 (2.05)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">ksat</td>
+<td class="gt_row gt_center">52 (36)</td>
+<td class="gt_row gt_center">9 (6)</td>
+<td class="gt_row gt_center">11 (11)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">awc</td>
+<td class="gt_row gt_center">0.13 (0.03)</td>
+<td class="gt_row gt_center">0.21 (0.04)</td>
+<td class="gt_row gt_center">0.19 (0.03)</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="odd">
+<td colspan="4" class="gt_footnote"><sup>1</sup> Mean (SD)</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="clusters" class="level2" data-number="11.6">
+<h2 data-number="11.6" class="anchored" data-anchor-id="clusters"><span class="header-section-number">11.6</span> 4 Clusters</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>coord4 <span class="ot">&lt;-</span> <span class="fu">parcoor_plot</span>(<span class="at">nclust =</span> <span class="dv">4</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>stat4 <span class="ot">&lt;-</span> <span class="fu">plot_cluster_stats</span>(<span class="dv">4</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>coord4 <span class="sc">+</span> stat4 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/pc4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">radar_plot</span>(<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/rad4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="clusters-ec-artefacts-ec-om-clay-spread" class="level2" data-number="11.7">
+<h2 data-number="11.7" class="anchored" data-anchor-id="clusters-ec-artefacts-ec-om-clay-spread"><span class="header-section-number">11.7</span> 5 Clusters “EC artefacts? EC-OM-Clay spread”</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>coord5 <span class="ot">&lt;-</span> <span class="fu">parcoor_plot</span>(<span class="at">nclust =</span> <span class="dv">5</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>stat5 <span class="ot">&lt;-</span> <span class="fu">plot_cluster_stats</span>(<span class="dv">5</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>coord5 <span class="sc">+</span> stat5 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/pc5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>I wonder if the difference between Cluster 1 and 5 here is actually being driven by the EC values we set to zero in the NW part of the state? It seems to be the only major thing distinguishing those 2 clusters.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">radar_plot</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/rad5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="clusters-histosols-break-free" class="level2" data-number="11.8">
+<h2 data-number="11.8" class="anchored" data-anchor-id="clusters-histosols-break-free"><span class="header-section-number">11.8</span> 6 Clusters “Histosols break free”</h2>
+<p>What strikes me about this one is Cluster 2, it seems like those might be histosols that broke away into their own cluster? Cluster 2 very high OM, CEC, very low bulk density, high AWC.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>coord6 <span class="ot">&lt;-</span> <span class="fu">parcoor_plot</span>(<span class="at">nclust =</span> <span class="dv">6</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>stat6 <span class="ot">&lt;-</span> <span class="fu">plot_cluster_stats</span>(<span class="dv">6</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>coord6 <span class="sc">+</span> stat6 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/pc6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">radar_plot</span>(<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/rad6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">create_summary_table</span>(<span class="st">"k_6"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="hfwtjwfkkv" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#hfwtjwfkkv .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#hfwtjwfkkv .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#hfwtjwfkkv .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#hfwtjwfkkv .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#hfwtjwfkkv .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hfwtjwfkkv .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#hfwtjwfkkv .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#hfwtjwfkkv .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#hfwtjwfkkv .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#hfwtjwfkkv .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#hfwtjwfkkv .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#hfwtjwfkkv .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#hfwtjwfkkv .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#hfwtjwfkkv .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#hfwtjwfkkv .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#hfwtjwfkkv .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#hfwtjwfkkv .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hfwtjwfkkv .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#hfwtjwfkkv .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#hfwtjwfkkv .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hfwtjwfkkv .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#hfwtjwfkkv .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#hfwtjwfkkv .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hfwtjwfkkv .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hfwtjwfkkv .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#hfwtjwfkkv .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#hfwtjwfkkv .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hfwtjwfkkv .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#hfwtjwfkkv .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hfwtjwfkkv .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#hfwtjwfkkv .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hfwtjwfkkv .gt_left {
+  text-align: left;
+}
+
+#hfwtjwfkkv .gt_center {
+  text-align: center;
+}
+
+#hfwtjwfkkv .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#hfwtjwfkkv .gt_font_normal {
+  font-weight: normal;
+}
+
+#hfwtjwfkkv .gt_font_bold {
+  font-weight: bold;
+}
+
+#hfwtjwfkkv .gt_font_italic {
+  font-style: italic;
+}
+
+#hfwtjwfkkv .gt_super {
+  font-size: 65%;
+}
+
+#hfwtjwfkkv .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#hfwtjwfkkv .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#hfwtjwfkkv .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#hfwtjwfkkv .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#hfwtjwfkkv .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#hfwtjwfkkv .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#hfwtjwfkkv .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+
+<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true">
+<thead class="gt_col_headings">
+<tr class="header">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Cluster_1</strong>, N = 1,660<sup>1</sup></th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Cluster_2</strong>, N = 2,276<sup>1</sup></th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Cluster_3</strong>, N = 1,376<sup>1</sup></th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Cluster_4</strong>, N = 1,100<sup>1</sup></th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Cluster_5</strong>, N = 393<sup>1</sup></th>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Cluster_6</strong>, N = 67<sup>1</sup></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left">claytotal</td>
+<td class="gt_row gt_center">9 (3)</td>
+<td class="gt_row gt_center">19 (5)</td>
+<td class="gt_row gt_center">23 (7)</td>
+<td class="gt_row gt_center">34 (7)</td>
+<td class="gt_row gt_center">22 (10)</td>
+<td class="gt_row gt_center">7 (4)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">om</td>
+<td class="gt_row gt_center">2.07 (1.11)</td>
+<td class="gt_row gt_center">3.58 (1.63)</td>
+<td class="gt_row gt_center">5.43 (3.13)</td>
+<td class="gt_row gt_center">5.99 (1.87)</td>
+<td class="gt_row gt_center">4.73 (1.38)</td>
+<td class="gt_row gt_center">68.17 (17.64)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">cec7</td>
+<td class="gt_row gt_center">9 (3)</td>
+<td class="gt_row gt_center">17 (4)</td>
+<td class="gt_row gt_center">21 (7)</td>
+<td class="gt_row gt_center">29 (6)</td>
+<td class="gt_row gt_center">19 (8)</td>
+<td class="gt_row gt_center">141 (29)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">dbthirdbar</td>
+<td class="gt_row gt_center">1.49 (0.09)</td>
+<td class="gt_row gt_center">1.36 (0.08)</td>
+<td class="gt_row gt_center">1.31 (0.20)</td>
+<td class="gt_row gt_center">1.27 (0.12)</td>
+<td class="gt_row gt_center">1.28 (0.09)</td>
+<td class="gt_row gt_center">0.30 (0.22)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">ec</td>
+<td class="gt_row gt_center">0.01 (0.09)</td>
+<td class="gt_row gt_center">0.01 (0.07)</td>
+<td class="gt_row gt_center">0.00 (0.00)</td>
+<td class="gt_row gt_center">0.07 (0.26)</td>
+<td class="gt_row gt_center">1.35 (0.56)</td>
+<td class="gt_row gt_center">0.00 (0.00)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">ph1to1h2o</td>
+<td class="gt_row gt_center">6.45 (0.50)</td>
+<td class="gt_row gt_center">6.55 (0.35)</td>
+<td class="gt_row gt_center">7.58 (0.30)</td>
+<td class="gt_row gt_center">6.81 (0.38)</td>
+<td class="gt_row gt_center">7.66 (0.37)</td>
+<td class="gt_row gt_center">6.57 (0.47)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">caco3</td>
+<td class="gt_row gt_center">0.4 (1.4)</td>
+<td class="gt_row gt_center">0.3 (1.0)</td>
+<td class="gt_row gt_center">10.0 (4.9)</td>
+<td class="gt_row gt_center">0.8 (2.0)</td>
+<td class="gt_row gt_center">9.3 (5.8)</td>
+<td class="gt_row gt_center">1.4 (2.4)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">lep</td>
+<td class="gt_row gt_center">1.16 (0.47)</td>
+<td class="gt_row gt_center">1.96 (0.92)</td>
+<td class="gt_row gt_center">2.67 (1.38)</td>
+<td class="gt_row gt_center">5.04 (2.17)</td>
+<td class="gt_row gt_center">2.69 (2.09)</td>
+<td class="gt_row gt_center">0.59 (0.30)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">ksat</td>
+<td class="gt_row gt_center">59 (37)</td>
+<td class="gt_row gt_center">13 (8)</td>
+<td class="gt_row gt_center">11 (9)</td>
+<td class="gt_row gt_center">4 (3)</td>
+<td class="gt_row gt_center">15 (16)</td>
+<td class="gt_row gt_center">24 (6)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">awc</td>
+<td class="gt_row gt_center">0.12 (0.03)</td>
+<td class="gt_row gt_center">0.20 (0.03)</td>
+<td class="gt_row gt_center">0.20 (0.02)</td>
+<td class="gt_row gt_center">0.19 (0.02)</td>
+<td class="gt_row gt_center">0.19 (0.03)</td>
+<td class="gt_row gt_center">0.39 (0.04)</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="odd">
+<td colspan="7" class="gt_footnote"><sup>1</sup> Mean (SD)</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="clusters-1" class="level2" data-number="11.9">
+<h2 data-number="11.9" class="anchored" data-anchor-id="clusters-1"><span class="header-section-number">11.9</span> 7 Clusters</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>coord7 <span class="ot">&lt;-</span> <span class="fu">parcoor_plot</span>(<span class="at">nclust =</span> <span class="dv">7</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>stat7 <span class="ot">&lt;-</span> <span class="fu">plot_cluster_stats</span>(<span class="dv">7</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>coord7 <span class="sc">+</span> stat7 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/pc7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">radar_plot</span>(<span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/rad7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="clusters-2" class="level2" data-number="11.10">
+<h2 data-number="11.10" class="anchored" data-anchor-id="clusters-2"><span class="header-section-number">11.10</span> 8 Clusters</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>coord8 <span class="ot">&lt;-</span> <span class="fu">parcoor_plot</span>(<span class="at">nclust =</span> <span class="dv">8</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>stat8 <span class="ot">&lt;-</span> <span class="fu">plot_cluster_stats</span>(<span class="dv">8</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>coord8 <span class="sc">+</span> stat8 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/pc8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">radar_plot</span>(<span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/rad8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="clusters-3" class="level2" data-number="11.11">
+<h2 data-number="11.11" class="anchored" data-anchor-id="clusters-3"><span class="header-section-number">11.11</span> 9 Clusters</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>coord9 <span class="ot">&lt;-</span> <span class="fu">parcoor_plot</span>(<span class="at">nclust =</span> <span class="dv">9</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>stat9 <span class="ot">&lt;-</span> <span class="fu">plot_cluster_stats</span>(<span class="dv">9</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>coord9 <span class="sc">+</span> stat9 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/pc9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">radar_plot</span>(<span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/rad9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="clusters-4" class="level2" data-number="11.12">
+<h2 data-number="11.12" class="anchored" data-anchor-id="clusters-4"><span class="header-section-number">11.12</span> 10 Clusters</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>coord10 <span class="ot">&lt;-</span> <span class="fu">parcoor_plot</span>(<span class="at">nclust =</span> <span class="dv">10</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>stat10 <span class="ot">&lt;-</span> <span class="fu">plot_cluster_stats</span>(<span class="dv">10</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>coord10 <span class="sc">+</span> stat10 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/pc10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">radar_plot</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/rad10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="clusters-5" class="level2" data-number="11.13">
+<h2 data-number="11.13" class="anchored" data-anchor-id="clusters-5"><span class="header-section-number">11.13</span> 11 Clusters</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>coord11 <span class="ot">&lt;-</span> <span class="fu">parcoor_plot</span>(<span class="at">nclust =</span> <span class="dv">11</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>stat11 <span class="ot">&lt;-</span> <span class="fu">plot_cluster_stats</span>(<span class="dv">11</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>coord11 <span class="sc">+</span> stat11 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/pc11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">radar_plot</span>(<span class="dv">11</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/rad11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="different-plot-example" class="level2" data-number="11.14">
+<h2 data-number="11.14" class="anchored" data-anchor-id="different-plot-example"><span class="header-section-number">11.14</span> Different plot example</h2>
+<p>Another way to compare soil properties between clusters. Only really works with a small number of clusters</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the centroids are all on a standardized scale,</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># so we can plot all the vars together to compare</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># the properties of each cluster</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>cent_df <span class="sc">%&gt;%</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n_clust <span class="sc">==</span> <span class="dv">4</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>n_clust) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>.cluster,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">'variable'</span>,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">'value'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">y =</span> variable)) <span class="sc">+</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(.cluster), <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expand_limits</span>(<span class="at">y =</span> <span class="fl">13.5</span>) <span class="sc">+</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12-explore-clust-props_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># +</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_label(data = clust_stat,</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#              aes(</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                x = 0.25,</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co">#                y = 11.5,</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co">#                label = glue("n:{n_members}")</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">#              ),</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co">#              size = 2.5) +</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_label(data = clust_stat,</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co">#              aes(</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="co">#                x = 0.25,</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co">#                y = 12.5,</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co">#                label = glue("wss:{round(wss,0)}")</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co">#              ),</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co">#              size = 2.5) +</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme_bw() </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./11-implement-kmeans.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Implement k-means</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./19-sample-points.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sample validation points</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

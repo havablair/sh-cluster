@@ -1,0 +1,35 @@
+### R ###
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+.RDataTmp
+
+# User-specific files
+.Ruserdata
+
+# RStudio files
+.Rproj.user/
+.Rproj.user
+
+
+### Other docs ###
+*.pdf
+*.docx
+*.pptx
+
+_refs/
+
+# big shape files
+_qgis_files/
+
+data/
+
+/.quarto/
+.quarto/
+
+# older versions and reference materials
+_refs/
+archive/

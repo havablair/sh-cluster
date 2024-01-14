@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Minnesota Topsoil Classification for Soil Health Assessment - 22&nbsp; Welch ANOVA for PCA cluster pairwise comparisons</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./30-welch-compare-variation.html" rel="next">
+<link href="./28-compare-variation-demo.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./29-welch-pairwise.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Minnesota Topsoil Classification for Soil Health Assessment</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-data_sources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data Sources</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-mus_comp_in_aoi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Explore Map Units &amp; Components in AOI</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-subset-component-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Identify Target Components</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-horiz-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Horizon Data Averages</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-soil-prop-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Soil Property Exploratory Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-map-unit-agg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Map unit aggregation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-var-transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Variable Transformations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-plot-ec-lep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MAP EC and LEP with <code>{terra}</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-additional-data-prep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Additional Data Preparation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-implement-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Implement k-means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-explore-clust-props.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Explore clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-sample-points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sample validation points</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-map-indiv-regions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mapping individual clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-pca-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Do PCA before k-means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-pca-kmeans-finalists.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">PCA-kmeans Clustering Finalists</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-compare-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Comparing k-means scenarios</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-pca-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">PCA Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-notes-pca6-8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Comparing PCA 6 &amp; PCA 8 Models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-pairwise-nonparametric.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">(non-parametric) PCA Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./28-compare-variation-demo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compare variation explained</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./29-welch-pairwise.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./30-welch-compare-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Welch ANOVA - compare variation explained</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">22.1</span> Overview</a></li>
+  <li><a href="#validation-points-per-cluster" id="toc-validation-points-per-cluster" class="nav-link" data-scroll-target="#validation-points-per-cluster"><span class="header-section-number">22.2</span> Validation points per cluster</a></li>
+  <li><a href="#soil-properties-for-pairwise-comparisons" id="toc-soil-properties-for-pairwise-comparisons" class="nav-link" data-scroll-target="#soil-properties-for-pairwise-comparisons"><span class="header-section-number">22.3</span> Soil properties for pairwise comparisons</a></li>
+  <li><a href="#example-pairwise-om-k6" id="toc-example-pairwise-om-k6" class="nav-link" data-scroll-target="#example-pairwise-om-k6"><span class="header-section-number">22.4</span> Example pairwise: OM, k=6</a></li>
+  <li><a href="#function-to-plot-model-checks" id="toc-function-to-plot-model-checks" class="nav-link" data-scroll-target="#function-to-plot-model-checks"><span class="header-section-number">22.5</span> Function to plot model checks</a></li>
+  <li><a href="#k4-model-checks" id="toc-k4-model-checks" class="nav-link" data-scroll-target="#k4-model-checks"><span class="header-section-number">22.6</span> k=4 model checks</a></li>
+  <li><a href="#k6-model-checks" id="toc-k6-model-checks" class="nav-link" data-scroll-target="#k6-model-checks"><span class="header-section-number">22.7</span> k=6 model checks</a></li>
+  <li><a href="#k8-model-checks" id="toc-k8-model-checks" class="nav-link" data-scroll-target="#k8-model-checks"><span class="header-section-number">22.8</span> k=8 model checks</a></li>
+  <li><a href="#function-for-games-howell-pairwise-comparisons" id="toc-function-for-games-howell-pairwise-comparisons" class="nav-link" data-scroll-target="#function-for-games-howell-pairwise-comparisons"><span class="header-section-number">22.9</span> Function for Games-Howell pairwise comparisons</a></li>
+  <li><a href="#example-function-output" id="toc-example-function-output" class="nav-link" data-scroll-target="#example-function-output"><span class="header-section-number">22.10</span> Example function output</a></li>
+  <li><a href="#run-pairwise-comparisons" id="toc-run-pairwise-comparisons" class="nav-link" data-scroll-target="#run-pairwise-comparisons"><span class="header-section-number">22.11</span> Run pairwise comparisons</a></li>
+  <li><a href="#plot-comparisons" id="toc-plot-comparisons" class="nav-link" data-scroll-target="#plot-comparisons"><span class="header-section-number">22.12</span> Plot comparisons</a>
+  <ul class="collapse">
+  <li><a href="#all-clusters" id="toc-all-clusters" class="nav-link" data-scroll-target="#all-clusters"><span class="header-section-number">22.12.1</span> All clusters</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="overview" class="level2" data-number="22.1">
+<h2 data-number="22.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">22.1</span> Overview</h2>
+<p>Did some more reading on March 15, 2023 and decided a better way to deal with the issue of hetergeneous variance is to do Welch’s ANOVA followed by Games-Howell pairwise comparisons.</p>
+<p>See Lakens et al.&nbsp;(2019) “Taking Parametric Assumptions Seriously: Arguments for the Use of Welch’s F-test instead of the Classical F-test in One-Way ANOVA” for more info on Welch’s F-test.</p>
+<p>See Sauder &amp; Demars (2019) plus their supplemental material on OSF for more about the Games-Howell test</p>
+<p>In R, Wech’s ANOVA can be accomplished with <code>oneway.test(…, var.equal = FALSE)</code> , or <code>{rstatix}</code> has a wrapper function <code>welch_anova_test()</code>.</p>
+<p>For Games-Howell, <code>{rstatix}</code> has <code>games_howell_test()</code> <a href="https://search.r-project.org/CRAN/refmans/rstatix/html/games_howell_test.html">documentation here</a>.</p>
+<p>From the documentation (emphasis added):</p>
+<blockquote class="blockquote">
+<p>Performs Games-Howell test, which is used to compare all possible combinations of group differences when the assumption of homogeneity of variances is violated. This post hoc test provides confidence intervals for the differences between group means and shows whether the differences are statistically significant.</p>
+<p>The test is based on Welch’s degrees of freedom correction and uses Tukey’s studentized range distribution for computing the p-values. The test compares the difference between each pair of means with <strong>appropriate adjustment for the multiple testing</strong>. So there is <strong>no need to apply additional p-value corrections</strong>.</p>
+</blockquote>
+</section>
+<section id="validation-points-per-cluster" class="level2" data-number="22.2">
+<h2 data-number="22.2" class="anchored" data-anchor-id="validation-points-per-cluster"><span class="header-section-number">22.2</span> Validation points per cluster</h2>
+<p>Here I am illustrating how many independent validation points we have for each cluster assignment, for the different model options from k = 4, 6, 8.</p>
+<p>Note that clusters with only 1 member won’t be included in pairwise comparison b/c not possible to calculate variance with only 1 member…</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="soil-properties-for-pairwise-comparisons" class="level2" data-number="22.3">
+<h2 data-number="22.3" class="anchored" data-anchor-id="soil-properties-for-pairwise-comparisons"><span class="header-section-number">22.3</span> Soil properties for pairwise comparisons</h2>
+<p>Because our validation data points are coming from different projects / datasets, we don’t have exactly the same variables from each project. This is a reminder of which variables exist in the three sources we used for validation points:</p>
+<ul>
+<li>KSSL : clay, bulk density, lep, awc, ec, cec, pH, carbonates, organic matter, (est org C)</li>
+<li>CIG: clay, bulk density, pH, carbonates, organic matter, (est org C)</li>
+<li>SHI: clay, bulk density, pH, organic matter</li>
+</ul>
+<p>In summary: all three datasets include bulk density, pH, organic matter, and clay, and KSSL and CIG include carbonates. So I think it makes sense to focus on plotting and doing pairwise comparisons with these variables specifically</p>
+</section>
+<section id="example-pairwise-om-k6" class="level2" data-number="22.4">
+<h2 data-number="22.4" class="anchored" data-anchor-id="example-pairwise-om-k6"><span class="header-section-number">22.4</span> Example pairwise: OM, k=6</h2>
+<p>Working out the steps I need to include in a function to do the pairwise comparisons.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># test case k=6 version and organic matter</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>test_dat <span class="ot">&lt;-</span> val_dat <span class="sc">%&gt;%</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(val_unit_id, k_6, om_loi, claytotal, source) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(om_loi)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># note only 1 observation for clust_1, need to drop it</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># b/c can't calculate variance for the pairwise comparison w/ only 1 obs.</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>test_dat <span class="sc">%&gt;%</span> <span class="fu">count</span>(k_6)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["k_6"],"name":[1],"type":["glue"],"align":["right"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"clust_1","2":"1"},{"1":"clust_2","2":"28"},{"1":"clust_3","2":"52"},{"1":"clust_4","2":"26"},{"1":"clust_5","2":"16"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>test_dat_mult <span class="ot">&lt;-</span> test_dat <span class="sc">%&gt;%</span> <span class="fu">filter</span>(k_6 <span class="sc">!=</span> <span class="st">"clust_1"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot to see distributions </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>test_dat_mult <span class="sc">%&gt;%</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> k_6, <span class="at">y =</span> om_loi)) <span class="sc">+</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>test_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> om_loi <span class="sc">~</span> k_6,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">data =</span> test_dat_mult)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># look at some diagnostic plots for our model </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># note homogeneity of variance looks sketchy</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(test_lm, <span class="at">check =</span> <span class="fu">c</span>(<span class="st">"normality"</span>, <span class="st">"homogeneity"</span>, <span class="st">"linearity"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runs Bartlett Test for homogeneity of variance</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">check_homogeneity</span>(test_lm) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Variances differ between groups (Bartlett Test, p = 0.000).</code></pre>
+</div>
+</div>
+<p>This shows how I would do Games-Howell pairwise comparisons</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>gh_om <span class="ot">&lt;-</span> <span class="fu">games_howell_test</span>(<span class="at">formula =</span> om_loi <span class="sc">~</span> k_6,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> test_dat_mult)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>gh_om</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":[".y."],"name":[1],"type":["chr"],"align":["left"]},{"label":["group1"],"name":[2],"type":["chr"],"align":["left"]},{"label":["group2"],"name":[3],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["p.adj"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["p.adj.signif"],"name":[8],"type":["chr"],"align":["left"]}],"data":[{"1":"om_loi","2":"clust_2","3":"clust_3","4":"1.1909799","5":"0.2223971","6":"2.1595626","7":"0.010","8":"**","_rn_":"1"},{"1":"om_loi","2":"clust_2","3":"clust_4","4":"1.4278983","5":"-0.8783648","6":"3.7341615","7":"0.351","8":"ns","_rn_":"2"},{"1":"om_loi","2":"clust_2","3":"clust_5","4":"0.8224702","5":"-0.1739072","6":"1.8188477","7":"0.137","8":"ns","_rn_":"3"},{"1":"om_loi","2":"clust_3","3":"clust_4","4":"0.2369185","5":"-2.0414863","6":"2.5153232","7":"0.992","8":"ns","_rn_":"4"},{"1":"om_loi","2":"clust_3","3":"clust_5","4":"-0.3685096","5":"-1.2814039","6":"0.5443846","7":"0.705","8":"ns","_rn_":"5"},{"1":"om_loi","2":"clust_4","3":"clust_5","4":"-0.6054281","5":"-2.8899152","6":"1.6790590","7":"0.888","8":"ns","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now we add a column "comparison" needed in order for </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># biostat::cld to make our "compact letter display" (letters</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># showing where we can/can't reject null that means are the same)</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pairwise comps w/ Dunn's test </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>gh_comp <span class="ot">&lt;-</span> gh_om <span class="sc">%&gt;%</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">comparison =</span> <span class="fu">glue</span>(<span class="st">"{group1}-{group2}"</span>))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>biostat<span class="sc">::</span><span class="fu">make_cld</span>(p.adj <span class="sc">~</span> comparison, <span class="at">data =</span> gh_comp)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["group"],"name":[1],"type":["chr"],"align":["left"]},{"label":["cld"],"name":[2],"type":["chr"],"align":["left"]},{"label":["spaced_cld"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"clust_2","2":"a","3":"a_","_rn_":"1"},{"1":"clust_3","2":"b","3":"_b","_rn_":"2"},{"1":"clust_4","2":"ab","3":"ab","_rn_":"3"},{"1":"clust_5","2":"ab","3":"ab","_rn_":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="function-to-plot-model-checks" class="level2" data-number="22.5">
+<h2 data-number="22.5" class="anchored" data-anchor-id="function-to-plot-model-checks"><span class="header-section-number">22.5</span> Function to plot model checks</h2>
+<p>I want to make some plots to check the assumptions of normally distributed residuals and homogeneity of variance. In chapter 27, where I show the non-parametric pairwise tests, I also have a section for running Levene’s test to check homogeneity of variance. However, since Welch’s ANOVA and Games-Howell make no assumptions about homogeneity variance, I’m not worried about running Levene’s test here.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># working with these variables for the model checks</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># independent:  k= 4, 6, 8</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># dependent:  vars = om_loi, dbthirdbar,  ph1to1h2o, caco3, claytotal</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>check_plots_anova <span class="ot">&lt;-</span> <span class="cf">function</span>(soil_var, k_opt, df, <span class="at">log_trans_adj =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  dat_no_na <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(val_unit_id,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>           <span class="fu">all_of</span>(k_opt),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>           <span class="fu">all_of</span>(soil_var)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(<span class="fu">all_of</span>(soil_var))</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># checking if any clusters are represented by 1 or less data points. Want to drop these</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  n_obs_per_cluster <span class="ot">&lt;-</span> dat_no_na <span class="sc">%&gt;%</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(.data[[k_opt]])</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  single_obs_clusters <span class="ot">&lt;-</span> n_obs_per_cluster <span class="sc">%&gt;%</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(n <span class="sc">&lt;=</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>(.data[[k_opt]])</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(single_obs_clusters) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    dat_subset <span class="ot">&lt;-</span> dat_no_na</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    dat_subset <span class="ot">&lt;-</span> dat_no_na <span class="sc">%&gt;%</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="sc">!</span>(.data[[k_opt]] <span class="sc">%in%</span> single_obs_clusters))</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(log_trans_adj){</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># note this is for CaCO3, need to add 1 to avoid</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># zero values</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    f <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"log10("</span>, soil_var, <span class="st">"+1)~"</span>, k_opt)</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    f <span class="ot">&lt;-</span> <span class="fu">paste0</span>(soil_var, <span class="st">" ~ "</span>, k_opt)</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>  mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> f,</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> dat_subset)</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>  check_plots <span class="ot">&lt;-</span> performance<span class="sc">::</span><span class="fu">check_model</span>(mod, <span class="at">check =</span> <span class="fu">c</span>(<span class="st">"normality"</span>, <span class="st">"homogeneity"</span>, <span class="st">"linearity"</span>))  </span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">var =</span> <span class="fu">glue</span>(<span class="st">"{soil_var}"</span>),</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>              <span class="at">plots =</span> check_plots))</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="k4-model-checks" class="level2" data-number="22.6">
+<h2 data-number="22.6" class="anchored" data-anchor-id="k4-model-checks"><span class="header-section-number">22.6</span> k=4 model checks</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"claytotal"</span>,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_4"</span>, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+claytotal
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"ph1to1h2o"</span>,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_4"</span>, </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+ph1to1h2o
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"dbthirdbar"</span>,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_4"</span>, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+dbthirdbar
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"om_loi"</span>,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_4"</span>, </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+om_loi
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-7-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># note we need to log10 transform here (+1) to meet the assumption of normally distributed residuals</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"caco3"</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_4"</span>, </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">log_trans_adj =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+caco3
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-7-5.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="k6-model-checks" class="level2" data-number="22.7">
+<h2 data-number="22.7" class="anchored" data-anchor-id="k6-model-checks"><span class="header-section-number">22.7</span> k=6 model checks</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"claytotal"</span>,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_6"</span>, </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+claytotal
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"ph1to1h2o"</span>,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_6"</span>, </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+ph1to1h2o
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"dbthirdbar"</span>,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_6"</span>, </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+dbthirdbar
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-8-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"om_loi"</span>,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_6"</span>, </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+om_loi
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-8-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"caco3"</span>,</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_6"</span>, </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">log_trans_adj =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+caco3
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-8-5.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="k8-model-checks" class="level2" data-number="22.8">
+<h2 data-number="22.8" class="anchored" data-anchor-id="k8-model-checks"><span class="header-section-number">22.8</span> k=8 model checks</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"claytotal"</span>,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_8"</span>, </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+claytotal
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"ph1to1h2o"</span>,</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_8"</span>, </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+ph1to1h2o
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"dbthirdbar"</span>,</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_8"</span>, </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+dbthirdbar
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"om_loi"</span>,</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_8"</span>, </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+om_loi
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-9-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_plots_anova</span>(<span class="at">soil_var =</span> <span class="st">"caco3"</span>,</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">k_opt =</span> <span class="st">"k_8"</span>, </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">df =</span> val_dat, </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">log_trans_adj =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$var
+caco3
+
+$plots</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-9-5.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="function-for-games-howell-pairwise-comparisons" class="level2" data-number="22.9">
+<h2 data-number="22.9" class="anchored" data-anchor-id="function-for-games-howell-pairwise-comparisons"><span class="header-section-number">22.9</span> Function for Games-Howell pairwise comparisons</h2>
+<p>Arguments: soil property and k option (model version / number of clusters) and validation dataframe.</p>
+<p>Returns: all pairwise comparisons in a dataframe</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>compare_clust_pairwise <span class="ot">&lt;-</span> <span class="cf">function</span>(soil_var, k_opt, <span class="at">df =</span> val_dat) {</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="do">### prep data</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  dat_no_na <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(val_unit_id,</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>           <span class="fu">all_of</span>(k_opt),</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>           <span class="fu">all_of</span>(soil_var)) <span class="sc">%&gt;%</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(<span class="fu">all_of</span>(soil_var))</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># can't do pairwise t-tests with only 1 obs in a</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># group, so need to filter those out</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  n_obs_per_cluster <span class="ot">&lt;-</span> dat_no_na <span class="sc">%&gt;%</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(.data[[k_opt]])</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>  single_obs_clusters <span class="ot">&lt;-</span> n_obs_per_cluster <span class="sc">%&gt;%</span></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(n <span class="sc">&lt;=</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>(.data[[k_opt]])</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(single_obs_clusters) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>    dat_subset <span class="ot">&lt;-</span> dat_no_na</span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>    dat_subset <span class="ot">&lt;-</span> dat_no_na <span class="sc">%&gt;%</span></span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="sc">!</span>(.data[[k_opt]] <span class="sc">%in%</span> single_obs_clusters))</span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>  <span class="do">### perform pairwise comparison</span></span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>    f <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste0</span>(soil_var, <span class="st">" ~ "</span>, k_opt))</span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a>  pairs_df <span class="ot">&lt;-</span> <span class="fu">games_howell_test</span>(<span class="at">data =</span> dat_subset,</span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a>                                <span class="at">formula =</span> f) <span class="sc">%&gt;%</span></span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">comparison =</span> <span class="fu">glue</span>(<span class="st">"{group1} - {group2}"</span>))</span>
+<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a>  cld_df <span class="ot">&lt;-</span> biostat<span class="sc">::</span><span class="fu">make_cld</span>(p.adj <span class="sc">~</span> comparison,</span>
+<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a>                              <span class="at">data =</span> pairs_df)</span>
+<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a>  <span class="do">### results</span></span>
+<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a>  results_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">pairs_df =</span> pairs_df,</span>
+<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a>                       <span class="at">cld =</span> cld_df)</span>
+<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(results_list)</span>
+<span id="cb39-46"><a href="#cb39-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-47"><a href="#cb39-47" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="example-function-output" class="level2" data-number="22.10">
+<h2 data-number="22.10" class="anchored" data-anchor-id="example-function-output"><span class="header-section-number">22.10</span> Example function output</h2>
+<p>This is what the pairwise function I wrote above returns:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>ph_test <span class="ot">&lt;-</span> <span class="fu">compare_clust_pairwise</span>(<span class="at">soil_var =</span> <span class="st">"ph1to1h2o"</span>,</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">k_opt =</span> <span class="st">"k_8"</span>,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">df =</span> val_dat) </span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>ph_test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$pairs_df
+# A tibble: 21 × 9
+   .y.       group1  group2  estimate conf.low conf.high    p.adj p.adj.signif
+   &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
+ 1 ph1to1h2o clust_1 clust_2 -0.119     -1.66      1.42  1   e+ 0 ns          
+ 2 ph1to1h2o clust_1 clust_3  0.00222   -1.50      1.50  1   e+ 0 ns          
+ 3 ph1to1h2o clust_1 clust_4  1.16      -0.399     2.71  1.32e- 1 ns          
+ 4 ph1to1h2o clust_1 clust_5  0.566     -0.926     2.06  6.68e- 1 ns          
+ 5 ph1to1h2o clust_1 clust_6  1.39      -0.165     2.94  7.4 e- 2 ns          
+ 6 ph1to1h2o clust_1 clust_7  0.625     -0.865     2.12  5.87e- 1 ns          
+ 7 ph1to1h2o clust_2 clust_3  0.122     -0.451     0.694 9.81e- 1 ns          
+ 8 ph1to1h2o clust_2 clust_4  1.28       0.953     1.60  0        ****        
+ 9 ph1to1h2o clust_2 clust_5  0.685      0.220     1.15  6.27e- 4 ***         
+10 ph1to1h2o clust_2 clust_6  1.51       1.18      1.84  9.92e-13 ****        
+# ℹ 11 more rows
+# ℹ 1 more variable: comparison &lt;glue&gt;
+
+$cld
+    group cld spaced_cld
+1 clust_1 abc        abc
+2 clust_2   a        a__
+3 clust_3  ab        ab_
+4 clust_4   c        __c
+5 clust_5   b        _b_
+6 clust_6   c        __c
+7 clust_7   b        _b_</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>comps <span class="ot">&lt;-</span> ph_test[[<span class="st">"pairs_df"</span>]]</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>comps <span class="sc">%&gt;%</span> </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(group1, group2, p.adj) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(p.adj <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["group1"],"name":[1],"type":["chr"],"align":["left"]},{"label":["group2"],"name":[2],"type":["chr"],"align":["left"]},{"label":["p.adj"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"clust_2","2":"clust_4","3":"0.00e+00"},{"1":"clust_2","2":"clust_5","3":"6.27e-04"},{"1":"clust_2","2":"clust_6","3":"9.92e-13"},{"1":"clust_2","2":"clust_7","3":"3.03e-04"},{"1":"clust_3","2":"clust_4","3":"8.95e-04"},{"1":"clust_3","2":"clust_6","3":"2.20e-04"},{"1":"clust_4","2":"clust_5","3":"3.00e-03"},{"1":"clust_4","2":"clust_7","3":"1.40e-02"},{"1":"clust_5","2":"clust_6","3":"2.22e-05"},{"1":"clust_6","2":"clust_7","3":"1.74e-04"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="run-pairwise-comparisons" class="level2" data-number="22.11">
+<h2 data-number="22.11" class="anchored" data-anchor-id="run-pairwise-comparisons"><span class="header-section-number">22.11</span> Run pairwise comparisons</h2>
+<p>Here I create a dataframe to hold the results of the pairwise comparisons, then use <code>map2()</code> to iterate over the variables and cluster sizes, running all the tests.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># transform CaCO3 in the dataframe beforehand</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>val_dat_trans <span class="ot">&lt;-</span> val_dat <span class="sc">%&gt;%</span> </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">caco3 =</span> <span class="fu">log10</span>(caco3<span class="sc">+</span><span class="dv">1</span>)) </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="co"># dependent vars</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>soil_var <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"claytotal"</span>, <span class="st">"ph1to1h2o"</span>, <span class="st">"om_loi"</span>, <span class="st">"caco3"</span>, <span class="st">"dbthirdbar"</span>)</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="co"># independent vars all possible values of k (number of clusters)</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>k_opt <span class="ot">&lt;-</span> <span class="fu">as.character</span>(<span class="fu">glue</span>(<span class="st">"k_{c(4, 5, 6, 7, 8, 9, 10, 11)}"</span>))</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="co"># create df with all combinations of var_names x clusters</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>mod_template <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">crossing</span>(soil_var, k_opt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># run the pairwise comparisons for each var and cluster size</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>diffs_df <span class="ot">&lt;-</span> mod_template <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">comps_all =</span> <span class="fu">map2</span>(</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.x =</span> soil_var,</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.y =</span> k_opt,</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.f =</span> compare_clust_pairwise</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="co"># unnest once to get the pairs_df and cld_df dfs </span></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a><span class="co"># as their own columns</span></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>diffs_unnest <span class="ot">&lt;-</span> diffs_df <span class="sc">%&gt;%</span> </span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(comps_all) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">obj_names =</span> <span class="fu">names</span>(comps_all))</span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a><span class="co"># want to save pairs_df and cld_df dat separately, so filtering</span></span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a><span class="co"># and then unnesting again to get rectangular data </span></span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>pairs_dat <span class="ot">&lt;-</span> diffs_unnest <span class="sc">%&gt;%</span> </span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(obj_names <span class="sc">==</span> <span class="st">"pairs_df"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(comps_all) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>obj_names)</span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(pairs_dat, <span class="st">"data/pca_welch_pairwise_results_all.csv"</span>)</span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>cld_dat <span class="ot">&lt;-</span> diffs_unnest <span class="sc">%&gt;%</span> </span>
+<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(obj_names <span class="sc">==</span> <span class="st">"cld"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(comps_all) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>obj_names)</span>
+<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(cld_dat, <span class="st">"data/cld_display_welch.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now need to count how many of the tests have an adjusted p-value &lt; 0.05. All of the p-values are already adjusted (see documentation for <code>games_howell_test()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>count_sig_comps <span class="ot">&lt;-</span> <span class="cf">function</span>(df){</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  df <span class="sc">%&gt;%</span> </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(p.adj<span class="sc">&lt;</span><span class="fl">0.05</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">nrow</span>()</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>sig_diffs_df <span class="ot">&lt;-</span> pairs_dat <span class="sc">%&gt;%</span></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(k_opt, soil_var, group1, group2, p.adj) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(k_opt, soil_var) <span class="sc">%&gt;%</span></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>(<span class="at">data =</span> <span class="fu">c</span>(group1, group2, p.adj)) <span class="sc">%&gt;%</span></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">n_sig_comps =</span> <span class="fu">map_int</span>(data, count_sig_comps)) <span class="sc">%&gt;%</span></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">num_regions =</span> <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(k_opt, <span class="st">"[:digit:]+"</span>)),</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">possible_comps =</span> (num_regions <span class="sc">*</span> (num_regions <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">/</span> <span class="dv">2</span>,</span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha_comps =</span> <span class="fu">round</span>(possible_comps <span class="sc">*</span> <span class="fl">0.05</span>, <span class="at">digits =</span> <span class="dv">0</span>)</span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(soil_var,</span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>         k_opt,</span>
+<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>         num_regions,</span>
+<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>         data,</span>
+<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>         n_sig_comps,</span>
+<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a>         possible_comps,</span>
+<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a>         alpha_comps)</span>
+<span id="cb45-26"><a href="#cb45-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-27"><a href="#cb45-27" aria-hidden="true" tabindex="-1"></a>sig_diffs_summary <span class="ot">&lt;-</span> sig_diffs_df <span class="sc">%&gt;%</span> </span>
+<span id="cb45-28"><a href="#cb45-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(soil_var,</span>
+<span id="cb45-29"><a href="#cb45-29" aria-hidden="true" tabindex="-1"></a>         k_opt,</span>
+<span id="cb45-30"><a href="#cb45-30" aria-hidden="true" tabindex="-1"></a>         num_regions,</span>
+<span id="cb45-31"><a href="#cb45-31" aria-hidden="true" tabindex="-1"></a>         n_sig_comps,</span>
+<span id="cb45-32"><a href="#cb45-32" aria-hidden="true" tabindex="-1"></a>         possible_comps,</span>
+<span id="cb45-33"><a href="#cb45-33" aria-hidden="true" tabindex="-1"></a>         alpha_comps)</span>
+<span id="cb45-34"><a href="#cb45-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-35"><a href="#cb45-35" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(sig_diffs_summary, <span class="st">"data/pca_welch_pairwise_comparisons_summary.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="plot-comparisons" class="level2" data-number="22.12">
+<h2 data-number="22.12" class="anchored" data-anchor-id="plot-comparisons"><span class="header-section-number">22.12</span> Plot comparisons</h2>
+<section id="all-clusters" class="level3" data-number="22.12.1">
+<h3 data-number="22.12.1" class="anchored" data-anchor-id="all-clusters"><span class="header-section-number">22.12.1</span> All clusters</h3>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>For context, this plot shows a black line for the total number of <strong>possible</strong> contrasts. Note that because we are showing each soil property variable separately, the “total possible” line illustrates the total number of possible comparisons for a single variable</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Two other ways to contextualize the number of significant contrasts: 1) with a table, and 2) with a plot showing how the % significant contrasts (as a function of total possible) changes as the number of clusters goes up.</p>
+<div class="cell">
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["num_regions"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["n_sig_comps"],"name":[2],"type":["int"],"align":["right"]},{"label":["possible_comps"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["percent_sig"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["alpha_5perc"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"4","2":"20","3":"30","4":"67","5":"2"},{"1":"5","2":"24","3":"50","4":"48","5":"2"},{"1":"6","2":"22","3":"75","4":"29","5":"4"},{"1":"7","2":"32","3":"105","4":"30","5":"5"},{"1":"8","2":"40","3":"140","4":"29","5":"7"},{"1":"9","2":"41","3":"180","4":"23","5":"9"},{"1":"10","2":"52","3":"225","4":"23","5":"11"},{"1":"11","2":"52","3":"275","4":"19","5":"14"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="29-welch-pairwise_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./28-compare-variation-demo.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compare variation explained</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./30-welch-compare-variation.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Welch ANOVA - compare variation explained</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,432 @@
+# PCA-kmeans Clustering Finalists {#sec-finalists}
+
+## Overview
+
+**Original k-means:** silhouette suggests 6, 9-11.
+C-H suggests 6, 11.
+Pairwise comparisons suggest 6, 8, or 11
+
+**PCA before k-means:** silhouette suggests 4, 6, 8, 11.
+C-H 4-8 would be similar, 9-11 would be similar.
+
+So between these two, it seems like it would make sense to compare 6, 8, 11.
+
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(glue)
+library(stringr)
+library(gtsummary)
+library(terra)
+
+```
+
+```{r}
+#| message: false
+#| warning: false
+
+# input files for spatial exploration of clusters 
+
+# generated in 22-pca-kmeans.qmd
+prop1 <- read_csv("data/pca_mukey_cluster_assignments_and_soilprops.csv")
+
+k4all <- rast("E:/big-files-backup/ch03-sh-groups/clust4_pca.tif")
+k6all <- rast("E:/big-files-backup/ch03-sh-groups/clust6_pca.tif")
+k8all <- rast("E:/big-files-backup/ch03-sh-groups/clust8_pca.tif")
+k11all <- rast("E:/big-files-backup/ch03-sh-groups/clust11_pca.tif")
+
+```
+
+```{r}
+#| message: false
+#| warning: false
+
+# input files for taxonomic exploration of clusters 
+
+# generated ch7 map unit aggregation
+mu <- read_csv("data/mu_weighted_soil_props.csv")
+
+cmp_lookup <- read_csv("data/key_cokey_mukey_complete_cases_include.csv")
+
+cmp_details <- read_csv("data/component_list.csv")
+
+munames <- read_csv("data/target_mapunit_table.csv") %>% 
+  select(mukey, muname, muacres)
+
+# more rows than mu b/c there are multiple cmps
+# included in some mus
+mu_cmp <- left_join(mu, cmp_lookup, by = "mukey")
+
+# adds munames and muacres
+mu_cmp_nm <- left_join(mu_cmp, munames, by = "mukey")
+
+# one row for each component (there can be multiple components
+# for an included mukey), now includes munames and component details
+mu_detail <- left_join(mu_cmp_nm, cmp_details, by = c("cokey","mukey"))
+
+# for translating MUKEY from gSSURGO to my shortened version
+cwalk <- aoi_mu <- read.delim("data/gSSURGO_MN/mukey_new_crosswalk.txt", sep = ",") %>% 
+  select(MUKEY, MUKEY_New, Count)
+```
+
+```{r}
+#| echo: false
+
+# does not include gray (no cluster 0 in plots)
+plot_colors <- c("#FF5A5F", "#FFB400", 
+                 "#007A87", "#8CE071", "#7B0051", 
+                 "#00D1C1", "#FFAA91", "#B4A76C", 
+                 "#9CA299", "#565A5C", "#00A04B", 
+                  "#E54C20")
+
+plot_clust_names <- c("Cluster_1", "Cluster_2", "Cluster_3", "Cluster_4", "Cluster_5", "Cluster_6", "Cluster_7", "Cluster_8","Cluster_9", "Cluster_10", "Cluster_11", "Cluster_12")
+
+
+
+# starts with gray for cluster 0 (not included)
+map_colors <- c("#FFF8DC", "#FF5A5F", "#FFB400", 
+                 "#007A87", "#8CE071", "#7B0051", 
+                 "#00D1C1", "#FFAA91", "#B4A76C", 
+                 "#9CA299", "#565A5C", "#00A04B", 
+                  "#E54C20")
+
+map_clust_names <- c("Cluster_0", "Cluster_1", "Cluster_2", "Cluster_3", "Cluster_4", "Cluster_5", "Cluster_6", "Cluster_7", "Cluster_8","Cluster_9", "Cluster_10", "Cluster_11", "Cluster_12")
+
+set_names(x = map_colors, nm = map_clust_names)
+
+
+create_summary_table <- function(kcol, prop_df){
+  
+  prop_df %>%
+  select(all_of(kcol),
+         where(is.numeric)) %>% 
+    select(-mukey) %>% 
+  tbl_summary(by = {{kcol}},
+              statistic = list(all_continuous() ~ "{mean} ({sd})"))
+  
+  
+}
+
+plot_cluster_violins <- function(kcol, soil_var, prop_df){
+  
+  prop_df %>% 
+    ggplot(aes(x = {{kcol}}, y = {{soil_var}})) +
+    geom_violin(aes(fill = {{kcol}}),
+                show.legend = FALSE,
+                draw_quantiles = c(0.5)) +
+    scale_fill_manual(values = plot_colors) +
+    theme_bw() +
+    xlab("") 
+    
+  
+}
+
+create_highlight_df <- function(nclust, target_clust){
+  
+  data.frame(values = c(1:nclust)) %>% 
+    mutate(cols = case_when(
+     values == target_clust ~ "#FDE333",
+      TRUE ~ "#4B0055"
+    ))
+  
+}
+
+
+create_mapcol_df <- function(nclust){
+  # adding one b/c we have cluster 0 in 
+  # every group (for areas not included)
+  mycolors <- map_colors[1:(nclust+1)]
+  myvalues <- c(0:nclust)
+  
+  mydf <- data.frame(values = myvalues,
+                     cols = mycolors)
+  
+  return(mydf)
+  
+}
+
+rank_clusters <- function(kcol, soilvar, prop_df){
+  
+  prop_df %>% 
+    select({{kcol}}, {{soilvar}}) %>% 
+    group_by({{kcol}}) %>% 
+    summarise(mean = mean({{soilvar}}),
+              sd = sd({{soilvar}})) %>% 
+    mutate(across(where(is.numeric), ~round(.x, digits = 1))) %>% 
+    arrange(mean)
+  
+}
+
+```
+
+## 4 clusters
+
+### Summary table
+
+```{r}
+create_summary_table(kcol = "k_4", prop_df = prop1)
+
+```
+
+### Violin plots
+
+```{r}
+
+plot_cluster_violins(kcol = k_4, claytotal, prop_df = prop1)
+plot_cluster_violins(kcol = k_4, om, prop_df = prop1) + scale_y_log10()
+plot_cluster_violins(kcol = k_4, ph1to1h2o, prop_df = prop1)
+plot_cluster_violins(kcol = k_4, caco3, prop_df = prop1)
+
+
+plot_cluster_violins(kcol = k_4, ec, prop_df = prop1)
+
+```
+
+### Maps
+
+```{r}
+#| eval: false
+
+k4all_colors <- create_mapcol_df(4)
+
+plot(k4all, col = k4all_colors, plg=list(legend = c("C0", "C1", "C2", "C3", "C4")), main = "k=4 all variables")
+
+```
+
+### Taxonomy
+
+```{r}
+#| echo: false
+
+
+k4all_key <- prop1 %>% select(mukey, k_4) 
+
+k4all_eda <- left_join(mu_detail, k4all_key, by = "mukey") %>% 
+  select(mukey, cokey, k_4, muname, muacres, compkind, contains("tax"))
+
+# nice way to keep only the top 4 highest count
+# great groups for each cluster from this SO answer: 
+# https://stackoverflow.com/a/45054605
+k4all_top4 <- k4all_eda %>% 
+  group_by(k_4, taxgrtgroup) %>% 
+  count() %>% 
+  arrange(desc(n)) %>% 
+  group_by(k_4) %>% 
+  slice(1:4)
+
+k4all_top4 %>% 
+  ggplot() +
+  geom_col(aes(y = taxgrtgroup, x = n)) +
+  facet_wrap(vars(k_4), scales = "free") + theme_bw()
+
+```
+
+### Visualize clusters in 2D
+
+```{r}
+prop1 %>% 
+  ggplot() + 
+  geom_point(aes(x = claytotal, y = ph1to1h2o, color = k_4)) +
+  theme_bw()
+
+prop1 %>% 
+  ggplot() + 
+  geom_point(aes(x = claytotal, y = om, color = k_4)) +
+  theme_bw() + 
+  scale_y_log10()
+
+
+```
+
+## 6 clusters
+
+### Summary table
+
+```{r}
+create_summary_table(kcol = "k_6", prop_df = prop1)
+
+```
+
+### Violin plots
+
+```{r}
+
+plot_cluster_violins(kcol = k_6, claytotal, prop_df = prop1)
+plot_cluster_violins(kcol = k_6, om, prop_df = prop1) + scale_y_log10()
+plot_cluster_violins(kcol = k_6, ph1to1h2o, prop_df = prop1)
+plot_cluster_violins(kcol = k_6, caco3, prop_df = prop1)
+plot_cluster_violins(kcol = k_6, ec, prop_df = prop1)
+
+```
+
+### Maps
+
+```{r}
+#| eval: false
+
+k6all_colors <- create_mapcol_df(6)
+
+plot(k6all, col = k6all_colors, plg=list(legend = c("C0", "C1", "C2", "C3", "C4", "C5", "C6")), main = "k=6 all variables")
+
+```
+
+### Taxonomy
+
+```{r}
+#| echo: false
+
+
+k6all_key <- prop1 %>% select(mukey, k_6) 
+
+k6all_eda <- left_join(mu_detail, k6all_key, by = "mukey") %>% 
+  select(mukey, cokey, k_6, muname, muacres, compkind, contains("tax"))
+
+# nice way to keep only the top 4 highest count
+# great groups for each cluster from this SO answer: 
+# https://stackoverflow.com/a/45054605
+k6all_top4 <- k6all_eda %>% 
+  group_by(k_6, taxgrtgroup) %>% 
+  count() %>% 
+  arrange(desc(n)) %>% 
+  group_by(k_6) %>% 
+  slice(1:4)
+
+k6all_top4 %>% 
+  ggplot() +
+  geom_col(aes(y = taxgrtgroup, x = n)) +
+  facet_wrap(vars(k_6), scales = "free") + theme_bw()
+
+```
+
+### Visualize clusters in 2D
+
+```{r}
+prop1 %>% 
+  ggplot() + 
+  geom_point(aes(x = claytotal, y = ph1to1h2o, color = k_6)) +
+  theme_bw()
+
+prop1 %>% 
+  ggplot() + 
+  geom_point(aes(x = claytotal, y = om, color = k_6)) +
+  theme_bw() + 
+  scale_y_log10()
+
+
+```
+
+## 8 clusters - all variables included
+
+### Summary table
+
+```{r}
+create_summary_table(kcol = "k_8", prop_df = prop1)
+
+```
+
+### Violin plots
+
+```{r}
+plot_cluster_violins(kcol = k_8, claytotal, prop_df = prop1)
+plot_cluster_violins(kcol = k_8, om, prop_df = prop1) + scale_y_log10()
+plot_cluster_violins(kcol = k_8, ph1to1h2o, prop_df = prop1)
+plot_cluster_violins(kcol = k_8, caco3, prop_df = prop1)
+plot_cluster_violins(kcol = k_8, ec, prop_df = prop1)
+```
+
+### Maps
+
+```{r}
+#| eval: false
+
+k8all_colors <- create_mapcol_df(8)
+
+plot(k8all, col = k8all_colors, plg=list(legend = c("C0", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8")), main = "k=8 all variables")
+
+```
+
+### Taxonomy
+
+```{r}
+#| echo: false
+
+
+k8all_key <- prop1 %>% select(mukey, k_8) 
+
+k8all_eda <- left_join(mu_detail, k8all_key, by = "mukey") %>% 
+  select(mukey, cokey, k_8, muname, muacres, compkind, contains("tax"))
+
+# nice way to keep only the top 4 highest count
+# great groups for each cluster from this SO answer: 
+# https://stackoverflow.com/a/45054605
+k8all_top4 <- k8all_eda %>% 
+  group_by(k_8, taxgrtgroup) %>% 
+  count() %>% 
+  arrange(desc(n)) %>% 
+  group_by(k_8) %>% 
+  slice(1:4)
+
+k8all_top4 %>% 
+  ggplot() +
+  geom_col(aes(y = taxgrtgroup, x = n)) +
+  facet_wrap(vars(k_8), scales = "free") + theme_bw()
+```
+
+## 11 clusters - all variables
+
+### Summary table
+
+```{r}
+create_summary_table(kcol = "k_11", prop_df = prop1)
+
+```
+
+```{r}
+rank_clusters(k_11, claytotal, prop1)
+
+rank_clusters(k_11, ph1to1h2o, prop1)
+
+rank_clusters(k_11, om, prop1)
+
+rank_clusters(k_11, caco3, prop1)
+
+```
+
+### Violin plots
+
+```{r}
+plot_cluster_violins(kcol = k_11, claytotal, prop_df = prop1)
+plot_cluster_violins(kcol = k_11, om, prop_df = prop1) + scale_y_log10()
+plot_cluster_violins(kcol = k_11, ph1to1h2o, prop_df = prop1)
+plot_cluster_violins(kcol = k_11, caco3, prop_df = prop1)
+plot_cluster_violins(kcol = k_11, ec, prop_df = prop1)
+```
+
+### Taxonomy
+
+```{r}
+#| echo: false
+
+
+k11all_key <- prop1 %>% select(mukey, k_11) 
+
+k11all_eda <- left_join(mu_detail, k11all_key, by = "mukey") %>% 
+  select(mukey, cokey, k_11, muname, muacres, compkind, contains("tax"))
+
+# nice way to keep only the top 4 highest count
+# great groups for each cluster from this SO answer: 
+# https://stackoverflow.com/a/45054605
+k11all_top4 <- k11all_eda %>% 
+  group_by(k_11, taxgrtgroup) %>% 
+  count() %>% 
+  arrange(desc(n)) %>% 
+  group_by(k_11) %>% 
+  slice(1:4)
+
+k11all_top4 %>% 
+  ggplot() +
+  geom_col(aes(y = taxgrtgroup, x = n)) +
+  facet_wrap(vars(k_11), scales = "free") + theme_bw()
+```

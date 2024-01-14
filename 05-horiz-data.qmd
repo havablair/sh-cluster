@@ -1,0 +1,610 @@
+# Horizon Data Averages
+
+## Overview
+
+Goal is to calculate 0-20cm depth weighted averages for all the soil properties of interest, for each component.
+
+I think I want to turn my horizon dataframe into an SPC object (`aqp` package), [see this demo](http://ncss-tech.github.io/AQP/demos/profileApply/loafercreek.html#26_build-your-own_spcs).
+I think I would use cokey as "site"?
+
+Note for available water capacity (AWC) and soil organic carbon (SOC) these will be sums.
+Need to convert OM to SOC stock following equation 1 in Devine et al. (2020), but consider if I want to use a different Van Bemmelen factor, per discussion with Nic on 2022-08-11.
+
+SOC (kg/m\^-2) = OM % / 1.72 x BD x (1-CF) x Z/10
+
+```{r setup-5}
+#| echo: false 
+#| message: false
+#| warning: false
+ 
+library(tidyverse)
+library(glue)
+# library(terra)
+# library(sf)
+# library(soilDB)
+library(aqp) 
+library(gt)
+
+# this was generated in 04-subset-component-data.qmd
+horiz <- read_csv("./data/target_choriz_all.csv")
+
+# so I can associate a name with each COKEY
+comps <- read_csv("./data/component_list.csv")
+
+comp_info <- comps %>% 
+  select(compname, taxsuborder, drainagecl, geomdesc, cokey)
+
+
+```
+
+## Toy Example
+
+Trying this process with just 4 components I selected at random, to make sure I understand what's happening with a smaller dataset.
+
+### Select some components
+
+```{r co-toy}
+
+# randomly selected cokeys
+ex_cokeys <- c(21760486, 21791957, 21760347, 21782338)
+
+# filter to example horizons
+# add some info from comps table for context
+toy_hz <- horiz %>% 
+  dplyr::filter(cokey %in% ex_cokeys) %>% 
+  left_join(x = ., y = comp_info, by = "cokey")
+
+# what kinds of soils are we working with?
+toy_hz %>% 
+  dplyr::select(cokey, compname, taxsuborder, geomdesc, drainagecl) %>% 
+  unique()
+
+
+```
+
+### Promote to SPC Object
+
+Before we promote to SPC object, need to make sure all my horizons are pre-sorted by profile id `cokey`, and then by horizon top boundary `hzdept_r`.
+Following along with ["Object Creation"](http://ncss-tech.github.io/AQP/aqp/aqp-intro.html#2_Object_Creation) in the Introduction to SPC Objects docs.
+
+```{r sort-hz}
+toy_sort <- toy_hz %>% 
+  arrange(cokey, hzdept_r) 
+
+# take a look
+toy_sort %>% 
+  select(compname, hzname, hzdept_r)
+
+```
+
+```{r spc-toy}
+
+# upgrade to SPC
+depths(toy_sort) <-  cokey ~ hzdept_r + hzdepb_r
+
+# specify horizon name col
+hzdesgnname(toy_sort) <- 'hzname'
+
+# confirm it worked
+class(toy_sort)
+
+# check out the object
+print(toy_sort)
+
+```
+
+### Aggregate Along Slabs
+
+We want to work with just the 0-20cm depth, can use `slab()` to do this.
+Example in ["Aggregating Soil Profile Collections Along Regular Slabs"](https://ncss-tech.github.io/AQP/aqp/aqp-intro.html#14_Aggregating_Soil_Profile_Collections_Along_Regular_%E2%80%9CSlabs%E2%80%9D)
+
+Here I'm grouping by cokey (individual profiles) so that we get a depth-wise summary for each cokey, weighted by horizon.
+
+Using `slab.fun = mean`, I double checked and this computes a depth-weighted mean.
+This is clear if you examine both the horizon data and the "slab" data below for the component 21760486.
+The top horizon (0-18cm) has OM 2.5%, and the second horizon (18-28cm) has OM 0.25.
+The depth weighted average (to 20cm depth) is 2.275
+
+I'm pretty sure I want to include na.rm = TRUE here for slab?
+Since I'm doing this for each profile, it seems unlikely that I'd have data for just one horizon, but not the next horizon.
+I suppose I could check this for our components
+
+```{r slab}
+slab_ex <- slab(object = toy_sort, 
+                fm = cokey ~ om_r + claytotal_r + cec7_r,
+                slab.structure = c(0,20),
+                slab.fun = mean,
+                na.rm = TRUE) 
+
+# our example component, 0-20cm depth spans 2 horizons here
+toy_hz %>% 
+  select(cokey, hzdept_r, hzdepb_r, om_r, claytotal_r) %>% 
+  arrange(cokey, hzdept_r) %>% 
+  filter(cokey == 21760486)
+
+# slab results, note they are "long" format
+# om_r = 2.275
+slab_ex %>% 
+  filter(cokey == 21760486)
+
+# do the weighted mean for om_r by hand 
+# should match slab results above for cokey 21760486 
+weighted.mean(x = c(2.5, 0.25), w = c(18,2)) 
+
+```
+
+## Variables
+
+### List to include
+
+Devine et al. 2020 included SAR and gypsum, these seem less relevant to us (and in fact might not be populated as much over here, since there are relatively few spots on the western side of the state where this might be relevant?)
+
+```{r vars}
+
+
+vars_of_interest <-
+  c(
+    'claytotal_r',
+    'silttotal_r',
+    'sandtotal_r',
+    'claysizedcarb_r', # not in Devine, I added 
+    'om_r',
+    'cec7_r',
+    'dbthirdbar_r',
+    'fragvol_r_sum',
+    'kwfact', # erodibility factor, learn more?
+    'ec_r',
+    'ph1to1h2o_r',
+    'sar_r',
+    'caco3_r',
+    'lep_r',
+    'ksat_r',
+    'awc_r'
+    # 'freeiron_r', # not in Devine, also no data
+    # 'feoxalate_r' # not in Devine, also no data 
+  )
+
+
+```
+
+### Number Missing
+
+How many horizons are missing data for our variables of interest?
+
+```{r var-na}
+#| echo: false
+
+na_df <- horiz %>% 
+  select(
+    all_of(vars_of_interest)) 
+
+colSums(is.na(na_df)) %>% 
+  as.data.frame() %>%
+  rename("n_hz_na" = ".") %>% 
+  arrange(n_hz_na) %>% 
+  dplyr::mutate(perc_missing = round((n_hz_na/nrow(horiz))*100,1)) 
+
+```
+
+## Implicit Zeroes
+
+Nic suggested that I check on the cokeys where `fragvol_r_sum` is `NA`, it's possible that these are actually implied zeroes.
+The main place we'll use this info is for calculating SOC stocks.
+
+```{r}
+
+frag_check <- horiz %>% 
+  select(chkey,
+         cokey,
+         fragvol_r_sum) %>% 
+  left_join(comp_info, by = c('cokey')) %>% 
+  filter(is.na(fragvol_r_sum))
+
+```
+
+So out of `r nrow(horiz)` chkeys, the sum of coarse fragment volume (`fragvol_r_sum`) is `NA` for `r nrow(frag_check)` of them.
+
+### Geomorphic Description
+
+Here I'm trying to pull out big groups of similar soils based on geomorphic description, which is helpful as a starting point for whether we would expect there to be coarse fragments.
+
+Look into using the `fetchOSD` function http://ncss-tech.github.io/AQP/soilDB/soil-series-query-functions.html
+
+Soil Survey Manual online, helpful info about how this info is recorded: https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/ref/?c
+id=nrcs142p2_054252
+
+```{r lake}
+
+# how many are on lake plains? unlikely to have 
+# many coarse frags here 
+lake <- frag_check %>% 
+  filter(str_detect(geomdesc, "lake plain"))
+
+# how many cokeys?
+nrow(lake)
+
+# a few examples
+head(unique(lake$geomdesc))
+
+lake %>% select(compname, taxsuborder) %>% 
+  distinct() %>% 
+dplyr::group_by(taxsuborder) %>% 
+  dplyr::summarise(comps = str_c(compname, collapse = ", ")) %>% 
+  gt()
+```
+
+```{r flood}
+# how many are on flood plains? 
+flood <- frag_check %>% 
+  filter(!str_detect(geomdesc, "lake plain")) %>% 
+  filter(str_detect(geomdesc, "flood plain"))
+
+# how many cokeys?
+nrow(flood)
+
+# a few examples
+head(unique(flood$geomdesc))
+
+flood  %>% select(compname, taxsuborder) %>% 
+  distinct() %>% 
+dplyr::group_by(taxsuborder) %>% 
+  dplyr::summarise(comps = str_c(compname, collapse = ", ")) %>% 
+  gt()
+
+```
+
+```{r sandhill}
+# how many are on sandhills? 
+sandhill <- frag_check %>% 
+  filter(!str_detect(geomdesc, "lake plain")) %>% 
+  filter(!str_detect(geomdesc, "flood plain")) %>% 
+  filter(str_detect(geomdesc, "sandhill"))
+
+# how many cokeys?
+nrow(sandhill)
+
+# a few examples
+head(unique(sandhill$geomdesc))
+
+sandhill %>% select(compname, taxsuborder) %>% 
+  distinct() %>% 
+dplyr::group_by(taxsuborder) %>% 
+  dplyr::summarise(comps = str_c(compname, collapse = ", ")) %>% 
+  gt()
+
+```
+
+```{r org}
+
+# how many are organic soils? 
+hist <- frag_check %>% 
+  filter(!str_detect(geomdesc, "lake plain")) %>% 
+  filter(!str_detect(geomdesc, "flood plain")) %>% 
+  filter(!str_detect(geomdesc, "sandhill")) %>% 
+  filter(taxsuborder %in% c("Saprists", "Hemists", "Fibrists")) 
+
+# how many cokeys?
+nrow(hist)
+
+# some examples
+head(unique(hist$geomdesc))
+
+hist %>% select(compname, taxsuborder) %>% 
+  distinct() %>% 
+dplyr::group_by(taxsuborder) %>% 
+  dplyr::summarise(comps = str_c(compname, collapse = ", ")) %>% 
+  gt()
+
+```
+
+```{r outwash}
+
+# outwash plains?
+outwash <- frag_check %>% 
+   filter(!str_detect(geomdesc, "lake plain")) %>% 
+  filter(!str_detect(geomdesc, "flood plain")) %>% 
+  filter(!str_detect(geomdesc, "sandhill")) %>% 
+  filter(!taxsuborder %in% c("Saprists", "Hemists", "Fibrists")) %>% 
+  filter(str_detect(geomdesc, "outwash plain"))
+
+# how many cokeys?
+nrow(outwash)
+
+# some examples 
+head(unique(outwash$geomdesc))
+
+outwash %>% select(compname, taxsuborder) %>% 
+  distinct() %>% 
+dplyr::group_by(taxsuborder) %>% 
+  dplyr::summarise(comps = str_c(compname, collapse = ", ")) %>% 
+  gt()
+
+```
+
+```{r stream}
+# stream terraces? 
+terrace <- frag_check %>% 
+   filter(!str_detect(geomdesc, "lake plain")) %>% 
+  filter(!str_detect(geomdesc, "flood plain")) %>% 
+  filter(!str_detect(geomdesc, "sandhill")) %>% 
+  filter(!taxsuborder %in% c("Saprists", "Hemists", "Fibrists")) %>% 
+  filter(!str_detect(geomdesc, "outwash plain")) %>% 
+  filter(str_detect(geomdesc, "stream terrace")) 
+
+# how many cokeys?
+nrow(terrace)
+
+# some examples
+head(unique(terrace$geomdesc))
+
+terrace %>% select(compname, taxsuborder) %>% 
+  distinct() %>% 
+dplyr::group_by(taxsuborder) %>% 
+  dplyr::summarise(comps = str_c(compname, collapse = ", ")) %>% 
+  gt()
+
+```
+
+```{r loess}
+# loess hills? 
+loess <- frag_check %>%
+    filter(!str_detect(geomdesc, "lake plain")) %>% 
+  filter(!str_detect(geomdesc, "flood plain")) %>% 
+  filter(!str_detect(geomdesc, "sandhill")) %>% 
+  filter(!taxsuborder %in% c("Saprists", "Hemists", "Fibrists")) %>% 
+  filter(!str_detect(geomdesc, "outwash plain")) %>% 
+  filter(!str_detect(geomdesc, "stream terrace")) %>% 
+  filter(str_detect(geomdesc, "loess"))
+
+nrow(loess)  
+
+# some examples
+head(unique(loess$geomdesc))
+
+loess %>% select(compname, taxsuborder) %>% 
+  distinct() %>% 
+dplyr::group_by(taxsuborder) %>% 
+  dplyr::summarise(comps = str_c(compname, collapse = ", ")) %>% 
+  gt()
+
+```
+
+```{r drainageway}
+
+# drainageways? 
+drain <- frag_check %>% 
+  filter(!str_detect(geomdesc, "lake plain")) %>% 
+  filter(!str_detect(geomdesc, "flood plain")) %>% 
+  filter(!str_detect(geomdesc, "sandhill")) %>% 
+  filter(!taxsuborder %in% c("Saprists", "Hemists", "Fibrists")) %>% 
+  filter(!str_detect(geomdesc, "outwash plain")) %>% 
+  filter(!str_detect(geomdesc, "stream terrace")) %>% 
+  filter(!str_detect(geomdesc, "loess")) %>% 
+  filter(str_detect(geomdesc, "drain"))
+
+# how many cokeys?
+nrow(drain)
+
+# some examples 
+head(unique(drain$geomdesc)) 
+
+drain %>% select(compname, taxsuborder) %>% 
+  distinct() %>% 
+dplyr::group_by(taxsuborder) %>% 
+  dplyr::summarise(comps = str_c(compname, collapse = ", ")) %>% 
+  gt()
+```
+
+```{r other}
+other <-  frag_check %>% 
+  filter(!str_detect(geomdesc, "lake plain")) %>% 
+  filter(!str_detect(geomdesc, "flood plain")) %>% 
+  filter(!str_detect(geomdesc, "sandhill")) %>% 
+  filter(!taxsuborder %in% c("Saprists", "Hemists", "Fibrists")) %>% 
+  filter(!str_detect(geomdesc, "outwash plain")) %>% 
+  filter(!str_detect(geomdesc, "stream terrace")) %>% 
+  filter(!str_detect(geomdesc, "loess")) %>% 
+  filter(!str_detect(geomdesc, "drain"))
+
+# other terrace related 
+other %>% filter(str_detect(geomdesc, "terrace")) %>% pull(geomdesc) %>% unique()
+
+# drumlin or moraine related
+other %>% filter(str_detect(geomdesc, "drumlin")|
+                   str_detect(geomdesc, "moraine")) %>% pull(geomdesc) %>% unique()
+
+# hill related (some of these don't really make sense to me)
+other %>% filter(str_detect(geomdesc, "hill")) %>% pull(geomdesc) %>% unique()
+
+# note that 'other' now contains only 208 unique compnames
+length(unique(other$compname))
+
+other %>% select(compname, taxsuborder) %>% 
+  distinct() %>% 
+dplyr::group_by(taxsuborder) %>% 
+  dplyr::summarise(comps = str_c(compname, collapse = ", ")) %>% 
+  gt()
+```
+
+## Full dataset SPC workflow
+
+### Create SPC object
+
+Here I turn the entire `horiz` dataframe into an SPC object.
+
+```{r spc-all}
+
+# sort so all horizons are in order for each cokey
+hz_sort <- horiz %>% 
+  arrange(cokey, hzdept_r) 
+
+# upgrade to SPC
+depths(hz_sort) <-  cokey ~ hzdept_r + hzdepb_r
+
+# check it out 
+# note only 10237 profiles, started with 10785 cokeys
+# figure out missing ones below
+hz_sort
+
+# specify horizon name col
+hzdesgnname(hz_sort) <- 'hzname'
+
+```
+
+### Custom slab function {#sec-custom-slab}
+
+I will use this function along with the `map` function from `{purrr}` to calculate weighted means of the soil properties on our list.
+
+```{r slab-fun}
+
+
+slab_fun <- function(var, spc_obj){
+  
+  slab_formula <- as.formula(paste("cokey ~ ", var))
+  
+  slab_df <- slab(object = spc_obj, 
+                fm = slab_formula,
+                slab.structure = c(0,20),
+                slab.fun = mean,
+                na.rm = TRUE) 
+  
+  return(slab_df)
+  
+}
+
+
+
+```
+
+### Apply (map) slab function
+
+Debugging victory here!
+I was having trouble with my custom function (defined above) working with any of the variants of `purrr::map()` .
+Found the answer in the `map2()` documentation (but it seems to work here, even though I'm using just `map()` ).
+Under the Details section: "Note that arguments to be vectorised over come before `.f` , and arguments that are supplied to every call come after `.f`"
+
+So in my case, the same `spc` object is used for all of these function calls; I needed to put that argument after `.f` .
+
+```{r map-slab}
+
+# # dataframe for results to land in
+r <- data.frame(var_name = vars_of_interest)
+
+# map over my list of vars, using custom slab function
+# takes a minute or so
+rnest <- r %>% 
+  dplyr::mutate(aggr_data = map(.x = var_name,
+                          .f = slab_fun, 
+                          spc_obj = hz_sort))
+
+# result is a list col with soil prop data nested 
+head(rnest)
+
+```
+
+```{r long-wide}
+
+# unnest, save long version b/c nice for 
+# facetted plots
+rlong <- rnest %>% 
+  unnest(cols = c(aggr_data)) %>% 
+  select(-var_name)   # don't need, col also returned by slab
+
+  
+# save wider version b/c better for modeling
+# this matches the number of elements in our SPC (10237)
+# not sure why the difference between nrow of comps and n
+# elements in our SPC... look into this. 
+rwide <- rlong %>% 
+  pivot_wider(names_from = "variable",
+              values_from = c("value", "contributing_fraction"),
+              names_glue = "{variable}_{.value}")
+
+```
+
+### Missing/Dropped Components? {#sec-missing}
+
+I started with `r nrow(comps)` that were identified in `04-subset-component-data.qmd`.
+However, when I promoted this list to an SPC object in `aqp` we got only `r nrow(rwide)` .
+Check out what's missing.
+
+```{r id-missing}
+
+comps_start <- comps$cokey
+
+comps_end <- rwide$cokey
+
+missing_cokeys <- setdiff(comps_start, comps_end)
+
+missing_comps <- comps %>% 
+  filter(cokey %in% missing_cokeys) %>% 
+  select(compname,
+         compkind,
+         majcompflag,
+         taxclname,
+         taxorder,
+         taxsuborder,
+         taxgrtgroup,
+         taxsubgrp,
+         mukey)
+
+
+```
+
+Here's more info about the missing components, by component kind:
+
+```{r info-missing1}
+#| echo: false 
+
+missing_comps %>% 
+  dplyr::group_by(compkind) %>% 
+  dplyr::count() %>% 
+  arrange(n) %>% 
+  ggplot() + 
+  geom_col(aes(x = n, y = compkind)) +
+  theme_minimal()
+
+make_compname_plot <- function(ckind){
+  
+  cplot <- missing_comps %>% 
+    filter(compkind == ckind) %>% 
+  dplyr::group_by(compname) %>% 
+  dplyr::count() %>% 
+  arrange(desc(n)) %>% 
+  ggplot() + 
+  geom_col(aes(x = n, y = compname)) +
+  theme_minimal() +
+  ggtitle(glue("{ckind}"))
+  return(cplot)
+  
+}
+
+missing_compkinds <- missing_comps %>% 
+  pull(compkind) %>% 
+  unique()
+
+```
+
+Check out component names, grouped by component kind.
+
+```{r info-missing2}
+#| echo: false
+
+map(missing_compkinds, make_compname_plot)
+
+```
+
+## Save Data
+
+Based on the summaries of missing/dropped components above, I think this is all stuff we would have wanted to exclude anyway (and data availability is likely low...).
+Saving long and wide versions of the 20cm slab-aggregated dataset for further analysis.
+
+```{r save-dat}
+
+datestamp <- lubridate::today() %>% str_replace_all("-", "")
+
+write_csv(rlong, glue("./data/long_slab_aggregated_soil_props_{datestamp}.csv"))
+
+write_csv(rwide, glue("./data/wide_slab_aggregated_soil_props_{datestamp}.csv"))
+
+```

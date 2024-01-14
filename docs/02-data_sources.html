@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Minnesota Topsoil Classification for Soil Health Assessment - 1&nbsp; Data Sources</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./03-mus_comp_in_aoi.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-data_sources.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data Sources</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Minnesota Topsoil Classification for Soil Health Assessment</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-data_sources.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data Sources</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-mus_comp_in_aoi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Explore Map Units &amp; Components in AOI</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-subset-component-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Identify Target Components</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-horiz-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Horizon Data Averages</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-soil-prop-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Soil Property Exploratory Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-map-unit-agg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Map unit aggregation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-var-transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Variable Transformations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-plot-ec-lep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MAP EC and LEP with <code>{terra}</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-additional-data-prep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Additional Data Preparation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-implement-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Implement k-means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-explore-clust-props.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Explore clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-sample-points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sample validation points</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-map-indiv-regions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mapping individual clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-pca-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Do PCA before k-means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-pca-kmeans-finalists.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">PCA-kmeans Clustering Finalists</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-compare-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Comparing k-means scenarios</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-pca-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">PCA Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-notes-pca6-8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Comparing PCA 6 &amp; PCA 8 Models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-pairwise-nonparametric.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">(non-parametric) PCA Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./28-compare-variation-demo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compare variation explained</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./29-welch-pairwise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./30-welch-compare-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Welch ANOVA - compare variation explained</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#define-area-of-interest" id="toc-define-area-of-interest" class="nav-link active" data-scroll-target="#define-area-of-interest"><span class="header-section-number">1.1</span> Define Area of Interest</a></li>
+  <li><a href="#major-land-resource-areas" id="toc-major-land-resource-areas" class="nav-link" data-scroll-target="#major-land-resource-areas"><span class="header-section-number">1.2</span> Major Land Resource Areas</a></li>
+  <li><a href="#minnesota-county-boundaries" id="toc-minnesota-county-boundaries" class="nav-link" data-scroll-target="#minnesota-county-boundaries"><span class="header-section-number">1.3</span> Minnesota County Boundaries</a></li>
+  <li><a href="#minnesota-state-boundary" id="toc-minnesota-state-boundary" class="nav-link" data-scroll-target="#minnesota-state-boundary"><span class="header-section-number">1.4</span> Minnesota State Boundary</a></li>
+  <li><a href="#national-cultivated-layer" id="toc-national-cultivated-layer" class="nav-link" data-scroll-target="#national-cultivated-layer"><span class="header-section-number">1.5</span> 2020 National Cultivated Layer</a></li>
+  <li><a href="#soils-data" id="toc-soils-data" class="nav-link" data-scroll-target="#soils-data"><span class="header-section-number">1.6</span> Soils Data</a>
+  <ul class="collapse">
+  <li><a href="#gssurgo-data" id="toc-gssurgo-data" class="nav-link" data-scroll-target="#gssurgo-data"><span class="header-section-number">1.6.1</span> gSSURGO data</a></li>
+  <li><a href="#process-for-.gdb-.tif" id="toc-process-for-.gdb-.tif" class="nav-link" data-scroll-target="#process-for-.gdb-.tif"><span class="header-section-number">1.6.2</span> Process for .gdb &gt; .tif</a></li>
+  <li><a href="#sec-reclass" id="toc-sec-reclass" class="nav-link" data-scroll-target="#sec-reclass"><span class="header-section-number">1.6.3</span> Process for raster reclass (new MUKEYs)</a></li>
+  </ul></li>
+  <li><a href="#ncss-kellogg-lab-data" id="toc-ncss-kellogg-lab-data" class="nav-link" data-scroll-target="#ncss-kellogg-lab-data"><span class="header-section-number">1.7</span> NCSS (Kellogg Lab) Data</a>
+  <ul class="collapse">
+  <li><a href="#accessing-data" id="toc-accessing-data" class="nav-link" data-scroll-target="#accessing-data"><span class="header-section-number">1.7.1</span> Accessing data</a></li>
+  </ul></li>
+  <li><a href="#noaa-ncei-u.s.-climate-normals" id="toc-noaa-ncei-u.s.-climate-normals" class="nav-link" data-scroll-target="#noaa-ncei-u.s.-climate-normals"><span class="header-section-number">1.8</span> NOAA NCEI U.S. Climate Normals</a>
+  <ul class="collapse">
+  <li><a href="#convert-map-and-mat-values" id="toc-convert-map-and-mat-values" class="nav-link" data-scroll-target="#convert-map-and-mat-values"><span class="header-section-number">1.8.1</span> Convert MAP and MAT values</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-data-source" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data Sources</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="define-area-of-interest" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="define-area-of-interest"><span class="header-section-number">1.1</span> Define Area of Interest</h2>
+<ul>
+<li>Union of MN county boundaries and MLRA boundaries<br>
+</li>
+<li>An idea for subsetting later - bring in Cropland Data Layer. Exclude pixels with impervious &gt;50%, or some other %?</li>
+</ul>
+</section>
+<section id="major-land-resource-areas" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="major-land-resource-areas"><span class="header-section-number">1.2</span> Major Land Resource Areas</h2>
+<ol type="1">
+<li>Access the <a href="https://gdg.sc.egov.usda.gov/">USDA’s Geospatial Data Gateway</a>.<br>
+</li>
+<li>Click “Order by State” link, select Minnesota<br>
+</li>
+<li>Select Major Land Resource Areas map layers</li>
+<li>Format: ESRI Shape (not sure about this, other options are ESRI File GeoDatabase, separate ESRI shapefiles, separate ESRI GeoDatabase Feature Classes)</li>
+</ol>
+<p>The code below is reproduced from <code>create_aoi_shapefile.R</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># USA MLRAs</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>mlras <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/mlra/mlra_v42.shp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `mlra_v42' from data source 
+  `C:\Users\Hava\Documents\R\ch03-sh-cluster\data\mlra\mlra_v42.shp' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 5306 features and 5 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: -179.1334 ymin: -14.38165 xmax: 179.7882 ymax: 71.39805
+Geodetic CRS:  NAD83</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># State boundary</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mn <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"_qgis_files/shp_mn_state_boundary/mn_state_boundary.shp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `mn_state_boundary' from data source 
+  `C:\Users\Hava\Documents\R\ch03-sh-cluster\_qgis_files\shp_mn_state_boundary\mn_state_boundary.shp' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 1 feature and 9 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -97.23921 ymin: 43.49936 xmax: -89.49174 ymax: 49.38436
+Geodetic CRS:  NAD83</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># confirm CRS the same</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(mn) <span class="sc">==</span> <span class="fu">st_crs</span>(mlras)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># keep the intersection of MLRAs and MN boundary</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mn_mlras <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(mn, mlras)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: attribute variables are assumed to be spatially constant throughout all
+geometries</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check out the result</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mn_mlras[<span class="st">"MLRARSYM"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="02-data_sources_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Now that I have the MLRA-MN intersection, need to subset to only the target MLRAs (selected b/c we know we will have validation data broadly in these regions, and because they are domianted by agriculture, unlike the NE part of the state)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># keep only target MLRAs (agricultural regions of the state)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># clipped to MN boundary</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>keep_mlrarsym <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"56"</span>,<span class="co"># Red River Valley of the North</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                <span class="st">"102A"</span>, <span class="co"># Rolling Till Prairie</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                <span class="st">"91A"</span>, <span class="co"># Central MN Sandy Outwash</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                <span class="st">"57"</span>, <span class="co"># Northern Minnesota Gray Drift</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                <span class="st">"103"</span>, <span class="co"># Central IA and MN Till Prairies</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                <span class="st">"104"</span>, <span class="co"># Eastern IA and MN Till Prairies</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                <span class="st">"105"</span>) <span class="co"># Northern Mississippi Valley Loess Hills </span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>mn_targets <span class="ot">&lt;-</span> mn_mlras <span class="sc">%&gt;%</span> </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="at">var =</span> <span class="st">"rowid"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(MLRARSYM <span class="sc">%in%</span> keep_mlrarsym,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>         <span class="co"># drops the northern portion of N MN Gray Drift </span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>         <span class="co"># which was excluded b/c lack of validation pts </span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>         rowid <span class="sc">!=</span> <span class="st">"1.4"</span>) </span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>mn_targets <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> MLRARSYM))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="02-data_sources_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># might want to make a map that shows the full extent of the MLRAs in MN, </span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># extending out to neighborhing states. </span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mn_mlras_extend <span class="ot">&lt;-</span> mlras <span class="sc">%&gt;%</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(MLRARSYM <span class="sc">%in%</span> keep_mlrarsym) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># drops the northern portion of N MN Gray Drift </span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># which was excluded b/c lack of validation pts </span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">2</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mn_mlras_extend) <span class="sc">+</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> MLRARSYM)) <span class="sc">+</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="02-data_sources_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="minnesota-county-boundaries" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="minnesota-county-boundaries"><span class="header-section-number">1.3</span> Minnesota County Boundaries</h2>
+<p>Downloaded the MDNR’s version of county boundaries from MN Geospatial</p>
+</section>
+<section id="minnesota-state-boundary" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="minnesota-state-boundary"><span class="header-section-number">1.4</span> Minnesota State Boundary</h2>
+<p>MN State Boundary downloaded from US Census Cartographic Boundary Files</p>
+<p><a href="https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html" class="uri">https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html</a></p>
+<p>File is the States 2018 500K shapefile</p>
+</section>
+<section id="national-cultivated-layer" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="national-cultivated-layer"><span class="header-section-number">1.5</span> 2020 National Cultivated Layer</h2>
+<ol type="1">
+<li>Access the data on the <a href="https://www.nass.usda.gov/Research_and_Science/Cropland/Release/index.php">Cropland “Research &amp; Science” page</a><br>
+</li>
+<li>Download zip file of 2020 National Cultivated Layer</li>
+</ol>
+<p>I think we want the “Cultivated Layer”, which is based on most recent 5 years of data, updated annually. Pixels are included in this layer if it was identified as cultivated in at least 2 of the last 5 years.</p>
+</section>
+<section id="soils-data" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="soils-data"><span class="header-section-number">1.6</span> Soils Data</h2>
+<section id="gssurgo-data" class="level3" data-number="1.6.1">
+<h3 data-number="1.6.1" class="anchored" data-anchor-id="gssurgo-data"><span class="header-section-number">1.6.1</span> gSSURGO data</h3>
+<ol type="1">
+<li>Navigate to the Geospatial Data Gateway’s <a href="https://gdg.sc.egov.usda.gov/GDGHome_DirectDownLoad.aspx">“Direct DAta/NAIP Download”</a> list<br>
+</li>
+<li>Click link for <a href="https://nrcs.app.box.com/v/soils">Soils Geographic Databases</a></li>
+<li>October 2021 gSSURGO by State<br>
+</li>
+<li>Download ZIP file for MN</li>
+</ol>
+<p>Citation for gSSURGO data:</p>
+<p>Soil Survey Staff. Gridded Soil Survey Geographic (gSSURGO) Database for Minnesota. United States Department of Agriculture, Natural Resources Conservation Service. Available online at <a href="https://gdg.sc.egov.usda.gov/" class="uri">https://gdg.sc.egov.usda.gov/</a>. November, 22, 2021 (2021 official release).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># inspect layers in .gdb</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>sf<span class="sc">::</span><span class="fu">st_layers</span>(<span class="st">"./data/gSSURGO_MN/gSSURGO_MN.gdb"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Driver: OpenFileGDB 
+Available layers:
+                   layer_name     geometry_type features fields
+1                    chaashto                NA   223330      4
+2               chconsistence                NA     2794     10
+3               chdesgnsuffix                NA    62846      3
+4                     chfrags                NA   321265     12
+5                    chorizon                NA   130493    171
+6                     chpores                NA       16      9
+7                    chstruct                NA   110021      7
+8                 chstructgrp                NA    95901      4
+9                      chtext                NA        0      7
+10                  chtexture                NA   318704      4
+11               chtexturegrp                NA   313739      6
+12               chtexturemod                NA    50000      3
+13                  chunified                NA   240027      4
+14              cocanopycover                NA       50      6
+15                  cocropyld                NA    34146     12
+16             codiagfeatures                NA    31760     12
+17                 coecoclass                NA    52483      6
+18                  coeplants                NA    25544      7
+19               coerosionacc                NA     5743      4
+20                  coforprod                NA     2726     12
+21                 coforprodo                NA        0     10
+22               cogeomordesc                NA    83667      8
+23           cohydriccriteria                NA    25091      3
+24                   cointerp                NA  5698886     13
+25                    comonth                NA   421728     17
+26                  component                NA    42529    109
+27                       copm                NA    49990      7
+28                    copmgrp                NA    34883      4
+29               copwindbreak                NA   161238      8
+30             corestrictions                NA     4369     13
+31                cosoilmoist                NA   666791      9
+32                 cosoiltemp                NA       96      9
+33                cosurffrags                NA    10955     15
+34              cosurfmorphgc                NA    17984      6
+35             cosurfmorphhpp                NA    28248      3
+36              cosurfmorphmr                NA      460      3
+37              cosurfmorphss                NA    42228      4
+38                 cotaxfmmin                NA    33654      3
+39               cotaxmoistcl                NA    20332      3
+40                     cotext                NA    42529      7
+41               cotreestomng                NA    32192      5
+42                cotxfmother                NA    31091      3
+43               distinterpmd                NA    11868      8
+44               distlegendmd                NA       92     11
+45                     distmd                NA       92      4
+46                   featdesc                NA      801      6
+47                  laoverlap                NA      512      6
+48                     legend                NA       92     14
+49                 legendtext                NA        0      7
+50                    mapunit                NA    10688     24
+51                      month                NA       12      2
+52                   muaggatt                NA    10688     40
+53                 muaoverlap                NA    35224      4
+54                  mucropyld                NA    23355     10
+55                     mutext                NA    12230      7
+56                  sacatalog                NA       92     11
+57                   sainterp                NA    11868      9
+58               sdvalgorithm                NA        8      4
+59               sdvattribute                NA      211     53
+60                  sdvfolder                NA       20      6
+61         sdvfolderattribute                NA      213      2
+62               mdstatdomdet                NA     6930      5
+63               mdstatdommas                NA      123      2
+64               mdstatidxdet                NA      172      4
+65               mdstatidxmas                NA      149      3
+66             mdstatrshipdet                NA       66      5
+67             mdstatrshipmas                NA       63      5
+68              mdstattabcols                NA      865     14
+69                 mdstattabs                NA       75      5
+70                   FEATLINE Multi Line String    60902      5
+71                  FEATPOINT             Point   254435      4
+72                     MULINE Multi Line String        0      5
+73                    MUPOINT             Point        0      4
+74                  SAPOLYGON     Multi Polygon       96      5
+75                  MUPOLYGON     Multi Polygon  2123552      6
+76                      Valu1                NA    10688     58
+77          MapunitRaster_10m     Multi Polygon        1      3
+78      VAT_MapunitRaster_10m                NA    10688      3
+79 fras_aux_MapunitRaster_10m                NA        1      3
+80 fras_blk_MapunitRaster_10m                NA   180371      6
+81 fras_bnd_MapunitRaster_10m                NA        1     18
+82 fras_ras_MapunitRaster_10m                NA        1      3
+               crs_name
+1                  &lt;NA&gt;
+2                  &lt;NA&gt;
+3                  &lt;NA&gt;
+4                  &lt;NA&gt;
+5                  &lt;NA&gt;
+6                  &lt;NA&gt;
+7                  &lt;NA&gt;
+8                  &lt;NA&gt;
+9                  &lt;NA&gt;
+10                 &lt;NA&gt;
+11                 &lt;NA&gt;
+12                 &lt;NA&gt;
+13                 &lt;NA&gt;
+14                 &lt;NA&gt;
+15                 &lt;NA&gt;
+16                 &lt;NA&gt;
+17                 &lt;NA&gt;
+18                 &lt;NA&gt;
+19                 &lt;NA&gt;
+20                 &lt;NA&gt;
+21                 &lt;NA&gt;
+22                 &lt;NA&gt;
+23                 &lt;NA&gt;
+24                 &lt;NA&gt;
+25                 &lt;NA&gt;
+26                 &lt;NA&gt;
+27                 &lt;NA&gt;
+28                 &lt;NA&gt;
+29                 &lt;NA&gt;
+30                 &lt;NA&gt;
+31                 &lt;NA&gt;
+32                 &lt;NA&gt;
+33                 &lt;NA&gt;
+34                 &lt;NA&gt;
+35                 &lt;NA&gt;
+36                 &lt;NA&gt;
+37                 &lt;NA&gt;
+38                 &lt;NA&gt;
+39                 &lt;NA&gt;
+40                 &lt;NA&gt;
+41                 &lt;NA&gt;
+42                 &lt;NA&gt;
+43                 &lt;NA&gt;
+44                 &lt;NA&gt;
+45                 &lt;NA&gt;
+46                 &lt;NA&gt;
+47                 &lt;NA&gt;
+48                 &lt;NA&gt;
+49                 &lt;NA&gt;
+50                 &lt;NA&gt;
+51                 &lt;NA&gt;
+52                 &lt;NA&gt;
+53                 &lt;NA&gt;
+54                 &lt;NA&gt;
+55                 &lt;NA&gt;
+56                 &lt;NA&gt;
+57                 &lt;NA&gt;
+58                 &lt;NA&gt;
+59                 &lt;NA&gt;
+60                 &lt;NA&gt;
+61                 &lt;NA&gt;
+62                 &lt;NA&gt;
+63                 &lt;NA&gt;
+64                 &lt;NA&gt;
+65                 &lt;NA&gt;
+66                 &lt;NA&gt;
+67                 &lt;NA&gt;
+68                 &lt;NA&gt;
+69                 &lt;NA&gt;
+70 NAD83 / Conus Albers
+71 NAD83 / Conus Albers
+72 NAD83 / Conus Albers
+73 NAD83 / Conus Albers
+74 NAD83 / Conus Albers
+75 NAD83 / Conus Albers
+76                 &lt;NA&gt;
+77 NAD83 / Conus Albers
+78                 &lt;NA&gt;
+79                 &lt;NA&gt;
+80                 &lt;NA&gt;
+81                 &lt;NA&gt;
+82                 &lt;NA&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="process-for-.gdb-.tif" class="level3" data-number="1.6.2">
+<h3 data-number="1.6.2" class="anchored" data-anchor-id="process-for-.gdb-.tif"><span class="header-section-number">1.6.2</span> Process for .gdb &gt; .tif</h3>
+<p>When you unzip gSSURGO, the data is in ESRI geodatabase (.gdb) format. I had thought this was a proprietary format that you had to open in an ESRI program like ArcMap, but <a href="https://gis.ucla.edu/node/53">this 2015 blog post</a> from UCLA suggests otherwise (and helpfully explains some GDAL drivers for opening .gdbs). Also <a href="https://www.northrivergeographic.com/qgis-using-esris-file-based-geodatabase">this blog post</a> from 2021 walks through opening a .gdb in QGIS, but doesn’t mention a maximum file size (which I thought was an issue?). Anyway, I think QGIS froze when I tried to open the .gdb, so I used ArcMap instead to save it is a .tif, as describe below.</p>
+<p>For future, <a href="https://gis.stackexchange.com/questions/108670/how-can-i-work-with-very-large-shapefiles-1-gb-in-qgis">gis.stackexchange post</a> suggests that maybe using a database like spatialite or postgis would be helpful? Learn more about this, starting with the QGIS docs here (esp module 16 and 18). Also for future,<a href="https://gis.stackexchange.com/questions/360210/open-gdb-file-in-r">some breadcrumbs that maybe .gdb</a> IS in fact proprietary and must be opened using ESRI software is necessary. Distinction that there is no GDAL <strong>raster</strong> driver for ESRI GeoDatabase files (for vector I believe there is a driver, stumbled on some posts about this).</p>
+<p>Other posts on this topic, both of which support the majority opinion that for <strong>rasters</strong> you really do need to open in ArcMap and export to get free of the .gdb :</p>
+<p>https://gis.stackexchange.com/questions/385255/how-to-extract-raster-from-gdb-instead-of-empty-polygons</p>
+<p>https://stackoverflow.com/questions/27821571/working-with-rasters-in-file-geodatabase-gdb-with-gdal</p>
+<p>(Side note, it is possible to access the <strong>tabular</strong> data in R without changing the .gdb format as demonstrated in the code chunk above, but for the spatial data I still needed to convert from .gdb to .tif).</p>
+<p>ArcMap <a href="https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/export-or-convert-raster-datasets.htm">documentation explains</a> that there are two ways to export a dataset (which is when you would have the option to change the file type). These are:</p>
+<ul>
+<li><strong>export raster data</strong> <strong>dialog box</strong>. I get this by right clicking the data layer listing in the side panel of ArcMap and selecting “export…”</li>
+<li><strong>copy raster tool</strong>. this tool can be found in Data management toolbox &gt; raster toolset. The <a href="https://desktop.arcgis.com/en/arcmap/latest/tools/data-management-toolbox/copy-raster.htm">documentation</a> is helpful. I used this to scale my pixels to a new bit depth (32bit -&gt; 16bit) after replacing the values with my shorter MUKEYs using a reclass (see below). This reduced the overall file size of the tif significantly.</li>
+</ul>
+<p>More about the <strong>export raster data dialog box</strong> (in ESRI’s words, from documentation linked above:</p>
+<blockquote class="blockquote">
+<p>The dialog box allows you to export a raster dataset or a portion of a raster dataset. Unlike other raster import or export tools, the Export Raster Data dialog box gives you additional capabilities such as clipping via the current data frame area, clipping via a selected graphic, choosing the spatial reference of the data frame, using the current renderer, choosing the output cell size, or specifying the NoData value. In addition, you will be able to choose the output format for the raster dataset: BMP, ENVI, Esri BIL, Esri BIP, Esri BSQ, GIF, GRID, IMG, JPEG, JPEG 2000, PNG, TIFF, or exporting to a geodatabase.</p>
+</blockquote>
+<p>I learned through trial and error about what happens when you lower the pixel depth even though you have values beyond the acceptable range: “If the pixel type is demoted (lowered), the raster <strong>values outside the valid range for that pixel depth will be truncated and lost</strong>”</p>
+</section>
+<section id="sec-reclass" class="level3" data-number="1.6.3">
+<h3 data-number="1.6.3" class="anchored" data-anchor-id="sec-reclass"><span class="header-section-number">1.6.3</span> Process for raster reclass (new MUKEYs)</h3>
+<p>Open .tif version of gSSURGO in ArcMap version XXX.</p>
+<p>First need to create a table of new (shorter) MUKEY values. The table I provided to the raster reclass tool below was a text file of our cross-walk between the original map unit keys and our new, shorter map unit keys that allowed us to reduce the file size by going down to 16bit pixel depth. I created this original crosswalk table by:</p>
+<ol type="1">
+<li>Build pyramids</li>
+<li>Build attribute table in Data Management Toolbox &gt; Raster &gt; Raster Properties &gt; Build Raster Attribute Table</li>
+<li>Open attribute table, add field called “new_mu” with “short integer type” (b/c only 2 bits to store short integers and we want to reduce size). Field properties “precision” leaving at 0. Now new_mu is the same as OID, just integers starting at 0 and going all the way to 7861</li>
+<li>Saved attribute table as a .txt file for future reference.</li>
+</ol>
+<p>Then, I performed a <a href="https://desktop.arcgis.com/en/arcmap/latest/tools/3d-analyst-toolbox/reclass-by-table.htm">raster reclass</a> by table. Had to <strong>turn on</strong> the 3D analyst tools before I could access them (they were grayed out). Using Customize menu &gt; Extensions, turned on the 3D analyst tools and spatial analyst tools</p>
+<p>Now in the ArcToolbox, going to 3D analyst tools &gt; Raster Reclass &gt; Reclass by Table</p>
+<p>Input raster: MapunitRaster_10m_Clip1<br>
+Input remap table: mukey_new_crosswalk.txt<br>
+From value field: MUKEY<br>
+To value field: MUKEY<br>
+Output value fuield: MUKEY_new<br>
+Change missing values to NoData: DATA?</p>
+<p>SUCCESS with raster reclass above. To save, I used “Export Raster Data”<br>
+Dialog box shows that the uncompressed size is 5.42 GB (!!), and the pixel depth is 16bit. I am assigning the NoData value as 7999 (our max MU value is 7861)</p>
+<p>Saving to <code>C:\Users\blair304\Desktop\MapunitRaster_10m_Clip1</code>, name <code>Reclass_tif1.tif</code>, compression type NONE, compression quality set at default 75 (can’t see a way to change it?)</p>
+</section>
+</section>
+<section id="ncss-kellogg-lab-data" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="ncss-kellogg-lab-data"><span class="header-section-number">1.7</span> NCSS (Kellogg Lab) Data</h2>
+<p>Navigate to this link: https://ncsslabdatamart.sc.egov.usda.gov/</p>
+<p>Click on “Advanced Query”</p>
+<p>Specify:</p>
+<ul>
+<li>Country: United States</li>
+<li>State: Minnesota</li>
+<li>Submission Date Jan 1, 2000 - Oct 17 2022</li>
+</ul>
+<p>This returns 145 records.</p>
+<p>Had to do the downloads separated by “data tiers” because I got a network timeout / server error when I tried highlighting everything. Here are the batches:</p>
+<ul>
+<li>Carbon and extractions</li>
+<li>PSDA &amp; Rock frags, WAter content</li>
+<li>Bulk density &amp; moisture, water content</li>
+<li>CEC and bases, salt, organic</li>
+<li>Phosphorus</li>
+<li>Taxonomy tier 1 &amp; 2</li>
+<li>pH &amp; carbonates</li>
+</ul>
+<section id="accessing-data" class="level3" data-number="1.7.1">
+<h3 data-number="1.7.1" class="anchored" data-anchor-id="accessing-data"><span class="header-section-number">1.7.1</span> Accessing data</h3>
+<ul>
+<li><p>For each chunk of data I downloaded (see bullet points above), have a folder with CSV files. Each folder contains a data dictionary, a “site” csv, and a “pedon” csv</p></li>
+<li><p>latitude &amp; longitude data are in the “site” files. Not clear if there is usually 1 pedon per site, and so this lat/lon are probably right? Or would there be multiple pedons at a given site, so the site location won’t be quite right?</p></li>
+<li><p>with code in R/unzip_merge_ncss_data.R, created “NCSS_validation_point_key_site_pedon.csv”, which is all pedons with location data (56 total)</p></li>
+</ul>
+<p>Need to match up the right lab methods from the NCSS dataset so they correspond with the data I pulled from gSSURGO. Looking up more info in the gSSURGO metadata about these to see if methods are listed</p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 50%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>variable</th>
+<th>gSSURGO info</th>
+<th>Spreadsheet</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>x clay</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>x SOC (for OM)</td>
+<td>OM (LOI), pull SOC data from NCSS and convert</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>x CEC</td>
+<td>pH 7</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>x bulk density</td>
+<td>1/3 bar</td>
+<td><code>Db1/3_4A1d_Caj_g/cc_0_CMS_0_0</code> AND/OR <code>Db13b_3B1b_Caj_0_SSL_0_0</code> AND/OR <code>Db13b_DbWR1_Caj_g/cc_0_SSL_0_0</code></td>
+</tr>
+<tr class="odd">
+<td>x EC</td>
+<td>saturated paste</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>x pH</td>
+<td>1:1 H2O</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>x carbonates</td>
+<td>weight percent CaCO3 equivalent</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>x LEP</td>
+<td></td>
+<td>COLE?</td>
+</tr>
+<tr class="odd">
+<td>O KSAT</td>
+<td></td>
+<td>See notes below on ksat, don’t have this data for now, think it’s not the most important for validation</td>
+</tr>
+<tr class="even">
+<td>x AWC</td>
+<td>volume fraction, diff b/t water contents at 1/10 or 1/3 and 15 bar</td>
+<td>0 or 1/3 bar and 15 bars tension</td>
+</tr>
+<tr class="odd">
+<td>x fragvol_r</td>
+<td>volume percentage of horizon occupied by 2mm or larger fraction (20mm or larger for wood fragments) on a whole soil basis</td>
+<td>? I found weight fractions but not volume fractions in the PSDA and rock fragments table.</td>
+</tr>
+</tbody>
+</table>
+<p>I couldn’t find ksat data in any of the NCSS tables. Suspect it might be because it is estimated using some kind of pedotransfer function. I found a Masters thesis from 2017 by Joshua Randall Weaver that seems to confirm this based on references in their literature review. The thesis is “Comparison of Saturated Hydraulic Conductivity using Geospatial Analysis of Field and SSURGO data for septic tank suitability assessment”, Clemson University. On pg 2 (introduction), Weaver states</p>
+<blockquote class="blockquote">
+<p>“Currently, SSURGO-reported saturated hydraulic conductivity (Ksat) data are often estimated from particle-size analysis (PSA) data from specific locations and then extrapolated across large areas based on soil map units (O’Neal, 1952; Rawls and Brakensiek, 1983; Williamson et al., 2014).” Rare comparisons of SSURGO recorded PSA-derived Ksat values are often different from site-specific field Ksat measurements (Hart et al.&nbsp;2008). The freely available PSA-derived Ksat data from SSURGO is frequently used for regional and national modelling for the purposes of environmental management, but spatial variability associated with using SSURGO data instead of site-specific data is largely unknown (Hoos and McMahon, 2009). ”</p>
+</blockquote>
+<p>For now I’m not going to worry too much about Ksat data, as it doesn’t seem like the most important thing to validate (very few SH studies collect it right now, it’s highly variable, it will be related to particle size). So I’m leaving this aside for now, but wanted to document in case I come back in the future.</p>
+</section>
+</section>
+<section id="noaa-ncei-u.s.-climate-normals" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="noaa-ncei-u.s.-climate-normals"><span class="header-section-number">1.8</span> NOAA NCEI U.S. Climate Normals</h2>
+<ul>
+<li>On January 9, 2023 Access the map interface for US Climate Normals Data at https://www.ncei.noaa.gov/maps/normals</li>
+<li>Select 1991-2020 Climate Normals in the side bar, Annual Normals (hourly, daily, and monthly are also available)</li>
+<li>Select the wrench icon next to the selected dataset in the sidebar to open the “Tools” for that dataset. Use the “identify” (i) tool to pick a station and learn it’s name and ID number.</li>
+<li>I picked two stations:
+<ul>
+<li><p>One in the far northwest (Hallock, MN USC00213455) and one in the far southeast (Caledonia MN, USC00211198)</p></li>
+<li><p>NW: Hallock, MN MAT is 39.1 F and MAP is 22.31 inches</p></li>
+<li><p>SE: Caledonia, MN MAT is 45.5 F and MAP is 38.32 in</p></li>
+</ul></li>
+<li>Rather than download the full dataset, I used the station names I had identified to see a quick summary with the “<a href="https://www.ncei.noaa.gov/access/us-climate-normals/">U.S. Climate Normals Quick Access</a>” Tool.
+<ul>
+<li><p>Selected the “Annual/Seasonal Tab” and 1991-2020 tab</p></li>
+<li></li>
+</ul></li>
+<li>Recommended dataset citation, per <a href="https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C01619/html#">metadata page</a>, is Arguez, A., I. Durre, S. Applequist, R. Vose, M. Squires, X. Yin, R. Heim, and T. Owen, 2012: NOAA’s 1981-2010 climate normals: An overview. Bull. Amer. Meteor. Soc., 93, 1687-1697. (this is saved in my Zotero library already)</li>
+</ul>
+<section id="convert-map-and-mat-values" class="level3" data-number="1.8.1">
+<h3 data-number="1.8.1" class="anchored" data-anchor-id="convert-map-and-mat-values"><span class="header-section-number">1.8.1</span> Convert MAP and MAT values</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MAT convert from F to C: subtract 32 and multiply by 5/9</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>(<span class="fl">39.1</span> <span class="sc">-</span> <span class="dv">32</span>)<span class="sc">*</span>(<span class="dv">5</span><span class="sc">/</span><span class="dv">9</span>) <span class="co"># Hallock (NW)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.944444</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(<span class="fl">45.5</span><span class="sc">-</span> <span class="dv">32</span>)<span class="sc">*</span>(<span class="dv">5</span><span class="sc">/</span><span class="dv">9</span>) <span class="co"># Caledonia (SE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7.5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MAP convert inches to mm (1in=2.54cm, 10mm = 1cm)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fl">22.31</span><span class="sc">*</span><span class="fl">2.54</span><span class="sc">*</span><span class="dv">10</span> <span class="co"># Hallock (NW)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 566.674</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fl">38.32</span><span class="sc">*</span><span class="fl">2.54</span><span class="sc">*</span><span class="dv">10</span> <span class="co"># Caledonia (SE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 973.328</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Overview</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./03-mus_comp_in_aoi.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Explore Map Units &amp; Components in AOI</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

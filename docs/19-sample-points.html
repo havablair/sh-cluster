@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Minnesota Topsoil Classification for Soil Health Assessment - 12&nbsp; Sample validation points</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./20-cluster-pairwise-comp.html" rel="next">
+<link href="./12-explore-clust-props.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./19-sample-points.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sample validation points</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Minnesota Topsoil Classification for Soil Health Assessment</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-data_sources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data Sources</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-mus_comp_in_aoi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Explore Map Units &amp; Components in AOI</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-subset-component-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Identify Target Components</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-horiz-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Horizon Data Averages</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-soil-prop-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Soil Property Exploratory Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-map-unit-agg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Map unit aggregation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-var-transformations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Variable Transformations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-plot-ec-lep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MAP EC and LEP with <code>{terra}</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-additional-data-prep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Additional Data Preparation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-implement-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Implement k-means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-explore-clust-props.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Explore clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-sample-points.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sample validation points</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-map-indiv-regions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mapping individual clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-pca-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Do PCA before k-means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23-pca-kmeans-finalists.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">PCA-kmeans Clustering Finalists</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24-compare-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Comparing k-means scenarios</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25-pca-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">PCA Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26-notes-pca6-8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Comparing PCA 6 &amp; PCA 8 Models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27-pairwise-nonparametric.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">(non-parametric) PCA Cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./28-compare-variation-demo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compare variation explained</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./29-welch-pairwise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./30-welch-compare-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Welch ANOVA - compare variation explained</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#validation-datasets" id="toc-validation-datasets" class="nav-link active" data-scroll-target="#validation-datasets"><span class="header-section-number">12.1</span> Validation datasets</a></li>
+  <li><a href="#reproject-points-to-nad-83-albers" id="toc-reproject-points-to-nad-83-albers" class="nav-link" data-scroll-target="#reproject-points-to-nad-83-albers"><span class="header-section-number">12.2</span> Reproject points to NAD 83 Albers</a></li>
+  <li><a href="#sample-rasters-extract-value" id="toc-sample-rasters-extract-value" class="nav-link" data-scroll-target="#sample-rasters-extract-value"><span class="header-section-number">12.3</span> Sample Rasters (Extract value)</a>
+  <ul class="collapse">
+  <li><a href="#an-example" id="toc-an-example" class="nav-link" data-scroll-target="#an-example"><span class="header-section-number">12.3.1</span> An example</a></li>
+  <li><a href="#brainstorm-process-to-iterate-with-extract" id="toc-brainstorm-process-to-iterate-with-extract" class="nav-link" data-scroll-target="#brainstorm-process-to-iterate-with-extract"><span class="header-section-number">12.3.2</span> Brainstorm process to iterate with “extract”</a></li>
+  <li><a href="#finished-raster-extract-process-cig-ncss" id="toc-finished-raster-extract-process-cig-ncss" class="nav-link" data-scroll-target="#finished-raster-extract-process-cig-ncss"><span class="header-section-number">12.3.3</span> Finished raster extract process (CIG, NCSS)</a></li>
+  </ul></li>
+  <li><a href="#number-points-per-dataset-soil-property" id="toc-number-points-per-dataset-soil-property" class="nav-link" data-scroll-target="#number-points-per-dataset-soil-property"><span class="header-section-number">12.4</span> Number points per dataset &amp; soil property</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sample validation points</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Now that we have our clustering candidates from the k-means models saved as raster files, to validate the models we need to sample the rasters at the locations where the soil samples were collected. This will tell us which “region” or cluster the sample falls into, based on its position on the map. We will do this for each raster we generated (different # of clusters).</p>
+<p>After we have this information for our validation points, we can compare the expected means and ranges of soil properties from the SSURGO data (by summarizing our model results, probably spatially weighted) with the soil property values measured at the validation points.</p>
+<section id="validation-datasets" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="validation-datasets"><span class="header-section-number">12.1</span> Validation datasets</h2>
+<p>There are 3 main validation datasets that I currently have access to:</p>
+<ul>
+<li>NRCS SHI project (Jess). Validation completed by Joe Brennan, saved in data &gt; validation data &gt; NCRS-SHI &gt; shi_site_allvar_validation_20221116.csv</li>
+<li>CIG field data</li>
+<li>NCSS data from KSSL. I completed the data cleaning and merging process with the script <code>unqip_merge_ncss_data.R</code>. The dataset (all props averaged to 0-20cm) is saved in data &gt; validation data &gt; NCSS-KSSL &gt; validation_ncss_kssl_0-20cm_aggr.csv</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># points to validate</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>ncss_dat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/validation_data/NCSS-KSSL/validation_ncss_kssl_0-20cm_aggr.csv"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ended up making these matrices so I can add ids as an "attribute" (atts) in the vect function </span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>ncss_pts <span class="ot">&lt;-</span> ncss_dat <span class="sc">%&gt;%</span> </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(longitude_decimal_degrees, latitude_decimal_degrees) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">lon =</span> longitude_decimal_degrees,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">lat =</span> latitude_decimal_degrees) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>cig_dat <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../CIG/cig-main/cig_lab_data_all_20221129.csv"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>cig_pts <span class="ot">&lt;-</span> cig_dat <span class="sc">%&gt;%</span> </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(lon, lat) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># I am using these dfs to see if setting sample ID as an attribute in the</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># SpatVector below will allow me to identify the points more readily after</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># extract()</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>cig_ids <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">sample_id =</span> cig_dat<span class="sc">$</span>sample_id,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>                      <span class="at">row.names =</span> <span class="cn">NULL</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>ncss_ids <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">pedon_key =</span> ncss_dat<span class="sc">$</span>pedon_key)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="reproject-points-to-nad-83-albers" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="reproject-points-to-nad-83-albers"><span class="header-section-number">12.2</span> Reproject points to NAD 83 Albers</h2>
+<p>My rasters are in NAD 1983 Albers projection (EPSG: 5070). My points are in WGS 84 (EPSG: 4326, they are lon/lat). I need to reproject the points before I extract the raster values. This involves two steps:</p>
+<ul>
+<li>Turn my 2-column dataframes (lon, lat) into SpatVector objects</li>
+<li>Reproject the SpatVector objects to the correction CRS</li>
+</ul>
+<p>From the <code>{terra}</code> documentation: “You can use a data.frame to make a SpatVector of points; or a”geom” matrix to make a SpatVector of any supported geometry (see examples and <code>geom</code>)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># turn the CIG and NCSS points dfs to SpatVectors</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>cig_spat <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="at">x =</span> cig_pts,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">type =</span> <span class="st">"points"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>     <span class="co"># EPSG:4326 is WGS84 long/lat</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">crs =</span> <span class="st">"epsg:4326"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">atts =</span> cig_ids</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>     )</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>ncss_spat <span class="ot">&lt;-</span> <span class="fu">vect</span>(<span class="at">x =</span> ncss_pts,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">"points"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># EPSG:4326 is WGS84 long/lat</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">crs =</span> <span class="st">"epsg:4326"</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">atts =</span> ncss_ids)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># reproject the CIG and NCSS points to NAD 83 (EPSG 5070)</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>cig_reproj <span class="ot">&lt;-</span> <span class="fu">project</span>(<span class="at">x =</span> cig_spat,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="st">"epsg:5070"</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>cig_reproj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> class       : SpatVector 
+ geometry    : points 
+ dimensions  : 486, 1  (geometries, attributes)
+ extent      : -83294.72, 263752.5, 2296221, 2843822  (xmin, xmax, ymin, ymax)
+ coord. ref. : NAD83 / Conus Albers (EPSG:5070) 
+ names       : sample_id
+ type        :     &lt;num&gt;
+ values      :         1
+                       2
+                       3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ncss_reproj <span class="ot">&lt;-</span> <span class="fu">project</span>(<span class="at">x =</span> ncss_spat,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">y =</span> <span class="st">"epsg:5070"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ncss_reproj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> class       : SpatVector 
+ geometry    : points 
+ dimensions  : 49, 1  (geometries, attributes)
+ extent      : -56529.96, 395663.8, 2374854, 2848762  (xmin, xmax, ymin, ymax)
+ coord. ref. : NAD83 / Conus Albers (EPSG:5070) 
+ names       : pedon_key
+ type        :     &lt;chr&gt;
+ values      :   02N0123
+                 02N0796
+                 02N0797</code></pre>
+</div>
+</div>
+</section>
+<section id="sample-rasters-extract-value" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="sample-rasters-extract-value"><span class="header-section-number">12.3</span> Sample Rasters (Extract value)</h2>
+<p>Need to review relevant function/s from <code>{terra}</code> for doing the raster sampling. Otherwise I know how to do it already in QGIS.</p>
+<p>Looks like I want the <code>extract()</code> function. “Sample” has a different meaning in <code>{terra}</code>, (taking a spatial sample / regular sample)</p>
+<p>Important arguments:</p>
+<ul>
+<li><code>x</code> is the SpatRaster</li>
+<li><code>y</code> (in my case) is a SpatVector, re-projected above</li>
+<li><code>method</code> should be “simple”, because I want the value of the cell the point falls into</li>
+<li><code>xy</code> set to TRUE (return coordinates with results)</li>
+<li><code>ID</code> set to TRUE (return IDs, record numbers, of input SpatVector y)</li>
+</ul>
+<section id="an-example" class="level3" data-number="12.3.1">
+<h3 data-number="12.3.1" class="anchored" data-anchor-id="an-example"><span class="header-section-number">12.3.1</span> An example</h3>
+<p>OK, got this working after some silly troubleshooting with attributes and CRS (had the wrong EPSG code for NAD 1983 Albers to start out).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># start with the k=2 model</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>test_rast <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"E:/big-files-backup/ch03-sh-groups/clust2_allvar.tif"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>ext_df <span class="ot">&lt;-</span> <span class="fu">extract</span>(<span class="at">x =</span> test_rast,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> cig_reproj,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">method =</span> <span class="st">"simple"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">xy =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">ID =</span> <span class="cn">TRUE</span>)  </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># also try it with the NCSS points, just to see:</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">extract</span>(<span class="at">x =</span> test_rast,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> ncss_reproj,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">method =</span> <span class="st">"simple"</span>, </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">xy =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">ID =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["ID"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Reclass_tif1"],"name":[2],"type":["int"],"align":["right"]},{"label":["x"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["y"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"1","3":"-20260","4":"2746870"},{"1":"2","2":"NA","3":"242690","4":"2707470"},{"1":"3","2":"NA","3":"231340","4":"2702890"},{"1":"4","2":"NA","3":"231340","4":"2702890"},{"1":"5","2":"NA","3":"235900","4":"2702910"},{"1":"6","2":"NA","3":"237150","4":"2702800"},{"1":"7","2":"NA","3":"223880","4":"2744130"},{"1":"8","2":"NA","3":"249120","4":"2716560"},{"1":"9","2":"NA","3":"262000","4":"2658110"},{"1":"10","2":"NA","3":"296260","4":"2684040"},{"1":"11","2":"2","3":"135770","4":"2374850"},{"1":"12","2":"2","3":"135460","4":"2374930"},{"1":"13","2":"2","3":"134180","4":"2375080"},{"1":"14","2":"2","3":"129390","4":"2445610"},{"1":"15","2":"2","3":"132460","4":"2447510"},{"1":"16","2":"NA","3":"NaN","4":"NaN"},{"1":"17","2":"NA","3":"NaN","4":"NaN"},{"1":"18","2":"NA","3":"NaN","4":"NaN"},{"1":"19","2":"NA","3":"320880","4":"2751490"},{"1":"20","2":"NA","3":"330190","4":"2748880"},{"1":"21","2":"NA","3":"337840","4":"2748010"},{"1":"22","2":"NA","3":"348680","4":"2755000"},{"1":"23","2":"NA","3":"356150","4":"2749630"},{"1":"24","2":"NA","3":"365100","4":"2747470"},{"1":"25","2":"NA","3":"372950","4":"2741330"},{"1":"26","2":"NA","3":"314630","4":"2749410"},{"1":"27","2":"1","3":"-45070","4":"2846080"},{"1":"28","2":"2","3":"-56530","4":"2842470"},{"1":"29","2":"0","3":"152830","4":"2634470"},{"1":"30","2":"0","3":"152840","4":"2634520"},{"1":"31","2":"0","3":"132330","4":"2600780"},{"1":"32","2":"0","3":"132350","4":"2600970"},{"1":"33","2":"2","3":"134530","4":"2415400"},{"1":"34","2":"2","3":"134420","4":"2416000"},{"1":"35","2":"2","3":"134140","4":"2416460"},{"1":"36","2":"1","3":"-33870","4":"2770710"},{"1":"37","2":"1","3":"-33620","4":"2770610"},{"1":"38","2":"2","3":"-34290","4":"2771610"},{"1":"39","2":"2","3":"-16470","4":"2848580"},{"1":"40","2":"2","3":"-3970","4":"2848760"},{"1":"41","2":"2","3":"-1270","4":"2848640"},{"1":"42","2":"2","3":"1550","4":"2666580"},{"1":"43","2":"2","3":"1550","4":"2666580"},{"1":"44","2":"2","3":"1580","4":"2666580"},{"1":"45","2":"0","3":"1620","4":"2666510"},{"1":"46","2":"0","3":"1630","4":"2666520"},{"1":"47","2":"2","3":"1650","4":"2666530"},{"1":"48","2":"2","3":"1660","4":"2666520"},{"1":"49","2":"2","3":"1740","4":"2666510"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="brainstorm-process-to-iterate-with-extract" class="level3" data-number="12.3.2">
+<h3 data-number="12.3.2" class="anchored" data-anchor-id="brainstorm-process-to-iterate-with-extract"><span class="header-section-number">12.3.2</span> Brainstorm process to iterate with “extract”</h3>
+<p>Again, thinking about how I want to be able to set up the steps of this process in a <code>{targets}</code> pipeline, the meat of this process of extracting raster values will be done in a separate R script. Here I am thinking through how I would structure that.</p>
+<ul>
+<li>Setup: Like above, load the locations and sample IDs for the points I want to use in my validation. Combine the CIG and NCSS points into a single dataframe. Then do Data.frame &gt; matrix &gt; spat vector w/ ID attribute</li>
+<li>Write a custom function that will:
+<ul>
+<li><p>Load a raster for a given value of <code>k</code></p></li>
+<li><p>Extract raster values at our target points -&gt; this is a dataframe. Make sure the raster value column has an informative name that includes the <code>k</code> value so we can distinguish it</p></li>
+<li><p>Remove the raster (it’s big, we dont need it any more)</p></li>
+<li><p>Return the dataframe</p></li>
+</ul></li>
+<li>Use map to run the custom function above, iterating over values of <code>k</code> from 2-20 and column-binding the results, so we end up with a dataframe that has rows = validation points, and columns = raster values for different <code>k</code> cluster sizes</li>
+</ul>
+</section>
+<section id="finished-raster-extract-process-cig-ncss" class="level3" data-number="12.3.3">
+<h3 data-number="12.3.3" class="anchored" data-anchor-id="finished-raster-extract-process-cig-ncss"><span class="header-section-number">12.3.3</span> Finished raster extract process (CIG, NCSS)</h3>
+<p>The script <code>R/extract_raster_values_at_validation_points.R</code> implements the process described above. At the end of that script, I save a CSV file in wide format with the CIG and NCSS_KSSl validation data <code>cig_ncss-kssl_allvar_validation_20221230.csv</code>.</p>
+<p>The next step is to combine the validation data, which identifies the cluster assignments, with the soil property data. I will do this in the next chapter.</p>
+</section>
+</section>
+<section id="number-points-per-dataset-soil-property" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="number-points-per-dataset-soil-property"><span class="header-section-number">12.4</span> Number points per dataset &amp; soil property</h2>
+<p>In the manuscript, I’d like to report how many points came from each of our three datasets. Here is some code to determine this. The best place to start is the dataset that I prepped for pairwise comparisons using <code>R/prep_validation_data_for_pairwise_comparisons.R</code>. It has NA values removed and the CIG points have been reduced to independent points only.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>val_dat <span class="ot">&lt;-</span>  <span class="fu">read_csv</span>(<span class="st">"data/validation_data_clusters_and_soil_props.csv"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">proj_id =</span> <span class="fu">case_when</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(val_unit_id, <span class="st">"CC$"</span>) <span class="sc">~</span> <span class="st">"NRCS-SHI"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(val_unit_id, <span class="st">"[:digit:]{3}$"</span>) <span class="sc">~</span> <span class="st">"KSSL"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"CIG"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 146 Columns: 34
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (1): val_unit_id
+dbl (33): k_10, k_11, k_12, k_13, k_14, k_15, k_16, k_17, k_18, k_19, k_2, k...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># number of validation pts per project</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>val_dat <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(proj_id) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["proj_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"CIG","2":"82"},{"1":"KSSL","2":"29"},{"1":"NRCS-SHI","2":"35"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># number of validation points overall</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(val_dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 146</code></pre>
+</div>
+</div>
+<p>OK, so how many points do we have for each of the soil properties we are using to calculate cluster means?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>val_dat <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(val_unit_id, claytotal, dbthirdbar, ph1to1h2o, caco3, om_loi) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>val_unit_id,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.fns =</span> \(xcol) <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(xcol))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["claytotal"],"name":[1],"type":["int"],"align":["right"]},{"label":["dbthirdbar"],"name":[2],"type":["int"],"align":["right"]},{"label":["ph1to1h2o"],"name":[3],"type":["int"],"align":["right"]},{"label":["caco3"],"name":[4],"type":["int"],"align":["right"]},{"label":["om_loi"],"name":[5],"type":["int"],"align":["right"]}],"data":[{"1":"144","2":"131","3":"144","4":"98","5":"125"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./12-explore-clust-props.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Explore clusters</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./20-cluster-pairwise-comp.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Cluster pairwise comparisons</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

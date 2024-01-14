@@ -1,0 +1,263 @@
+# Explore Map Units & Components in AOI
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE) 
+
+library(tidyverse)
+library(terra)
+library(sf)
+library(soilDB)
+library(aqp) 
+
+# list of mapunit keys in my AOI
+# generated in ArcGIS
+aoi_mu <- read.delim("data/gSSURGO_MN/mukey_new_crosswalk.txt", sep = ",") %>% 
+  select(MUKEY, MUKEY_New, Count)
+```
+
+## Overview
+
+I have a list of map unit keys from my clipped area of interest.
+In order to reduce the file size of the TIF I was working with, I created new map unit key IDs.
+The cross-walk table is in `data/gSSURGO_MN/mukey_new_crosswalk.txt`.
+There are 7,862 unique map unit keys in my area of interest (AOI).
+
+This is what the cross-walk table looks like:
+
+```{r, echo=FALSE}
+head(aoi_mu)
+```
+
+## Map Units
+
+I can use the map unit keys (MUKEYs) from my AOI to get more information on my target map units by calling up different tables from gSSURGO and subsetting based on the MUKEYs, and identifying the components within each mapunit in my AOI.
+
+For more info about SSURGO tables and columns, refer to descriptions in the SSURGO metadata PDFs in `data/gSSURGO_MN/`
+
+```{r}
+# which layers (tables) are available to me?
+# can inspect layers in .gdb
+sf::st_layers("./data/gSSURGO_MN/gSSURGO_MN.gdb")
+
+mn_gdb <- "data/gSSURGO_MN/gSSURGO_MN.gdb" 
+
+# read only mapunit table, as dataframe
+mn_mapunits <- sf::st_read(dsn = mn_gdb, layer = "mapunit")
+
+```
+
+These are the columns in the mapunit table:
+
+```{r}
+colnames(mn_mapunits)
+```
+
+We will subset to only include MUKEYs in our AOI.
+
+```{r}
+
+# keep only the map units in my AOI (n=7862)
+target_mapunits <- mn_mapunits %>% 
+  filter(mukey %in% aoi_mu$MUKEY)
+
+# summary of map unit types
+target_mapunits %>% 
+  dplyr::group_by(mukind) %>% 
+  dplyr::summarise(n = n()) 
+
+# when is mukind undefined?
+target_mapunits %>% 
+  filter(is.na(mukind))
+
+# what's going on with W = water?
+water_mukeys <- target_mapunits %>% 
+  filter(musym == "W") %>% 
+  pull(mukey)
+
+target_mapunits %>% 
+  filter(mukey %in% water_mukeys) %>% 
+  head()
+
+# saving CSV of target map unit info
+write_csv(target_mapunits, "data/target_mapunit_table.csv") 
+```
+
+## Components
+
+First a reminder of the columns in the component table:
+
+```{r}
+mn_components <- sf::st_read(dsn = mn_gdb, layer = "component")
+
+colnames(mn_components)
+
+```
+
+Summarizing some info about number of components, major components
+
+```{r}
+# keep the components in my target map units
+target_comp <- mn_components %>% 
+  filter(mukey %in% target_mapunits$mukey) 
+
+# looking at this, it's probabaly safe to exclude 
+# compname == "Water" when the comppct_r is also 100%
+# there's one here where water is only 5%, "Riverwash", rest are 100%
+water_comp <- target_comp %>% filter(mukey %in% water_mukeys)
+
+# how many components?
+nrow(target_comp)
+
+# how many major components? (defined by "majcompflag")
+target_comp %>% 
+  filter(majcompflag == "Yes") %>% 
+  nrow() 
+```
+
+For our unique MUKEYs, how many components in each?
+
+```{r}
+# how many components per mukey? 
+comp_nest <- target_comp %>%
+  dplyr::group_by(mukey) %>% 
+  nest()
+
+comp_nest_n <- comp_nest %>% 
+  dplyr::mutate(n_comp = map_dbl(data, nrow))
+
+comp_nest_n %>% 
+  dplyr::group_by(n_comp) %>% 
+  count(name = "n_mapunits")
+```
+
+```{r}
+# just the major components from target MUs
+maj_comp <- target_comp %>% 
+  filter(majcompflag == "Yes")
+
+nrow(maj_comp)
+
+```
+
+## Taxonomy Summaries
+
+### Order
+
+```{r}
+target_comp %>% 
+  dplyr::group_by(taxorder) %>% 
+  dplyr::summarise(n = n()) %>% 
+  arrange(n)
+
+# what's up with taxonomic order = NA?
+# not really farmable stuff.
+maj_comp %>% 
+  filter(is.na(taxorder)) %>% 
+  pull(compname) %>% 
+  unique()
+  
+```
+
+### Suborder
+
+```{r}
+
+suborders <- target_comp %>% 
+  dplyr::group_by(taxsuborder) %>% 
+  dplyr::summarise(n = n()) 
+
+  
+suborders %>% 
+  ggplot() +
+  geom_col(aes(y = reorder(taxsuborder, -n), x = n)) +
+  ylab("Suborder") + 
+  xlab("Count") + 
+  theme_bw() +
+  ggtitle("Number of components by suborder")
+
+# what's up with taxonomic suborder = NA?
+# much of this likely dropped if we use CDL to subset 
+comps_no_taxsuborder <- target_comp %>% 
+  filter(is.na(taxsuborder)) %>% 
+  pull(compname) %>% 
+  unique()
+
+length(comps_no_taxsuborder)
+head(comps_no_taxsuborder, n = 20)
+tail(comps_no_taxsuborder, n = 20)
+
+```
+
+### Subgroup & Family (long name)
+
+The `taxclname` is a concatenation of the taxonomy subgroup and family.
+On 11 August, 2022 Nic and I talked about how this could be another way to pull out mineralogy information.
+Could grab "smectitic" or "mixed" from these names if we wanted to do yes/no variable.
+
+```{r}
+target_comp %>% 
+  pull(taxclname) %>% 
+  unique() %>% 
+  head()
+
+```
+
+## Variables of Interest
+
+I think my next step is to use the `chorizon` table and pull the variables I'm interested in for each of my major components.
+Devine et al. 2021 did 0-30cm depth-weighted averages.
+I am going to do 0-20cm because I believe this is more likely to be the available depth in our validation datasets (esp. CIG).
+
+Then I can [turn my horizon table into an SPC object](http://ncss-tech.github.io/AQP/demos/profileApply/loafercreek.html#26_build-your-own_spcs), with cokey as "site"?
+
+```{r}
+chorizon <- mn_components <- sf::st_read(dsn = mn_gdb, layer = "chorizon")
+
+target_horiz <- chorizon %>% 
+  filter(cokey %in% maj_comp$cokey)
+
+
+```
+
+## Diagnostic Features {#sec-diag-feat}
+
+Here, I'm pulling out the depth to restrictive horizon (if any) in the profile.
+Note that this may be \>20cm, for our other features we are summarizing soil properties in the 0-20cm depth range.
+
+```{r diag-feat}
+
+# read only diag features table, as dataframe
+diag <- sf::st_read(dsn = mn_gdb, layer = "codiagfeatures")
+
+# check out what kind of diagnostic features we have
+unique(diag$featkind) %>% head(20)
+
+target_diag <- diag %>% 
+  filter(cokey %in% maj_comp$cokey)
+
+
+
+```
+
+Ok, so from above we can see that `r nrow(target_diag)` cokeys out of a total of `r nrow(maj_comp)` have something entered in the `featkind` field as a diagnostic feature.
+Now let's investigate how many of those might be considered restrictive to roots (relevant in agricultural context):
+
+target_restr
+
+```{r root-restr}
+
+target_restr <- target_diag %>% 
+  filter(featkind %in% c("Lithic contact", 
+                         "Densic contact",
+                         "Paralithic contact"))
+
+# how many cokeys have a restrictive horizon? 
+length(unique(target_restr$cokey))
+
+target_restr
+
+# save this in case we want to investigate further
+#it's such a small number, seems unlikely 
+write_csv(target_restr, "./data/restr_horiz_data_cokey.csv")
+
+```

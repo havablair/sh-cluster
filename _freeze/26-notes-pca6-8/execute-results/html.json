@@ -1,0 +1,20 @@
+{
+  "hash": "890efd9cabb712d529fbe26f6f3325ec",
+  "result": {
+    "markdown": "# Comparing PCA 6 & PCA 8 Models\n\n## Overview\n\nMy plan is to make maps of the k=6-8 clusterings (PCA version) to help explain differences between them, and potentially provide practical / interpretive evidence for why we might choose one over another.\nMy gut feeling is that k=8 makes sense because it breaks up some of the biggest cluster groups (can see this in the alluvial plot comparing the PCA k_6 with the PCA k_8\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n\n## Alluvial plot\n\nThe three largest clusters (k_6) are:\n\n-   Clust 2 (n=2158)\n-   Clust 3 (n=1664)\n-   Clust 4 (n=1436)\n\nMoving from PCA k_6 to PCA k_8 versions of the model, the big differences we see are that the 3 largest clusters (6-2, 6-3, 6-4) split to create to two additional, intermediate clusters (8-3 and 8-2).\nAn additional result of this split is that we have a smaller cluster (n=971) of the highest clay mukeys remaining in 8-5.\n\n-   \\~ 100 mukeys from the 6-1 (coarsest) and \\~1200 mukeys from 6-2 (coarse-loamy) split off to form 8-3.\n-   The remaining \\~900 mukeys from 6-2 combine with \\~500 mukeys from 6-3 to form 8-2, leaving the remaining \\~1000 mukeys with the highest clay from 6-3 to become 8-5\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](_refs/alluvial diagrams and map grids/png_alluvial_compare_pca6-8.png){width=1200}\n:::\n:::\n\n\n## k=6\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](26-notes-pca6-8_files/figure-html/plotk6-1.png){width=672}\n:::\n:::\n\n\n## k=8\n\nGoing from k=6 to k=8, the main difference is\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](26-notes-pca6-8_files/figure-html/plotk8-1.png){width=672}\n:::\n:::\n",
+    "supporting": [
+      "26-notes-pca6-8_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\r\n<script src=\"site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\r\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

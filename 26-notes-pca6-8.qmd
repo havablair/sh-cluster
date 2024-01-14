@@ -1,0 +1,151 @@
+# Comparing PCA 6 & PCA 8 Models
+
+## Overview
+
+My plan is to make maps of the k=6-8 clusterings (PCA version) to help explain differences between them, and potentially provide practical / interpretive evidence for why we might choose one over another.
+My gut feeling is that k=8 makes sense because it breaks up some of the biggest cluster groups (can see this in the alluvial plot comparing the PCA k_6 with the PCA k_8
+
+```{r setup}
+#| message: false
+#| warning: false
+#| echo: false
+
+library(readr)
+library(dplyr)
+library(glue)
+library(stringr)
+library(terra)
+
+cluster_names <- read_csv("data/named_clustering_candidates.csv")%>% 
+  mutate(desc_w_count = glue("n={n_members}\n{description}"),
+    wrap_names = str_wrap(desc_w_count, 15))
+
+rastpca6 <- rast("E:/big-files-backup/ch03-sh-groups/clust6_pca.tif")
+
+rastpca8 <- rast("E:/big-files-backup/ch03-sh-groups/clust8_pca.tif")
+
+
+```
+
+```{r funs}
+#| echo: false
+
+# function to create dataframe passed to "plot" 
+# for raster maps that highlight one specific 
+# raster value at a time
+create_highlight_df <- function(nclust, target_clust){
+  
+  data.frame(values = c(0:nclust)) %>% 
+    mutate(cols = case_when(
+     values == target_clust ~ "#FDE333",
+      TRUE ~ "#4B0055"
+    ))
+  
+}
+
+# function to create one map, with target cluster highlighted
+plot_cluster_hlight <-
+  function(nclust,
+           target_clust,
+           desc_df = cluster_names,
+           sp_rast,
+           cex_val=1,
+           lab_xpos = 5e5) {
+    
+    hlight_colors <- create_highlight_df(nclust, target_clust)
+    
+    clust_id <- paste("Cluster_", target_clust, sep = "")
+    
+    clust_desc <- cluster_names %>%
+      filter(k == nclust,
+             join_cluster == clust_id) %>%
+      pull(wrap_names)
+
+      plot(sp_rast,
+           col = hlight_colors,
+           legend = FALSE,
+           main = glue("Cluster {target_clust}"),
+           cex.main = cex_val)
+
+  text(x = lab_xpos, y = 2700000, labels = clust_desc, cex_val)
+    
+  }
+
+```
+
+## Alluvial plot
+
+The three largest clusters (k_6) are:
+
+-   Clust 2 (n=2158)
+-   Clust 3 (n=1664)
+-   Clust 4 (n=1436)
+
+Moving from PCA k_6 to PCA k_8 versions of the model, the big differences we see are that the 3 largest clusters (6-2, 6-3, 6-4) split to create to two additional, intermediate clusters (8-3 and 8-2).
+An additional result of this split is that we have a smaller cluster (n=971) of the highest clay mukeys remaining in 8-5.
+
+-   \~ 100 mukeys from the 6-1 (coarsest) and \~1200 mukeys from 6-2 (coarse-loamy) split off to form 8-3.
+-   The remaining \~900 mukeys from 6-2 combine with \~500 mukeys from 6-3 to form 8-2, leaving the remaining \~1000 mukeys with the highest clay from 6-3 to become 8-5
+
+```{r}
+#| echo: false
+
+
+knitr::include_graphics("_refs/alluvial diagrams and map grids/png_alluvial_compare_pca6-8.png")
+```
+
+## k=6
+
+```{r plotk6}
+#| echo: false
+#| fig-height: 9 
+
+par(mfrow = c(3,2))
+
+plot_cluster_hlight(nclust = 6, target_clust = 1, sp_rast = rastpca6, 
+                    lab_xpos = 4e5)
+
+plot_cluster_hlight(nclust = 6, target_clust = 2, sp_rast = rastpca6, 
+                    lab_xpos = 4e5)
+
+plot_cluster_hlight(nclust = 6, target_clust = 3, sp_rast = rastpca6, 
+                    lab_xpos = 4e5)
+
+plot_cluster_hlight(nclust = 6, target_clust = 4, sp_rast = rastpca6, 
+                    lab_xpos = 4e5)
+
+plot_cluster_hlight(nclust = 6, target_clust = 5, sp_rast = rastpca6, 
+                    lab_xpos = 4e5)
+
+plot_cluster_hlight(nclust = 6, target_clust = 6, sp_rast = rastpca6, 
+                    lab_xpos = 4e5)
+
+```
+
+## k=8
+
+Going from k=6 to k=8, the main difference is
+
+```{r plotk8}
+#| echo: false
+#| fig-height: 9 
+
+par(mfrow = c(4,2))
+
+plot_cluster_hlight(nclust = 8, target_clust = 1, sp_rast = rastpca8)
+
+plot_cluster_hlight(nclust = 8, target_clust = 2, sp_rast = rastpca8)
+
+plot_cluster_hlight(nclust = 8, target_clust = 3, sp_rast = rastpca8)
+
+plot_cluster_hlight(nclust = 8, target_clust = 4, sp_rast = rastpca8)
+
+plot_cluster_hlight(nclust = 8, target_clust = 5, sp_rast = rastpca8)
+
+plot_cluster_hlight(nclust = 8, target_clust = 6, sp_rast = rastpca8)
+
+plot_cluster_hlight(nclust = 8, target_clust = 7, sp_rast = rastpca8)
+
+plot_cluster_hlight(nclust = 8, target_clust = 8, sp_rast = rastpca8)
+
+```

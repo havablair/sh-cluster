@@ -1,0 +1,49 @@
+project:
+  type: book
+  output-dir: docs
+book:
+  title: "Minnesota Topsoil Classification for Soil Health Assessment"
+  author: "Hava Blair"
+  date: "2024-01-14"
+  chapters:
+    - index.qmd
+    - 02-data_sources.qmd
+    - 03-mus_comp_in_aoi.qmd
+    - 04-subset-component-data.qmd
+    - 05-horiz-data.qmd
+    - 06-soil-prop-eda.qmd
+    - 07-map-unit-agg.qmd
+    - 08-var-transformations.qmd
+    - 09-plot-ec-lep.qmd
+    - 10-additional-data-prep.qmd
+    - 11-implement-kmeans.qmd
+    - 12-explore-clust-props.qmd
+    - 19-sample-points.qmd
+    - 20-cluster-pairwise-comp.qmd
+    - 21-map-indiv-regions.qmd
+    - 22-pca-kmeans.qmd
+    - 23-pca-kmeans-finalists.qmd
+    - 24-compare-kmeans.qmd
+    - 25-pca-cluster-pairwise-comp.qmd
+    - 26-notes-pca6-8.qmd
+    - 27-pairwise-nonparametric.qmd
+    - 28-compare-variation-demo.qmd
+    - 29-welch-pairwise.qmd
+    - 30-welch-compare-variation.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    df-print: paged
+  pdf:
+    documentclass: scrreprt
+# knitr:
+#   opts_chunk: 
+#       echo: false
+editor: visual
+execute: 
+  freeze: auto
+

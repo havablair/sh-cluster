@@ -1,0 +1,501 @@
+# Explore clusters {#sec-clust-full}
+
+Based on the model metrics in @sec-mod-metrics , k = 4, 6, or 9 seem like reasonable places to start.
+These are local maxima in the average silhouette metric.
+For the Calinski-Harabasz index, we see a steady decrease from 2-7, then similar index values for 7-9, then decreasing again.
+In general higher is better, which would suggest something in the lower range.
+Really don't have a clear elbow in the WSS plot, I could see an argument for the 8-11 region being where it starts to flatten out more.
+
+```{r setup12}
+#| message: false
+#| warning: false
+
+library(workflows)
+library(parsnip)
+library(tidyverse)
+library(tidymodels)
+library(glue)
+library(tidyclust)
+library(scales)
+library(GGally) # for ggparcoor
+library(gganimate)
+library(ggradar)
+library(ggrepel)
+library(patchwork)
+library(tidytext)
+library(gtsummary)
+
+# our fitted models, created in chap 11
+load("data/fitted_kmeans_mods.RData")
+
+# mukeys, cluster assignments, and soil properties 
+# note these are the untransformed soil prop values
+prop <- read_csv("data/mukey_cluster_assignments_and_soilprops.csv")
+
+```
+
+## Extract Centroids
+
+Recall that these are still the standardized values.
+
+```{r}
+
+cent_df <- mods %>% 
+  mutate(centroids = map(km_fit, ~extract_centroids(.x))) %>% 
+  select(n_clust, centroids) %>% 
+  unnest(centroids) # debated whether to also rescale here, as I did below for the radar plots? 
+
+
+head(cent_df)
+
+# scaled 0-1 for radar plot
+sc_cent <- cent_df %>% 
+  mutate(across(.cols = c(3:12),
+                   .fns = ~round(rescale(.x,to = c(0,1)), 1)))
+
+```
+
+## About individual clusters
+
+We can also extract information about how many members (unique MUKEYs) have been allocated to each cluster, and the sum of squared error **within** each cluster.
+This tells us about how how "cohesive" each cluster is (lower SSE means points are closer to their cluster centroid, more tightly packed).
+
+```{r}
+
+iclust <- mods %>% 
+  mutate(clust_stat = map(km_fit, ~within_cluster_sse(.x))) %>% 
+  select(n_clust, clust_stat) %>% 
+  unnest(clust_stat) %>% 
+  mutate(.cluster = str_replace_all(.cluster, "er_", ""))
+
+head(iclust)
+
+
+```
+
+```{r plot-funs}
+#| echo: false 
+
+# I liked the default colors from gggradar, so I pulled them
+# to use in the rest of the plots too 
+plot_colors <- c("#FF5A5F", "#FFB400", 
+                           "#007A87", "#8CE071", "#7B0051", 
+                           "#00D1C1", "#FFAA91", "#B4A76C", 
+                           "#9CA299", "#565A5C", "#00A04B", 
+                           "#E54C20")
+
+
+parcoor_plot <- function(nclust){
+  
+  cent_df %>% 
+  filter(n_clust == nclust) %>% 
+  ggparcoord(columns = c(3:12),
+    groupColumn = '.cluster',
+    scale = 'globalminmax',  # no scaling, data is already std
+    showPoints = TRUE) +
+      theme_bw() + 
+    scale_color_discrete(type = plot_colors) +
+  coord_flip() +
+  ggtitle(glue("{nclust} Clusters")) + 
+    guides(color = 'none') +
+    geom_vline(xintercept = 0, color = "black")
+  
+}
+
+radar_plot <- function(nclust){
+  
+  sc_cent %>% 
+  filter(n_clust == nclust) %>% 
+  rename(group = .cluster) %>% 
+  select(-n_clust) %>% 
+  as_tibble() %>% 
+  mutate(group = as.character(group)) %>% # fixed error about
+    # "arguments imply differing number of rows"
+  ggradar(grid.min = 0,
+          grid.max = 1,
+          values.radar = c("0", "0.5", "1"),
+          base.size = 10,
+          group.point.size = 3, 
+          group.line.width = 1, 
+          legend.text.size = 6, 
+          axis.label.size = 4, 
+          grid.label.size = 4
+          ) + 
+  ggtitle(glue("{nclust} Clusters")) +
+  theme(plot.title.position = 'plot')
+  
+}
+
+plot_cluster_stats <- function(nclust){
+  
+  iclust %>% 
+  filter(n_clust == nclust) %>% 
+  ggplot(aes(x = .cluster, y = n_members, label = n_members)) + 
+  geom_point(aes(size = wss, color = .cluster)) +
+  geom_text_repel(point.padding = 3)+
+  theme_bw() +
+  theme(axis.title.y = element_blank()) +
+  ylab("# Members") + 
+  coord_flip() +
+  scale_color_discrete(type = plot_colors) + 
+  guides(color = 'none', size = 'none') +
+  labs(subtitle = "Dot size is WSS")
+  
+} 
+
+create_summary_table <- function(kcol){
+  
+  prop %>%
+  select(all_of(kcol),
+         claytotal,
+         om,
+         cec7,
+         dbthirdbar,
+         ec,
+         ph1to1h2o,
+         caco3,
+         lep,
+         ksat,
+         awc) %>%
+  tbl_summary(by = {{kcol}},
+              statistic = list(all_continuous() ~ "{mean} ({sd})"))
+  
+  
+}
+
+
+```
+
+## Cluster Stats Overall
+
+```{r}
+#| echo: false
+#| fig-height: 3
+
+iclust %>%
+  filter(n_clust %in% c(2:4)) %>%
+  ggplot(aes(
+    x = reorder_within(x = .cluster,
+                       by = n_members,
+                       within = n_clust),
+    y = n_members,
+    label = n_members
+  )) + 
+  geom_point(aes(size = wss, color = .cluster)) +
+  geom_text_repel(point.padding = 3) +
+  theme_bw() +
+  theme(axis.title.y = element_blank()) +
+  ylab("# Members") +
+  coord_flip() +
+  scale_color_discrete(type = plot_colors) +
+  guides(color = 'none', size = 'none') +
+  labs(subtitle = "Dot size is WSS") +
+  facet_wrap(vars(n_clust), scales = "free_y")
+
+
+iclust %>%
+  filter(n_clust %in% c(5:7)) %>%
+  ggplot(aes(
+    x = reorder_within(x = .cluster,
+                       by = n_members,
+                       within = n_clust),
+    y = n_members,
+    label = n_members
+  ))  +
+  geom_point(aes(size = wss, color = .cluster)) +
+  geom_text_repel(point.padding = 3) +
+  theme_bw() +
+  theme(axis.title.y = element_blank()) +
+  ylab("# Members") +
+  coord_flip() +
+  scale_color_discrete(type = plot_colors) +
+  guides(color = 'none', size = 'none') +
+  labs(subtitle = "Dot size is WSS") +
+  facet_wrap(vars(n_clust), scales = "free_y")
+
+iclust %>%
+  filter(n_clust %in% c(8:10)) %>%
+  ggplot(aes(
+    x = reorder_within(x = .cluster,
+                       by = n_members,
+                       within = n_clust),
+    y = n_members,
+    label = n_members
+  )) +
+  geom_point(aes(size = wss, color = .cluster)) +
+  geom_text_repel(point.padding = 3) +
+  theme_bw() +
+  theme(axis.title.y = element_blank()) +
+  ylab("# Members") +
+  coord_flip() +
+  scale_color_discrete(type = plot_colors) +
+  guides(color = 'none', size = 'none') +
+  labs(subtitle = "Dot size is WSS") +
+  facet_wrap(vars(n_clust), scales = "free_y")
+
+```
+
+## 2 Clusters "Split the difference"
+
+-   Cluster 1: sandy, high Ksat and low AWC. Low OM and clay.
+-   Cluster 2: high clay, CEC, OM, AWC, LEP.
+
+```{r pc2}
+coord2 <- parcoor_plot(nclust = 2)
+stat2 <- plot_cluster_stats(2)
+
+coord2 + stat2 + plot_layout(widths = c(2,1), guides = "collect")
+
+```
+
+```{r}
+
+create_summary_table("k_2")
+
+```
+
+```{r rad2}
+
+radar_plot(2)
+
+```
+
+```{r}
+
+prop %>% 
+  select(k_2, claytotal, om, ph1to1h2o, caco3) %>% 
+  pivot_longer(-k_2) %>% 
+ggplot() + 
+  geom_violin(aes(x = name, y = value, color = k_2)) +
+  facet_wrap(vars(name), scales = "free")
+
+
+```
+
+## 3 Clusters "Distinguishing NW?"
+
+```{r pc3}
+
+coord3 <- parcoor_plot(nclust = 3)
+stat3 <- plot_cluster_stats(3)
+
+coord3 + stat3 + plot_layout(widths = c(2,1), guides = "collect")
+
+```
+
+```{r rad3}
+radar_plot(3)
+
+```
+
+```{r}
+create_summary_table("k_3")
+```
+
+## 4 Clusters
+
+```{r pc4}
+
+coord4 <- parcoor_plot(nclust = 4)
+stat4 <- plot_cluster_stats(4)
+
+coord4 + stat4 + plot_layout(widths = c(2,1), guides = "collect")
+
+```
+
+```{r rad4}
+radar_plot(4)
+
+```
+
+## 5 Clusters "EC artefacts? EC-OM-Clay spread"
+
+```{r pc5}
+
+coord5 <- parcoor_plot(nclust = 5)
+stat5 <- plot_cluster_stats(5)
+
+coord5 + stat5 + plot_layout(widths = c(2,1), guides = "collect")
+
+
+```
+
+I wonder if the difference between Cluster 1 and 5 here is actually being driven by the EC values we set to zero in the NW part of the state?
+It seems to be the only major thing distinguishing those 2 clusters.
+
+```{r rad5}
+radar_plot(5)
+
+```
+
+## 6 Clusters "Histosols break free"
+
+What strikes me about this one is Cluster 2, it seems like those might be histosols that broke away into their own cluster?
+Cluster 2 very high OM, CEC, very low bulk density, high AWC.
+
+```{r pc6}
+
+coord6 <- parcoor_plot(nclust = 6)
+stat6 <- plot_cluster_stats(6)
+
+coord6 + stat6 + plot_layout(widths = c(2,1), guides = "collect")
+
+
+```
+
+```{r rad6}
+radar_plot(6)
+
+```
+
+```{r}
+create_summary_table("k_6")
+```
+
+## 7 Clusters
+
+```{r pc7}
+
+coord7 <- parcoor_plot(nclust = 7)
+stat7 <- plot_cluster_stats(7)
+
+coord7 + stat7 + plot_layout(widths = c(2,1), guides = "collect")
+
+
+```
+
+```{r rad7}
+radar_plot(7)
+
+```
+
+## 8 Clusters
+
+```{r pc8}
+
+coord8 <- parcoor_plot(nclust = 8)
+stat8 <- plot_cluster_stats(8)
+
+coord8 + stat8 + plot_layout(widths = c(2,1), guides = "collect")
+
+
+```
+
+```{r rad8}
+radar_plot(8)
+
+```
+
+## 9 Clusters
+
+```{r pc9}
+
+coord9 <- parcoor_plot(nclust = 9)
+stat9 <- plot_cluster_stats(9)
+
+coord9 + stat9 + plot_layout(widths = c(2,1), guides = "collect")
+
+
+```
+
+```{r rad9}
+radar_plot(9)
+
+```
+
+## 10 Clusters
+
+```{r pc10}
+
+coord10 <- parcoor_plot(nclust = 10)
+stat10 <- plot_cluster_stats(10)
+
+coord10 + stat10 + plot_layout(widths = c(2,1), guides = "collect")
+
+
+```
+
+```{r rad10}
+radar_plot(10)
+
+```
+
+## 11 Clusters
+
+```{r pc11}
+
+coord11 <- parcoor_plot(nclust = 11)
+stat11 <- plot_cluster_stats(11)
+
+coord11 + stat11 + plot_layout(widths = c(2,1), guides = "collect")
+
+
+```
+
+```{r rad11}
+radar_plot(11)
+
+```
+
+## Different plot example
+
+Another way to compare soil properties between clusters.
+Only really works with a small number of clusters
+
+```{r}
+
+# the centroids are all on a standardized scale,
+# so we can plot all the vars together to compare
+# the properties of each cluster
+cent_df %>%
+  filter(n_clust == 4) %>% 
+  select(-n_clust) %>% 
+  pivot_longer(cols = -.cluster,
+               names_to = 'variable',
+               values_to = 'value') %>%
+  ggplot() +
+  geom_col(aes(x = value, y = variable)) +
+  facet_wrap(vars(.cluster), nrow = 1) +
+  geom_vline(xintercept = 0, color = "blue") +
+  expand_limits(y = 13.5) +
+  theme_bw()
+
+# +
+#   geom_label(data = clust_stat,
+#              aes(
+#                x = 0.25,
+#                y = 11.5,
+#                label = glue("n:{n_members}")
+#              ),
+#              size = 2.5) +
+#   geom_label(data = clust_stat,
+#              aes(
+#                x = 0.25,
+#                y = 12.5,
+#                label = glue("wss:{round(wss,0)}")
+#              ),
+#              size = 2.5) +
+#   theme_bw() 
+```
+
+```{r}
+#| echo: false
+#| eval: false
+
+
+# playing around with animated plots to watch the clusters evolve
+testdf <- cent_df %>% 
+  pivot_longer(cols = c(3:12)) %>% 
+  filter(n_clust %in% c(3:6))
+
+testdf %>% 
+  ggplot() + 
+  geom_point(aes(x = value, y = name, color = .cluster), size = 4) + 
+  theme_bw() +
+  transition_states(
+    n_clust, 
+    transition_length = 2,
+    state_length = 3
+  )
+
+```
