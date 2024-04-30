@@ -1,5 +1,5 @@
 This repository contains code and notes on the analysis presented in Blair et al. (2024) manuscript "A data-driven topsoil classification to support soil health assessment in Minnesota, USA".
-The easiest way to view this information is through the published notebook, which is generated from this repo: https://havablair.github.io/sh-cluster/
+The easiest way to view this information is through the notebook hosted on GitHub pages here: https://havablair.github.io/sh-cluster/
 
 Manuscript authors: Hava K Blair, Jessica M. Gutknecht, Anna M. Cates, A. Marcelle Lewandowski, Nicolas A. Jelinski
 
