@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,7 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,13 +96,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
-
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
 
 
 </head>
@@ -107,13 +116,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-mus_comp_in_aoi.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Explore Map Units &amp; Components in AOI</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-mus_comp_in_aoi.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Explore Map Units &amp; Components in AOI</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -122,7 +131,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Minnesota Topsoil Classification for Soil Health Assessment</a> 
@@ -203,80 +212,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12-explore-clust-props.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Explore clusters</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./19-sample-points.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sample validation points</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./20-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Cluster pairwise comparisons</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./21-map-indiv-regions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mapping individual clusters</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./22-pca-kmeans.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Do PCA before k-means</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Do PCA before k-means</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./23-pca-kmeans-finalists.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">PCA-kmeans Clustering Finalists</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Clustering Finalists</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./24-compare-kmeans.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Comparing k-means scenarios</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./25-pca-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">PCA Cluster pairwise comparisons</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Comparing k-means scenarios</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./26-notes-pca6-8.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Comparing PCA 6 &amp; PCA 8 Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Comparing PCA 6 &amp; PCA 8 Models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./27-pairwise-nonparametric.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">(non-parametric) PCA Cluster pairwise comparisons</span></span></a>
+  <a href="./31-demo-weighted-centroids.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Find map unit weighted centroids</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./28-compare-variation-demo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compare variation explained</span></span></a>
+  <a href="./32-sample-climate-vars.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Sample climate data at map-unit centroids</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./35-climate-clusters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Cluster map units based on climate</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-sample-points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Sample validation points</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./29-welch-pairwise.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./30-welch-compare-variation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Welch ANOVA - compare variation explained</span></span></a>
+  <a href="./36-update-welch-compare-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Welch ANOVA - compare variation explained</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -288,7 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -302,7 +293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#order" id="toc-order" class="nav-link" data-scroll-target="#order"><span class="header-section-number">2.4.1</span> Order</a></li>
   <li><a href="#suborder" id="toc-suborder" class="nav-link" data-scroll-target="#suborder"><span class="header-section-number">2.4.2</span> Suborder</a></li>
-  <li><a href="#subgroup-family-long-name" id="toc-subgroup-family-long-name" class="nav-link" data-scroll-target="#subgroup-family-long-name"><span class="header-section-number">2.4.3</span> Subgroup &amp; Family (long name)</a></li>
+  <li><a href="#subgroup-family" id="toc-subgroup-family" class="nav-link" data-scroll-target="#subgroup-family"><span class="header-section-number">2.4.3</span> Subgroup &amp; Family</a></li>
   </ul></li>
   <li><a href="#variables-of-interest" id="toc-variables-of-interest" class="nav-link" data-scroll-target="#variables-of-interest"><span class="header-section-number">2.5</span> Variables of Interest</a></li>
   <li><a href="#sec-diag-feat" id="toc-sec-diag-feat" class="nav-link" data-scroll-target="#sec-diag-feat"><span class="header-section-number">2.6</span> Diagnostic Features</a></li>
@@ -327,15 +318,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <section id="overview" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">2.1</span> Overview</h2>
-<p>I have a list of map unit keys from my clipped area of interest. In order to reduce the file size of the TIF I was working with, I created new map unit key IDs. The cross-walk table is in <code>data/gSSURGO_MN/mukey_new_crosswalk.txt</code>. There are 7,862 unique map unit keys in my area of interest (AOI).</p>
+<p>I have a list of map unit keys from my clipped area of interest (saved crosswalk text file after clipping my AOI in ArcMap, see <a href="02-data_sources.html" class="quarto-xref"><span>Chapter 1</span></a>). In order to reduce the file size of the TIF I was working with, I created new map unit key IDs. The cross-walk table is in <code>data/gSSURGO_MN/mukey_new_crosswalk.txt</code>. There are 7,862 unique map unit keys in my area of interest (AOI).</p>
 <p>This is what the cross-walk table looks like:</p>
 <div class="cell">
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["MUKEY"],"name":[1],"type":["int"],"align":["right"]},{"label":["MUKEY_New"],"name":[2],"type":["int"],"align":["right"]},{"label":["Count"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"352143","2":"0","3":"2685","_rn_":"1"},{"1":"352159","2":"1","3":"4425","_rn_":"2"},{"1":"352160","2":"2","3":"7057","_rn_":"3"},{"1":"352162","2":"3","3":"595744","_rn_":"4"},{"1":"352165","2":"4","3":"83467","_rn_":"5"},{"1":"352166","2":"5","3":"110","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -355,83 +347,172 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>Driver: OpenFileGDB 
 Available layers:
-           layer_name     geometry_type features fields
-1            chaashto                NA   223330      4
-2       chconsistence                NA     2794     10
-3       chdesgnsuffix                NA    62846      3
-4             chfrags                NA   321265     12
-5            chorizon                NA   130493    171
-6             chpores                NA       16      9
-7            chstruct                NA   110021      7
-8         chstructgrp                NA    95901      4
-9              chtext                NA        0      7
-10          chtexture                NA   318704      4
-11       chtexturegrp                NA   313739      6
-12       chtexturemod                NA    50000      3
-13          chunified                NA   240027      4
-14      cocanopycover                NA       50      6
-15          cocropyld                NA    34146     12
-16     codiagfeatures                NA    31760     12
-17         coecoclass                NA    52483      6
-18          coeplants                NA    25544      7
-19       coerosionacc                NA     5743      4
-20          coforprod                NA     2726     12
-21         coforprodo                NA        0     10
-22       cogeomordesc                NA    83667      8
-23   cohydriccriteria                NA    25091      3
-24           cointerp                NA  5698886     13
-25            comonth                NA   421728     17
-26          component                NA    42529    109
-27               copm                NA    49990      7
-28            copmgrp                NA    34883      4
-29       copwindbreak                NA   161238      8
-30     corestrictions                NA     4369     13
-31        cosoilmoist                NA   666791      9
-32         cosoiltemp                NA       96      9
-33        cosurffrags                NA    10955     15
-34      cosurfmorphgc                NA    17984      6
-35     cosurfmorphhpp                NA    28248      3
-36      cosurfmorphmr                NA      460      3
-37      cosurfmorphss                NA    42228      4
-38         cotaxfmmin                NA    33654      3
-39       cotaxmoistcl                NA    20332      3
-40             cotext                NA    42529      7
-41       cotreestomng                NA    32192      5
-42        cotxfmother                NA    31091      3
-43       distinterpmd                NA    11868      8
-44       distlegendmd                NA       92     11
-45             distmd                NA       92      4
-46           featdesc                NA      801      6
-47          laoverlap                NA      512      6
-48             legend                NA       92     14
-49         legendtext                NA        0      7
-50            mapunit                NA    10688     24
-51              month                NA       12      2
-52           muaggatt                NA    10688     40
-53         muaoverlap                NA    35224      4
-54          mucropyld                NA    23355     10
-55             mutext                NA    12230      7
-56          sacatalog                NA       92     11
-57           sainterp                NA    11868      9
-58       sdvalgorithm                NA        8      4
-59       sdvattribute                NA      211     53
-60          sdvfolder                NA       20      6
-61 sdvfolderattribute                NA      213      2
-62       mdstatdomdet                NA     6930      5
-63       mdstatdommas                NA      123      2
-64       mdstatidxdet                NA      172      4
-65       mdstatidxmas                NA      149      3
-66     mdstatrshipdet                NA       66      5
-67     mdstatrshipmas                NA       63      5
-68      mdstattabcols                NA      865     14
-69         mdstattabs                NA       75      5
-70           FEATLINE Multi Line String    60902      5
-71          FEATPOINT             Point   254435      4
-72             MULINE Multi Line String        0      5
-73            MUPOINT             Point        0      4
-74          SAPOLYGON     Multi Polygon       96      5
-75          MUPOLYGON     Multi Polygon  2123552      6
-76              Valu1                NA    10688     58</code></pre>
+                   layer_name     geometry_type features fields
+1                    chaashto                NA   223330      4
+2               chconsistence                NA     2794     10
+3               chdesgnsuffix                NA    62846      3
+4                     chfrags                NA   321265     12
+5                    chorizon                NA   130493    171
+6                     chpores                NA       16      9
+7                    chstruct                NA   110021      7
+8                 chstructgrp                NA    95901      4
+9                      chtext                NA        0      7
+10                  chtexture                NA   318704      4
+11               chtexturegrp                NA   313739      6
+12               chtexturemod                NA    50000      3
+13                  chunified                NA   240027      4
+14              cocanopycover                NA       50      6
+15                  cocropyld                NA    34146     12
+16             codiagfeatures                NA    31760     12
+17                 coecoclass                NA    52483      6
+18                  coeplants                NA    25544      7
+19               coerosionacc                NA     5743      4
+20                  coforprod                NA     2726     12
+21                 coforprodo                NA        0     10
+22               cogeomordesc                NA    83667      8
+23           cohydriccriteria                NA    25091      3
+24                   cointerp                NA  5698886     13
+25                    comonth                NA   421728     17
+26                  component                NA    42529    109
+27                       copm                NA    49990      7
+28                    copmgrp                NA    34883      4
+29               copwindbreak                NA   161238      8
+30             corestrictions                NA     4369     13
+31                cosoilmoist                NA   666791      9
+32                 cosoiltemp                NA       96      9
+33                cosurffrags                NA    10955     15
+34              cosurfmorphgc                NA    17984      6
+35             cosurfmorphhpp                NA    28248      3
+36              cosurfmorphmr                NA      460      3
+37              cosurfmorphss                NA    42228      4
+38                 cotaxfmmin                NA    33654      3
+39               cotaxmoistcl                NA    20332      3
+40                     cotext                NA    42529      7
+41               cotreestomng                NA    32192      5
+42                cotxfmother                NA    31091      3
+43               distinterpmd                NA    11868      8
+44               distlegendmd                NA       92     11
+45                     distmd                NA       92      4
+46                   featdesc                NA      801      6
+47                  laoverlap                NA      512      6
+48                     legend                NA       92     14
+49                 legendtext                NA        0      7
+50                    mapunit                NA    10688     24
+51                      month                NA       12      2
+52                   muaggatt                NA    10688     40
+53                 muaoverlap                NA    35224      4
+54                  mucropyld                NA    23355     10
+55                     mutext                NA    12230      7
+56                  sacatalog                NA       92     11
+57                   sainterp                NA    11868      9
+58               sdvalgorithm                NA        8      4
+59               sdvattribute                NA      211     53
+60                  sdvfolder                NA       20      6
+61         sdvfolderattribute                NA      213      2
+62               mdstatdomdet                NA     6930      5
+63               mdstatdommas                NA      123      2
+64               mdstatidxdet                NA      172      4
+65               mdstatidxmas                NA      149      3
+66             mdstatrshipdet                NA       66      5
+67             mdstatrshipmas                NA       63      5
+68              mdstattabcols                NA      865     14
+69                 mdstattabs                NA       75      5
+70                   FEATLINE Multi Line String    60902      5
+71                  FEATPOINT             Point   254435      4
+72                     MULINE Multi Line String        0      5
+73                    MUPOINT             Point        0      4
+74                  SAPOLYGON     Multi Polygon       96      5
+75                  MUPOLYGON     Multi Polygon  2123552      6
+76                      Valu1                NA    10688     58
+77          MapunitRaster_10m     Multi Polygon        1      3
+78      VAT_MapunitRaster_10m                NA    10688      3
+79 fras_aux_MapunitRaster_10m                NA        1      3
+80 fras_blk_MapunitRaster_10m                NA   180371      6
+81 fras_bnd_MapunitRaster_10m                NA        1     18
+82 fras_ras_MapunitRaster_10m                NA        1      3
+               crs_name
+1                  &lt;NA&gt;
+2                  &lt;NA&gt;
+3                  &lt;NA&gt;
+4                  &lt;NA&gt;
+5                  &lt;NA&gt;
+6                  &lt;NA&gt;
+7                  &lt;NA&gt;
+8                  &lt;NA&gt;
+9                  &lt;NA&gt;
+10                 &lt;NA&gt;
+11                 &lt;NA&gt;
+12                 &lt;NA&gt;
+13                 &lt;NA&gt;
+14                 &lt;NA&gt;
+15                 &lt;NA&gt;
+16                 &lt;NA&gt;
+17                 &lt;NA&gt;
+18                 &lt;NA&gt;
+19                 &lt;NA&gt;
+20                 &lt;NA&gt;
+21                 &lt;NA&gt;
+22                 &lt;NA&gt;
+23                 &lt;NA&gt;
+24                 &lt;NA&gt;
+25                 &lt;NA&gt;
+26                 &lt;NA&gt;
+27                 &lt;NA&gt;
+28                 &lt;NA&gt;
+29                 &lt;NA&gt;
+30                 &lt;NA&gt;
+31                 &lt;NA&gt;
+32                 &lt;NA&gt;
+33                 &lt;NA&gt;
+34                 &lt;NA&gt;
+35                 &lt;NA&gt;
+36                 &lt;NA&gt;
+37                 &lt;NA&gt;
+38                 &lt;NA&gt;
+39                 &lt;NA&gt;
+40                 &lt;NA&gt;
+41                 &lt;NA&gt;
+42                 &lt;NA&gt;
+43                 &lt;NA&gt;
+44                 &lt;NA&gt;
+45                 &lt;NA&gt;
+46                 &lt;NA&gt;
+47                 &lt;NA&gt;
+48                 &lt;NA&gt;
+49                 &lt;NA&gt;
+50                 &lt;NA&gt;
+51                 &lt;NA&gt;
+52                 &lt;NA&gt;
+53                 &lt;NA&gt;
+54                 &lt;NA&gt;
+55                 &lt;NA&gt;
+56                 &lt;NA&gt;
+57                 &lt;NA&gt;
+58                 &lt;NA&gt;
+59                 &lt;NA&gt;
+60                 &lt;NA&gt;
+61                 &lt;NA&gt;
+62                 &lt;NA&gt;
+63                 &lt;NA&gt;
+64                 &lt;NA&gt;
+65                 &lt;NA&gt;
+66                 &lt;NA&gt;
+67                 &lt;NA&gt;
+68                 &lt;NA&gt;
+69                 &lt;NA&gt;
+70 NAD83 / Conus Albers
+71 NAD83 / Conus Albers
+72 NAD83 / Conus Albers
+73 NAD83 / Conus Albers
+74 NAD83 / Conus Albers
+75 NAD83 / Conus Albers
+76                 &lt;NA&gt;
+77 NAD83 / Conus Albers
+78                 &lt;NA&gt;
+79                 &lt;NA&gt;
+80                 &lt;NA&gt;
+81                 &lt;NA&gt;
+82                 &lt;NA&gt;</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mn_gdb <span class="ot">&lt;-</span> <span class="st">"data/gSSURGO_MN/gSSURGO_MN.gdb"</span> </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -439,7 +520,7 @@ Available layers:
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>mn_mapunits <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(<span class="at">dsn =</span> mn_gdb, <span class="at">layer =</span> <span class="st">"mapunit"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `mapunit' from data source 
-  `C:\Users\Hava\Documents\R\ch03-sh-cluster\data\gSSURGO_MN\gSSURGO_MN.gdb' 
+  `C:\Users\Hava\backed_up\Documents\R\ch03-sh-cluster-20240114\data\gSSURGO_MN\gSSURGO_MN.gdb' 
   using driver `OpenFileGDB'</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
@@ -469,7 +550,6 @@ Available layers:
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(mukind) <span class="sc">%&gt;%</span> </span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["mukind"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Complex","2":"2013"},{"1":"Consociation","2":"5577"},{"1":"Undifferentiated group","2":"268"},{"1":"NA","2":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -480,7 +560,6 @@ Available layers:
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>target_mapunits <span class="sc">%&gt;%</span> </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(mukind))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["musym"],"name":[1],"type":["chr"],"align":["left"]},{"label":["muname"],"name":[2],"type":["chr"],"align":["left"]},{"label":["mukind"],"name":[3],"type":["chr"],"align":["left"]},{"label":["mustatus"],"name":[4],"type":["chr"],"align":["left"]},{"label":["muacres"],"name":[5],"type":["int"],"align":["right"]},{"label":["mapunitlfw_l"],"name":[6],"type":["int"],"align":["right"]},{"label":["mapunitlfw_r"],"name":[7],"type":["int"],"align":["right"]},{"label":["mapunitlfw_h"],"name":[8],"type":["int"],"align":["right"]},{"label":["mapunitpfa_l"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["mapunitpfa_r"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["mapunitpfa_h"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["farmlndcl"],"name":[12],"type":["chr"],"align":["left"]},{"label":["muhelcl"],"name":[13],"type":["chr"],"align":["left"]},{"label":["muwathelcl"],"name":[14],"type":["chr"],"align":["left"]},{"label":["muwndhelcl"],"name":[15],"type":["chr"],"align":["left"]},{"label":["interpfocus"],"name":[16],"type":["chr"],"align":["left"]},{"label":["invesintens"],"name":[17],"type":["chr"],"align":["left"]},{"label":["iacornsr"],"name":[18],"type":["int"],"align":["right"]},{"label":["nhiforsoigrp"],"name":[19],"type":["chr"],"align":["left"]},{"label":["nhspiagr"],"name":[20],"type":["dbl"],"align":["right"]},{"label":["vtsepticsyscl"],"name":[21],"type":["chr"],"align":["left"]},{"label":["mucertstat"],"name":[22],"type":["chr"],"align":["left"]},{"label":["lkey"],"name":[23],"type":["chr"],"align":["left"]},{"label":["mukey"],"name":[24],"type":["chr"],"align":["left"]}],"data":[{"1":"W","2":"Water","3":"NA","4":"NA","5":"2280","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"Not prime farmland","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"13809","24":"394925"},{"1":"1356","2":"Water, miscellaneous","3":"NA","4":"NA","5":"227","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"Not prime farmland","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"13809","24":"394939"},{"1":"W","2":"Water","3":"NA","4":"NA","5":"8769","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"Not prime farmland","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"13811","24":"427939"},{"1":"W","2":"Water","3":"NA","4":"NA","5":"1137","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"Not prime farmland","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"13816","24":"428207"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -496,7 +575,6 @@ Available layers:
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(mukey <span class="sc">%in%</span> water_mukeys) <span class="sc">%&gt;%</span> </span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["musym"],"name":[1],"type":["chr"],"align":["left"]},{"label":["muname"],"name":[2],"type":["chr"],"align":["left"]},{"label":["mukind"],"name":[3],"type":["chr"],"align":["left"]},{"label":["mustatus"],"name":[4],"type":["chr"],"align":["left"]},{"label":["muacres"],"name":[5],"type":["int"],"align":["right"]},{"label":["mapunitlfw_l"],"name":[6],"type":["int"],"align":["right"]},{"label":["mapunitlfw_r"],"name":[7],"type":["int"],"align":["right"]},{"label":["mapunitlfw_h"],"name":[8],"type":["int"],"align":["right"]},{"label":["mapunitpfa_l"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["mapunitpfa_r"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["mapunitpfa_h"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["farmlndcl"],"name":[12],"type":["chr"],"align":["left"]},{"label":["muhelcl"],"name":[13],"type":["chr"],"align":["left"]},{"label":["muwathelcl"],"name":[14],"type":["chr"],"align":["left"]},{"label":["muwndhelcl"],"name":[15],"type":["chr"],"align":["left"]},{"label":["interpfocus"],"name":[16],"type":["chr"],"align":["left"]},{"label":["invesintens"],"name":[17],"type":["chr"],"align":["left"]},{"label":["iacornsr"],"name":[18],"type":["int"],"align":["right"]},{"label":["nhiforsoigrp"],"name":[19],"type":["chr"],"align":["left"]},{"label":["nhspiagr"],"name":[20],"type":["dbl"],"align":["right"]},{"label":["vtsepticsyscl"],"name":[21],"type":["chr"],"align":["left"]},{"label":["mucertstat"],"name":[22],"type":["chr"],"align":["left"]},{"label":["lkey"],"name":[23],"type":["chr"],"align":["left"]},{"label":["mukey"],"name":[24],"type":["chr"],"align":["left"]}],"data":[{"1":"W","2":"Water","3":"NA","4":"NA","5":"2280","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"Not prime farmland","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"13809","24":"394925","_rn_":"1"},{"1":"W","2":"Water","3":"Consociation","4":"NA","5":"2","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"Not prime farmland","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"12953","24":"357194","_rn_":"2"},{"1":"W","2":"Water","3":"Consociation","4":"NA","5":"353391","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"Not prime farmland","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"13748","24":"397687","_rn_":"3"},{"1":"W","2":"Water","3":"Consociation","4":"NA","5":"15720","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"Not prime farmland","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"12956","24":"352341","_rn_":"4"},{"1":"W","2":"Water","3":"Consociation","4":"NA","5":"27","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"Not prime farmland","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"15777","24":"654761","_rn_":"5"},{"1":"W","2":"Water","3":"Consociation","4":"NA","5":"20449","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"Not prime farmland","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"13758","24":"430612","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -514,7 +592,7 @@ Available layers:
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mn_components <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(<span class="at">dsn =</span> mn_gdb, <span class="at">layer =</span> <span class="st">"component"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `component' from data source 
-  `C:\Users\Hava\Documents\R\ch03-sh-cluster\data\gSSURGO_MN\gSSURGO_MN.gdb' 
+  `C:\Users\Hava\backed_up\Documents\R\ch03-sh-cluster-20240114\data\gSSURGO_MN\gSSURGO_MN.gdb' 
   using driver `OpenFileGDB'</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
@@ -599,7 +677,6 @@ Available layers:
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(n_comp) <span class="sc">%&gt;%</span> </span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">name =</span> <span class="st">"n_mapunits"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["n_comp"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["n_mapunits"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"1","2":"624"},{"1":"2","2":"793"},{"1":"3","2":"1622"},{"1":"4","2":"2056"},{"1":"5","2":"1444"},{"1":"6","2":"864"},{"1":"7","2":"331"},{"1":"8","2":"108"},{"1":"9","2":"20"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -628,7 +705,6 @@ Available layers:
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["taxorder"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Spodosols","2":"1"},{"1":"Vertisols","2":"467"},{"1":"Inceptisols","2":"945"},{"1":"Histosols","2":"1198"},{"1":"Entisols","2":"1812"},{"1":"Alfisols","2":"3026"},{"1":"NA","2":"6330"},{"1":"Mollisols","2":"17286"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -666,16 +742,19 @@ Available layers:
 <span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Number of components by suborder"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="03-mus_comp_in_aoi_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="03-mus_comp_in_aoi_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># what's up with taxonomic suborder = NA?</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># much of this likely dropped if we use CDL to subset </span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>comps_no_taxsuborder <span class="ot">&lt;-</span> target_comp <span class="sc">%&gt;%</span> </span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(taxsuborder)) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(compname) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>()</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(comps_no_taxsuborder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>comps_no_taxsuborder <span class="ot">&lt;-</span> target_comp <span class="sc">%&gt;%</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(taxsuborder)) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(compname) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>()</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(comps_no_taxsuborder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 829</code></pre>
 </div>
@@ -727,9 +806,9 @@ Available layers:
 </div>
 </div>
 </section>
-<section id="subgroup-family-long-name" class="level3" data-number="2.4.3">
-<h3 data-number="2.4.3" class="anchored" data-anchor-id="subgroup-family-long-name"><span class="header-section-number">2.4.3</span> Subgroup &amp; Family (long name)</h3>
-<p>The <code>taxclname</code> is a concatenation of the taxonomy subgroup and family. On 11 August, 2022 Nic and I talked about how this could be another way to pull out mineralogy information. Could grab “smectitic” or “mixed” from these names if we wanted to do yes/no variable.</p>
+<section id="subgroup-family" class="level3" data-number="2.4.3">
+<h3 data-number="2.4.3" class="anchored" data-anchor-id="subgroup-family"><span class="header-section-number">2.4.3</span> Subgroup &amp; Family</h3>
+<p>On 11 August, 2022 Nic and I talked about how this could be another way to pull out mineralogy information. Could grab “smectitic” or “mixed” from these names if we wanted to do yes/no variable.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>target_comp <span class="sc">%&gt;%</span> </span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(taxclname) <span class="sc">%&gt;%</span> </span>
@@ -754,7 +833,7 @@ Available layers:
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>chorizon <span class="ot">&lt;-</span> mn_components <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(<span class="at">dsn =</span> mn_gdb, <span class="at">layer =</span> <span class="st">"chorizon"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `chorizon' from data source 
-  `C:\Users\Hava\Documents\R\ch03-sh-cluster\data\gSSURGO_MN\gSSURGO_MN.gdb' 
+  `C:\Users\Hava\backed_up\Documents\R\ch03-sh-cluster-20240114\data\gSSURGO_MN\gSSURGO_MN.gdb' 
   using driver `OpenFileGDB'</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
@@ -766,13 +845,13 @@ Available layers:
 </section>
 <section id="sec-diag-feat" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="sec-diag-feat"><span class="header-section-number">2.6</span> Diagnostic Features</h2>
-<p>Here, I’m pulling out the depth to restrictive horizon (if any) in the profile. Note that this may be &gt;20cm, for our other features we are summarizing soil properties in the 0-20cm depth range.</p>
+<p>Here, I’m pulling out the depth to restrictive horizon (if any) in the profile. Note that this may be &gt;20cm, which is the depth we are summarizing to for the soil properties.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read only diag features table, as dataframe</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>diag <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(<span class="at">dsn =</span> mn_gdb, <span class="at">layer =</span> <span class="st">"codiagfeatures"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `codiagfeatures' from data source 
-  `C:\Users\Hava\Documents\R\ch03-sh-cluster\data\gSSURGO_MN\gSSURGO_MN.gdb' 
+  `C:\Users\Hava\backed_up\Documents\R\ch03-sh-cluster-20240114\data\gSSURGO_MN\gSSURGO_MN.gdb' 
   using driver `OpenFileGDB'</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
@@ -806,7 +885,6 @@ Available layers:
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(cokey <span class="sc">%in%</span> maj_comp<span class="sc">$</span>cokey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ok, so from above we can see that 10458 cokeys out of a total of 10588 have something entered in the <code>featkind</code> field as a diagnostic feature. Now let’s investigate how many of those might be considered restrictive to roots (relevant in agricultural context):</p>
-<p>target_restr</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>target_restr <span class="ot">&lt;-</span> target_diag <span class="sc">%&gt;%</span> </span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(featkind <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Lithic contact"</span>, </span>
@@ -820,7 +898,6 @@ Available layers:
 </div>
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>target_restr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["featkind"],"name":[1],"type":["chr"],"align":["left"]},{"label":["featdept_l"],"name":[2],"type":["int"],"align":["right"]},{"label":["featdept_r"],"name":[3],"type":["int"],"align":["right"]},{"label":["featdept_h"],"name":[4],"type":["int"],"align":["right"]},{"label":["featdepb_l"],"name":[5],"type":["int"],"align":["right"]},{"label":["featdepb_r"],"name":[6],"type":["int"],"align":["right"]},{"label":["featdepb_h"],"name":[7],"type":["int"],"align":["right"]},{"label":["featthick_l"],"name":[8],"type":["int"],"align":["right"]},{"label":["featthick_r"],"name":[9],"type":["int"],"align":["right"]},{"label":["featthick_h"],"name":[10],"type":["int"],"align":["right"]},{"label":["cokey"],"name":[11],"type":["chr"],"align":["left"]},{"label":["codiagfeatkey"],"name":[12],"type":["chr"],"align":["left"]}],"data":[{"1":"Densic contact","2":"70","3":"147","4":"193","5":"100","6":"200","7":"200","8":"NA","9":"NA","10":"NA","11":"21726416","12":"12085252"},{"1":"Densic contact","2":"50","3":"102","4":"163","5":"200","6":"200","7":"200","8":"NA","9":"98","10":"NA","11":"21726420","12":"12085267"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21743069","12":"12097498"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21743070","12":"12097504"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21743074","12":"12097510"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21743078","12":"12097516"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21743080","12":"12097522"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21743085","12":"12097528"},{"1":"Densic contact","2":"50","3":"102","4":"163","5":"200","6":"200","7":"200","8":"NA","9":"98","10":"NA","11":"21743097","12":"12097546"},{"1":"Densic contact","2":"70","3":"147","4":"193","5":"100","6":"200","7":"200","8":"NA","9":"NA","10":"NA","11":"21743102","12":"12097541"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21695278","12":"12016634"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21695279","12":"12016640"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21695286","12":"12016652"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21695288","12":"12016658"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21695289","12":"12016664"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21695292","12":"12016670"},{"1":"Densic contact","2":"50","3":"102","4":"163","5":"200","6":"200","7":"200","8":"NA","9":"98","10":"NA","11":"21695798","12":"12016702"},{"1":"Densic contact","2":"70","3":"147","4":"193","5":"100","6":"200","7":"200","8":"NA","9":"NA","10":"NA","11":"21695802","12":"12016713"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21791312","12":"12128165"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21791314","12":"12128159"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21791320","12":"12128177"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21791322","12":"12128171"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21791323","12":"12128183"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21791326","12":"12128189"},{"1":"Densic contact","2":"70","3":"147","4":"193","5":"100","6":"200","7":"200","8":"NA","9":"NA","10":"NA","11":"21791340","12":"12128202"},{"1":"Densic contact","2":"50","3":"102","4":"163","5":"200","6":"200","7":"200","8":"NA","9":"98","10":"NA","11":"21791343","12":"12128207"},{"1":"Densic contact","2":"50","3":"104","4":"150","5":"200","6":"200","7":"200","8":"50","9":"96","10":"150","11":"21733956","12":"12090208"},{"1":"Densic contact","2":"100","3":"104","4":"150","5":"200","6":"200","7":"200","8":"NA","9":"96","10":"NA","11":"21734010","12":"12090861"},{"1":"Densic contact","2":"50","3":"104","4":"150","5":"200","6":"200","7":"200","8":"50","9":"96","10":"150","11":"21734112","12":"12090388"},{"1":"Densic contact","2":"50","3":"104","4":"150","5":"200","6":"200","7":"200","8":"50","9":"96","10":"150","11":"21734114","12":"12090384"},{"1":"Densic contact","2":"50","3":"104","4":"150","5":"200","6":"200","7":"200","8":"50","9":"96","10":"150","11":"21734115","12":"12090396"},{"1":"Densic contact","2":"100","3":"109","4":"200","5":"200","6":"200","7":"200","8":"50","9":"91","10":"100","11":"21734116","12":"12090400"},{"1":"Densic contact","2":"50","3":"104","4":"150","5":"200","6":"200","7":"200","8":"50","9":"96","10":"150","11":"21734119","12":"12090416"},{"1":"Densic contact","2":"100","3":"109","4":"200","5":"200","6":"200","7":"200","8":"50","9":"91","10":"100","11":"21734120","12":"12090412"},{"1":"Densic contact","2":"100","3":"107","4":"150","5":"200","6":"200","7":"200","8":"NA","9":"93","10":"NA","11":"21734131","12":"12090439"},{"1":"Densic contact","2":"100","3":"104","4":"150","5":"200","6":"200","7":"200","8":"NA","9":"96","10":"NA","11":"21734137","12":"12090451"},{"1":"Densic contact","2":"50","3":"104","4":"150","5":"200","6":"200","7":"200","8":"50","9":"96","10":"150","11":"21734141","12":"12090469"},{"1":"Densic contact","2":"34","3":"99","4":"160","5":"200","6":"200","7":"200","8":"NA","9":"101","10":"NA","11":"21734142","12":"12090484"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21774009","12":"12117800"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21774010","12":"12117806"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21774015","12":"12117815"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21774016","12":"12117821"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21774017","12":"12117827"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21774020","12":"12117833"},{"1":"Densic contact","2":"50","3":"102","4":"163","5":"200","6":"200","7":"200","8":"NA","9":"98","10":"NA","11":"21774070","12":"12117894"},{"1":"Densic contact","2":"70","3":"147","4":"193","5":"100","6":"200","7":"200","8":"NA","9":"NA","10":"NA","11":"21774075","12":"12117905"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21789937","12":"12126931"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21789938","12":"12126937"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21789940","12":"12126949"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21789945","12":"12126943"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21789946","12":"12126955"},{"1":"Densic contact","2":"71","3":"116","4":"122","5":"71","6":"116","7":"122","8":"NA","9":"0","10":"NA","11":"21789950","12":"12126961"},{"1":"Densic contact","2":"70","3":"147","4":"193","5":"100","6":"200","7":"200","8":"NA","9":"NA","10":"NA","11":"21789965","12":"12126974"},{"1":"Densic contact","2":"50","3":"102","4":"163","5":"200","6":"200","7":"200","8":"NA","9":"98","10":"NA","11":"21789969","12":"12126979"},{"1":"Densic contact","2":"100","3":"115","4":"150","5":"100","6":"115","7":"150","8":"0","9":"0","10":"0","11":"21778778","12":"12121251"},{"1":"Paralithic contact","2":"100","3":"107","4":"149","5":"200","6":"200","7":"200","8":"51","9":"93","10":"100","11":"21735582","12":"12093245"},{"1":"Paralithic contact","2":"100","3":"107","4":"149","5":"200","6":"200","7":"200","8":"51","9":"93","10":"100","11":"21737725","12":"12094841"},{"1":"Paralithic contact","2":"100","3":"107","4":"149","5":"200","6":"200","7":"200","8":"51","9":"93","10":"100","11":"21737731","12":"12094818"},{"1":"Paralithic contact","2":"51","3":"99","4":"102","5":"51","6":"99","7":"102","8":"0","9":"0","10":"0","11":"21791113","12":"12127946"},{"1":"Paralithic contact","2":"51","3":"99","4":"102","5":"51","6":"99","7":"102","8":"0","9":"0","10":"0","11":"21791174","12":"12127949"},{"1":"Paralithic contact","2":"51","3":"99","4":"102","5":"51","6":"99","7":"102","8":"0","9":"0","10":"0","11":"21791177","12":"12127952"},{"1":"Paralithic contact","2":"100","3":"107","4":"149","5":"200","6":"200","7":"200","8":"51","9":"93","10":"100","11":"21791182","12":"12128001"},{"1":"Paralithic contact","2":"100","3":"107","4":"149","5":"200","6":"200","7":"200","8":"51","9":"93","10":"100","11":"21791185","12":"12127989"},{"1":"Paralithic contact","2":"100","3":"107","4":"149","5":"200","6":"200","7":"200","8":"51","9":"93","10":"100","11":"21772951","12":"12117588"},{"1":"Paralithic contact","2":"51","3":"99","4":"102","5":"51","6":"99","7":"102","8":"0","9":"0","10":"0","11":"21793214","12":"12130036"},{"1":"Paralithic contact","2":"100","3":"107","4":"149","5":"200","6":"200","7":"200","8":"51","9":"93","10":"100","11":"21793217","12":"12130037"},{"1":"Paralithic contact","2":"100","3":"107","4":"149","5":"200","6":"200","7":"200","8":"51","9":"93","10":"100","11":"21736557","12":"12094207"},{"1":"Paralithic contact","2":"100","3":"107","4":"149","5":"200","6":"200","7":"200","8":"51","9":"93","10":"100","11":"21736560","12":"12094184"},{"1":"Paralithic contact","2":"100","3":"107","4":"149","5":"200","6":"200","7":"200","8":"51","9":"93","10":"100","11":"21740126","12":"12096616"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -915,10 +992,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -928,8 +1022,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -941,7 +1044,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -985,6 +1211,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1010,6 +1237,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1071,17 +1324,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./02-data_sources.html" class="pagination-link">
+      <a href="./02-data_sources.html" class="pagination-link" aria-label="Data Sources">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data Sources</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./04-subset-component-data.html" class="pagination-link">
+      <a href="./04-subset-component-data.html" class="pagination-link" aria-label="Identify Target Components">
         <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Identify Target Components</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 

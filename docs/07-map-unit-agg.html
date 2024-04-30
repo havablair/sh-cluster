@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,7 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,16 +96,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
-
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -109,13 +145,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-map-unit-agg.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Map unit aggregation</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-map-unit-agg.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Map unit aggregation</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -124,7 +160,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Minnesota Topsoil Classification for Soil Health Assessment</a> 
@@ -205,80 +241,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12-explore-clust-props.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Explore clusters</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./19-sample-points.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sample validation points</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./20-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Cluster pairwise comparisons</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./21-map-indiv-regions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mapping individual clusters</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./22-pca-kmeans.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Do PCA before k-means</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Do PCA before k-means</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./23-pca-kmeans-finalists.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">PCA-kmeans Clustering Finalists</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Clustering Finalists</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./24-compare-kmeans.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Comparing k-means scenarios</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./25-pca-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">PCA Cluster pairwise comparisons</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Comparing k-means scenarios</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./26-notes-pca6-8.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Comparing PCA 6 &amp; PCA 8 Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Comparing PCA 6 &amp; PCA 8 Models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./27-pairwise-nonparametric.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">(non-parametric) PCA Cluster pairwise comparisons</span></span></a>
+  <a href="./31-demo-weighted-centroids.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Find map unit weighted centroids</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./28-compare-variation-demo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compare variation explained</span></span></a>
+  <a href="./32-sample-climate-vars.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Sample climate data at map-unit centroids</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./35-climate-clusters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Cluster map units based on climate</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-sample-points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Sample validation points</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./29-welch-pairwise.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./30-welch-compare-variation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Welch ANOVA - compare variation explained</span></span></a>
+  <a href="./36-update-welch-compare-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Welch ANOVA - compare variation explained</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -290,7 +308,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -327,7 +345,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <p>Now that I have soil properties calculated for my target COKEYs, I need to aggregate those values to the MUKEY level, weighting my average soil properties by the normalized component percentages. This is necessary because we dropped all the components that were &lt;15% of map unit area, and we want to calculate <strong>component percent-weighted averages for</strong> <strong>MUKEYS</strong> based on the proportions of the included components only.</p>
 <p>Here am trying to figure out a nice LaTeX equation for the generic weighted means formula:</p>
@@ -356,27 +376,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># based on data availability </span></span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>mukey_info <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"./data/target_mapunit_table.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Recall that we dropped 548 components because they didn’t have data / did not refer to specific series (dumps, water, gravel pits, etc.), see <a href="05-horiz-data.html#sec-missing"><span>Section&nbsp;4.5.4</span></a>. So the <code>cmp</code> dataframe here has fewer rows than <code>cmp_lookup</code>.</p>
+<p>Recall that we dropped 548 components because they didn’t have data / did not refer to specific series (dumps, water, gravel pits, etc.), see <a href="05-horiz-data.html#sec-missing" class="quarto-xref"><span>Section 4.4.4</span></a>. So the <code>cmp</code> dataframe here has fewer rows than <code>cmp_lookup</code>.</p>
 <section id="clustering-variables" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="clustering-variables"><span class="header-section-number">6.1</span> Clustering Variables</h2>
 <p>Using the same variables they did in Devine et al., but added calcium carbonate (<code>caco3_r_value</code>)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>clust_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"claytotal_r_value"</span>,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># "silttotal_r_value",</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># "sandtotal_r_value",</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"om_r_value"</span>,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cec7_r_value"</span>,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"dbthirdbar_r_value"</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#"fragvol_r_sum_value",</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#"kwfact_value",  </span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ec_r_value"</span>,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ph1to1h2o_r_value"</span>,</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"caco3_r_value"</span>,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"lep_r_value"</span>,</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ksat_r_value"</span>,</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"awc_r_value"</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"om_r_value"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cec7_r_value"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"dbthirdbar_r_value"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ec_r_value"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ph1to1h2o_r_value"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"caco3_r_value"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"lep_r_value"</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ksat_r_value"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"awc_r_value"</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="drop-incomplete-cases" class="level2" data-number="6.2">
@@ -390,7 +406,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"n_missing"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n_missing))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n_missing"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"ph1to1h2o_r_value","2":"554"},{"1":"lep_r_value","2":"377"},{"1":"claytotal_r_value","2":"369"},{"1":"cec7_r_value","2":"221"},{"1":"ec_r_value","2":"9"},{"1":"om_r_value","2":"4"},{"1":"dbthirdbar_r_value","2":"4"},{"1":"caco3_r_value","2":"4"},{"1":"awc_r_value","2":"4"},{"1":"cokey","2":"0"},{"1":"ksat_r_value","2":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -415,7 +430,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="6.3" class="anchored" data-anchor-id="create-table-for-map-unit-data"><span class="header-section-number">6.3</span> Create table for map unit data</h2>
 <p>Here, I take the (complete only) component data (0-20cm weighted averages for all our soil properties) and join it to my lookup table, which includes MUKEY. Then I nest COKEY data (multiple COKEYs can belong to one MUKEY). The result is a table with one row for each MUKEY.</p>
 <p>I also pull out some info about the number, min %, and max % of components in a given MUKEY for context.</p>
-<p>The first time I did this, I forgot to deal with <code>NA</code>s in the <code>cmp</code> dataframe, and we had 7525 MUKEYs to work with. After filtering to include only complete cases based on the cluster variables defined above, we now have 7062 MUKEYs to work with. For reference, Devine et al.&nbsp;had 4,595 for inclusion in their model (after an additional drop step based on sufficient data representation, see below <a href="#sec-dat-avail"><span>Section&nbsp;6.5</span></a>) .</p>
+<p>The first time I did this, I forgot to deal with <code>NA</code>s in the <code>cmp</code> dataframe, and we had 7525 MUKEYs to work with. After filtering to include only complete cases based on the cluster variables defined above, we now have 7062 MUKEYs to work with. For reference, Devine et al.&nbsp;had 4,595 for inclusion in their model (after an additional drop step based on sufficient data representation, see below <a href="#sec-dat-avail" class="quarto-xref"><span>Section 6.5</span></a>) .</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># nest by mukey</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cmp_nest <span class="ot">&lt;-</span> <span class="fu">left_join</span>(cmp_complete, cmp_lookup, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"cokey"</span>)) <span class="sc">%&gt;%</span></span>
@@ -451,15 +466,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># test &lt;- as.data.frame(cmp_nest$data[[115]])</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co"># calc_mu_wtd(df = test, myvars = clust_vars)</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>df_mu_sum <span class="ot">&lt;-</span> cmp_nest <span class="sc">%&gt;%</span> </span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mu_sum_data =</span> <span class="fu">map</span>(<span class="at">.x =</span> data, </span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>                           <span class="at">.f =</span> calc_mu_wtd,</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                           <span class="at">myvars =</span> clust_vars))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>df_mu_sum <span class="ot">&lt;-</span> cmp_nest <span class="sc">%&gt;%</span> </span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mu_sum_data =</span> <span class="fu">map</span>(<span class="at">.x =</span> data, </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>                           <span class="at">.f =</span> calc_mu_wtd,</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>                           <span class="at">myvars =</span> clust_vars))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="sec-dat-avail" class="level2" data-number="6.5">
@@ -479,7 +490,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ncomp_counts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["n_comp"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["n_mukeys"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"1","2":"5094"},{"1":"2","2":"1612"},{"1":"3","2":"355"},{"1":"4","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -488,7 +498,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Now, calculate the data availability for each MUKEY. Recall that since we dropped incomplete cases at the COKEY level above, we can get at data availability by summing the remaining <code>comppct_r</code> for each MUKEY.</p>
-<p>The object <code>dom_cmp_key</code> I join in here was created in back in <a href="04-subset-component-data.html"><span>Chapter&nbsp;3</span></a> . It specifies the <code>comppct_r</code> for the dominant component in a given map unit. It was important to pull this number early in our data aggregation process, before dropping any components due to missing data.</p>
+<p>The object <code>dom_cmp_key</code> I join in here was created in back in <a href="04-subset-component-data.html" class="quarto-xref"><span>Chapter 3</span></a> . It specifies the <code>comppct_r</code> for the dominant component in a given map unit. It was important to pull this number early in our data aggregation process, before dropping any components due to missing data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data_avail <span class="ot">&lt;-</span> df_mu_sum <span class="sc">%&gt;%</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">avail_data_perc =</span> <span class="fu">map_dbl</span>(data,  <span class="sc">~</span> <span class="fu">sum</span>(.[<span class="st">"comppct_r"</span>]))) <span class="sc">%&gt;%</span></span>
@@ -498,7 +508,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data_avail)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["mukey"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["cokeys"],"name":[2],"type":["list"],"align":["right"]},{"label":["avail_data_perc"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["dom_comppct"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"395973","2":"<dbl [1]>","3":"85","4":"85"},{"1":"395975","2":"<dbl [1]>","3":"85","4":"85"},{"1":"395900","2":"<dbl [1]>","3":"100","4":"100"},{"1":"395948","2":"<dbl [1]>","3":"100","4":"100"},{"1":"1146301","2":"<dbl [1]>","3":"15","4":"85"},{"1":"1146306","2":"<dbl [1]>","3":"15","4":"85"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -510,26 +519,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exclude-based-on-data-availability" class="level2" data-number="6.6">
 <h2 data-number="6.6" class="anchored" data-anchor-id="exclude-based-on-data-availability"><span class="header-section-number">6.6</span> Exclude based on data availability</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use same conditions as Devine et al. </span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to populate a column specifying whether </span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># to include a given mukey.</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the order of the conditions is important</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># must go from most specific to most general</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># see https://dplyr.tidyverse.org/reference/case_when.html</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>exclude_key <span class="ot">&lt;-</span> data_avail <span class="sc">%&gt;%</span> </span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">include =</span> <span class="fu">case_when</span>(</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    avail_data_perc <span class="sc">&gt;=</span> <span class="dv">80</span> <span class="sc">~</span> <span class="st">"yes"</span>, <span class="co"># cond. 2 (n=5874)</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    avail_data_perc <span class="sc">&gt;=</span> dom_comppct <span class="sc">~</span> <span class="st">"yes"</span>, <span class="co"># cond. 1 (n=6912)</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"no"</span> <span class="co"># doesn't meet either condition</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>cokeys)</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># add the info about include/excl to main dataset</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>df_mu_avail <span class="ot">&lt;-</span> <span class="fu">full_join</span>(exclude_key, df_mu_sum, <span class="at">by =</span> <span class="st">"mukey"</span>)</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co"># keep only "include" mukeys</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>df_mu_incl <span class="ot">&lt;-</span> df_mu_avail <span class="sc">%&gt;%</span> </span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(include <span class="sc">==</span> <span class="st">"yes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># populate a column specifying whether </span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to include a given mukey.</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># the order of the conditions is important</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># must go from most specific to most general</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># see https://dplyr.tidyverse.org/reference/case_when.html</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>exclude_key <span class="ot">&lt;-</span> data_avail <span class="sc">%&gt;%</span> </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">include =</span> <span class="fu">case_when</span>(</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    avail_data_perc <span class="sc">&gt;=</span> <span class="dv">80</span> <span class="sc">~</span> <span class="st">"yes"</span>, <span class="co"># cond. 2 (n=5874)</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    avail_data_perc <span class="sc">&gt;=</span> dom_comppct <span class="sc">~</span> <span class="st">"yes"</span>, <span class="co"># cond. 1 (n=6912)</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"no"</span> <span class="co"># doesn't meet either condition</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>cokeys)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># add the info about include/excl to main dataset</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>df_mu_avail <span class="ot">&lt;-</span> <span class="fu">full_join</span>(exclude_key, df_mu_sum, <span class="at">by =</span> <span class="st">"mukey"</span>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co"># keep only "include" mukeys</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>df_mu_incl <span class="ot">&lt;-</span> df_mu_avail <span class="sc">%&gt;%</span> </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(include <span class="sc">==</span> <span class="st">"yes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>After applying the criteria above for data availability, we went from 7062 to 6912 MUKEYs, a difference of 150.</p>
 </section>
@@ -565,7 +573,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(include) <span class="sc">%&gt;%</span> </span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">name =</span> <span class="st">"num_mukeys"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["include"],"name":[1],"type":["chr"],"align":["left"]},{"label":["num_mukeys"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"no","2":"150"},{"1":"yes","2":"6912"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -584,7 +591,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(farmlndcl) <span class="sc">%&gt;%</span> </span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["farmlndcl"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"All areas are prime farmland","2":"1"},{"1":"Farmland of statewide importance","2":"5"},{"1":"Not prime farmland","2":"139"},{"1":"Prime farmland if drained","2":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -596,7 +602,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(mukind) <span class="sc">%&gt;%</span> </span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["mukind"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Complex","2":"106"},{"1":"Consociation","2":"9"},{"1":"Undifferentiated group","2":"35"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -638,7 +643,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">abbrev_muname =</span> V1) <span class="sc">%&gt;%</span> </span>
 <span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(abbrev_muname)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["abbrev_muname"],"name":[1],"type":["chr"],"align":["left"]}],"data":[{"1":"Berner-Markey mucks"},{"1":"Boone and Chelsea loamy fine sands"},{"1":"Bowstring and Fluaquents soils"},{"1":"Bowstring and Fluvaquents"},{"1":"Bowstring and Fluvaquents soils"},{"1":"Bowstring muck and Fluvaquents"},{"1":"Bowstring-Fluvaquents complex"},{"1":"Brainerd-Flak complex"},{"1":"Caron"},{"1":"Dumps"},{"1":"Eutrudepts-Graycalm-Rollins complex"},{"1":"Gerrish-Hapludalfs-Hegberg-Eutrudepts complex"},{"1":"Gerrish-Mahtomedi complex"},{"1":"Graycalm-Bootlake complex"},{"1":"Graycalm-Grayling complex"},{"1":"Graycalm-Grayling-Rifle complex"},{"1":"Graycalm-Grayling-Water complex"},{"1":"Graycalm-Sanburn complex"},{"1":"Graycalm-Totagatic"},{"1":"Haplosaprists"},{"1":"Klossner"},{"1":"Klossner and Lundlake soils"},{"1":"Klossner and Lura soils"},{"1":"Klossner muck"},{"1":"Klossner soils"},{"1":"Lougee-Totagatic-Bowstring complex"},{"1":"Medo muck"},{"1":"Medo soils"},{"1":"Meehan-Isan complex"},{"1":"Muskego"},{"1":"Pits"},{"1":"Prebish-Witbeck complex"},{"1":"Rock outcrop-Copaston complex"},{"1":"Rock outcrop-Ihlen complex"},{"1":"Sax"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -649,7 +653,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="sec-dom-eda" class="level2" data-number="6.9">
 <h2 data-number="6.9" class="anchored" data-anchor-id="sec-dom-eda"><span class="header-section-number">6.9</span> (old) Explore dominant component percentages</h2>
-<p>Keeping this here as an illustration/explanation, but the dominant component percentages we actually want to use come from <a href="04-subset-component-data.html"><span>Chapter&nbsp;3</span></a> . This is some troubleshooting and exploration I did on the road to figuring that out.</p>
+<p>Keeping this here as an illustration/explanation, but the dominant component percentages we actually want to use come from <a href="04-subset-component-data.html" class="quarto-xref"><span>Chapter 3</span></a> . This is some troubleshooting and exploration I did on the road to figuring that out.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this adds MUKEY to our df </span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>cmp_mukey_detail <span class="ot">&lt;-</span> <span class="fu">left_join</span>(cmp, cmp_lookup, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"cokey"</span>))</span>
@@ -661,7 +665,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(old_dom_cmp_key)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["mukey"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["dom_comppct"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"352143","2":"30"},{"1":"352159","2":"90"},{"1":"352160","2":"31"},{"1":"352162","2":"90"},{"1":"352165","2":"90"},{"1":"352166","2":"50"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -679,13 +682,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="07-map-unit-agg_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="07-map-unit-agg_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<p>Thoughts after troubleshooting this. The dominant component percentages shouldn’t be calculated here, they should be done earlier, in <a href="04-subset-component-data.html"><span>Chapter&nbsp;3</span></a>, before we promote to SPC object. Below is an example with two MUKEYs to illustrate.</p>
-<p>Both of these MUKEYs have large areas in components that don’t have data in the database (“Pits” and “Urban Land”). This makes sense. These are the types of components that are dropped when we promote our <code>chorizon</code> data to an <code>aqp</code> object, see <a href="05-horiz-data.html#sec-missing"><span>Section&nbsp;4.5.4</span></a> . There is data available for lower % components “Dassel” and “Udipsamment” here, but those aren’t the true dominant components, they are simply the only components that made it through the filtering that happened when I created my <code>aqp</code> object.</p>
+</div>
+<p>Thoughts after troubleshooting this. The dominant component percentages shouldn’t be calculated here, they should be done earlier, in <a href="04-subset-component-data.html" class="quarto-xref"><span>Chapter 3</span></a>, before we promote to SPC object. Below is an example with two MUKEYs to illustrate.</p>
+<p>Both of these MUKEYs have large areas in components that don’t have data in the database (“Pits” and “Urban Land”). This makes sense. These are the types of components that are dropped when we promote our <code>chorizon</code> data to an <code>aqp</code> object, see <a href="05-horiz-data.html#sec-missing" class="quarto-xref"><span>Section 4.4.4</span></a> . There is data available for lower % components “Dassel” and “Udipsamment” here, but those aren’t the true dominant components, they are simply the only components that made it through the filtering that happened when I created my <code>aqp</code> object.</p>
 <p>So if I want to use the dominant component percentage as a criterion in including/excluding data, I need to grab it earlier.</p>
-<p>More broadly, if these areas are primarily urban land or pits, they aren’t really the type of thing we’d want to include in this primarily agricultural analysis anyway. So it’s good that we have a way to filter them out, using similar criteria to Devine et al.&nbsp;(described above).</p>
+<p>More broadly, if these areas are primarily urban land or pits, they aren’t really the type of thing we’d want to include in this primarily agricultural analysis anyway. So it’s good that we have a way to filter them out.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># as an example</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>old_dom_cmp_key <span class="sc">%&gt;%</span> </span>
@@ -693,7 +700,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(., cmp_lookup, <span class="at">by =</span> <span class="st">"mukey"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(mukey <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">394766</span>, <span class="dv">428184</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["mukey"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["dom_comppct"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["cokey"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["comppct_r"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["compname"],"name":[5],"type":["chr"],"align":["left"]},{"label":["compkind"],"name":[6],"type":["chr"],"align":["left"]},{"label":["taxclname"],"name":[7],"type":["chr"],"align":["left"]},{"label":["taxorder"],"name":[8],"type":["chr"],"align":["left"]},{"label":["taxsuborder"],"name":[9],"type":["chr"],"align":["left"]},{"label":["taxgrtgroup"],"name":[10],"type":["chr"],"align":["left"]},{"label":["taxsubgrp"],"name":[11],"type":["chr"],"align":["left"]},{"label":["taxpartsize"],"name":[12],"type":["chr"],"align":["left"]},{"label":["taxpartsizemod"],"name":[13],"type":["chr"],"align":["left"]},{"label":["taxceactcl"],"name":[14],"type":["chr"],"align":["left"]},{"label":["taxreaction"],"name":[15],"type":["chr"],"align":["left"]},{"label":["taxtempcl"],"name":[16],"type":["chr"],"align":["left"]},{"label":["taxmoistscl"],"name":[17],"type":["chr"],"align":["left"]},{"label":["taxtempregime"],"name":[18],"type":["chr"],"align":["left"]}],"data":[{"1":"394766","2":"20","3":"21781218","4":"75","5":"Pits","6":"Miscellaneous area","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA"},{"1":"394766","2":"20","3":"21781221","4":"20","5":"Udipsamments","6":"Taxon above family","7":"Udipsamments","8":"Entisols","9":"Psamments","10":"Udipsamments","11":"NA","12":"not used","13":"NA","14":"NA","15":"not used","16":"NA","17":"NA","18":"NA"},{"1":"428184","2":"20","3":"21787771","4":"80","5":"Urban land","6":"Miscellaneous area","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA"},{"1":"428184","2":"20","3":"21787772","4":"20","5":"Dassel","6":"Series","7":"Coarse-loamy, mixed, superactive, mesic Typic Endoaquolls","8":"Mollisols","9":"Aquolls","10":"Endoaquolls","11":"Typic Endoaquolls","12":"coarse-loamy","13":"NA","14":"superactive","15":"not used","16":"mesic","17":"NA","18":"mesic"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -785,10 +791,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -798,8 +821,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -811,7 +843,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -855,6 +1010,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -880,6 +1036,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -941,17 +1123,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./06-soil-prop-eda.html" class="pagination-link">
+      <a href="./06-soil-prop-eda.html" class="pagination-link" aria-label="Soil Property Exploratory Analysis">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Soil Property Exploratory Analysis</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./08-var-transformations.html" class="pagination-link">
+      <a href="./08-var-transformations.html" class="pagination-link" aria-label="Variable Transformations">
         <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Variable Transformations</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 

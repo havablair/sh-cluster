@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,7 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,13 +96,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
-
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
 
 
 </head>
@@ -107,13 +116,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-var-transformations.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Variable Transformations</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-var-transformations.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Variable Transformations</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -122,7 +131,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Minnesota Topsoil Classification for Soil Health Assessment</a> 
@@ -203,80 +212,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12-explore-clust-props.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Explore clusters</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./19-sample-points.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Sample validation points</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./20-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Cluster pairwise comparisons</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./21-map-indiv-regions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mapping individual clusters</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./22-pca-kmeans.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Do PCA before k-means</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Do PCA before k-means</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./23-pca-kmeans-finalists.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">PCA-kmeans Clustering Finalists</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Clustering Finalists</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./24-compare-kmeans.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Comparing k-means scenarios</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./25-pca-cluster-pairwise-comp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">PCA Cluster pairwise comparisons</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Comparing k-means scenarios</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./26-notes-pca6-8.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Comparing PCA 6 &amp; PCA 8 Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Comparing PCA 6 &amp; PCA 8 Models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./27-pairwise-nonparametric.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">(non-parametric) PCA Cluster pairwise comparisons</span></span></a>
+  <a href="./31-demo-weighted-centroids.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Find map unit weighted centroids</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./28-compare-variation-demo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Compare variation explained</span></span></a>
+  <a href="./32-sample-climate-vars.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Sample climate data at map-unit centroids</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./35-climate-clusters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Cluster map units based on climate</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-sample-points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Sample validation points</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./29-welch-pairwise.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Welch ANOVA for PCA cluster pairwise comparisons</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./30-welch-compare-variation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Welch ANOVA - compare variation explained</span></span></a>
+  <a href="./36-update-welch-compare-variation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Welch ANOVA - compare variation explained</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -288,7 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -336,32 +327,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <section id="overview" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">7.1</span> Overview</h2>
-<p>So it makes sense to me that we would want to apply transformations on our variables with skewed distributions, but it has been surprisingly hard to find more info about this in the textbooks and tutorials I’ve found on k-means. Might need to continue looking. Because we are going to standardize / scale the data by subtracting the mean and dividing by 1 standard deviation, I think it makes sense that we’d want something close to normal for the starting distribution (since the mean is not really a helpful summary statistic for data that is very skewed…).</p>
+<p>So it makes sense to me that we would want to apply transformations on our variables with skewed distributions, but it has been surprisingly hard to find more info about this in the textbooks and tutorials I’ve found on k-means. Because we are going to standardize / scale the data by subtracting the mean and dividing by 1 standard deviation, I think it makes sense that we’d want something close to normal for the starting distribution (since the mean is not really a helpful summary statistic for data that is very skewed…).</p>
 <p>I made plots to review the best transformations for normalizing the soil property data I will be including in my k-means clustering. Here, I summarize my decisions based on the plots below:</p>
 <ul>
-<li>Clay: square root</li>
-<li>Organic matter: log10 or ln</li>
-<li>CEC: log10 or ln</li>
-<li>Bulk density: cubed (dB ^ 3)</li>
-<li>EC: None</li>
-<li>pH: None</li>
-<li>Carbonates: square root</li>
-<li>LEP: ln OR log10 (note that since we are setting LEP=0 values to 0.5, we don’t have to worry about adding an offset here before doing the log transformation).</li>
-<li>Ksat: log10 or ln</li>
-<li>AWC: log10 or ln</li>
-</ul>
-<p>“In order to weight these properties equally in the analysis and de-emphasize extreme values, some data were log transformed and all data were rescaled to produce standardized distributions with means equal to 0 and standard deviations equal to 1.”</p>
-<p>Devine et al transformed:</p>
-<ul>
-<li>OM log(x+0)</li>
-<li>CEC log(x+5)</li>
-<li>EC log(x+2)</li>
-<li>LEP log(x+5)</li>
-<li>Ks log(x+0)</li>
+<li><p>Clay: square root</p></li>
+<li><p>Organic matter: log10 or ln</p></li>
+<li><p>CEC: log10 or ln</p></li>
+<li><p>Bulk density: cubed (dB ^ 3)</p></li>
+<li><p>EC: None</p></li>
+<li><p>pH: None</p></li>
+<li><p>Carbonates: square root</p></li>
+<li><p>LEP: ln OR log10 (note that since we are setting LEP=0 values to 0.5, we don’t have to worry about adding an offset here before doing the log transformation).</p></li>
+<li><p>Ksat: log10 or ln</p></li>
+<li><p>AWC: log10 or ln</p></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -371,7 +355,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["mukey"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["claytotal_r_value"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["om_r_value"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["cec7_r_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["dbthirdbar_r_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["ec_r_value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["ph1to1h2o_r_value"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["caco3_r_value"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["lep_r_value"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["ksat_r_value"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["awc_r_value"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"395973","2":"3.000000","3":"1.50","4":"4.50000","5":"1.600","6":"0","7":"6.000000","8":"0","9":"0.3","10":"282.00000","11":"0.0800000"},{"1":"395975","2":"3.000000","3":"1.00","4":"4.50000","5":"1.600","6":"0","7":"6.000000","8":"0","9":"0.3","10":"282.00000","11":"0.0800000"},{"1":"395900","2":"5.000000","3":"4.50","4":"11.37500","5":"1.435","6":"0","7":"7.250000","8":"0","9":"1.5","10":"74.75000","11":"0.0975000"},{"1":"395948","2":"19.500000","3":"5.00","4":"21.00000","5":"1.400","6":"0","7":"6.500000","8":"0","9":"1.5","10":"9.00000","11":"0.2200000"},{"1":"885885","2":"7.155556","3":"4.95","4":"17.81667","5":"1.437","6":"0","7":"6.416667","8":"0","9":"1.5","10":"38.27778","11":"0.1396111"},{"1":"395974","2":"3.000000","3":"1.00","4":"4.50000","5":"1.600","6":"0","7":"6.000000","8":"0","9":"0.3","10":"282.00000","11":"0.0800000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -395,7 +378,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="7.2" class="anchored" data-anchor-id="zero-values"><span class="header-section-number">7.2</span> Zero values</h2>
 <p>A key consideration for these transformations is whether we have zero values, and whether to set very low values to zero.</p>
 <p>In cases where we have lots of zero values (carbonates would be a good example), think about whether we need to add a constant before applying a transformation in order to make the distribution more normal.</p>
-<p>In terms of setting very low values to zero, need to think about this more in terms of the variables we have. I don’t have much experience with EC data, but Devine et al.&nbsp;did this for EC, setting anything &lt;1.5 to zero in order to disregard differences in this low range.</p>
 <p>Let’s count the zeroes, keeping only variables that have zero values:</p>
 <p>For LEP, check textures of the samples with LEP = 0. If loamy sands or sands, this might be OK?</p>
 <div class="cell">
@@ -404,7 +386,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>()) <span class="sc">%&gt;%</span> </span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(value <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["value"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"ec_r_value","2":"6187"},{"1":"caco3_r_value","2":"4480"},{"1":"lep_r_value","2":"117"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -447,7 +428,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_transformations</span>(<span class="at">var =</span> claytotal_r_value, <span class="at">df =</span> m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -457,7 +442,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_transformations</span>(<span class="at">var =</span> om_r_value, <span class="at">df =</span> m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>m <span class="sc">%&gt;%</span> </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sqrt_om =</span> <span class="fu">sqrt</span>(om_r_value)) <span class="sc">%&gt;%</span> </span>
@@ -469,7 +458,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -479,7 +472,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_transformations</span>(<span class="at">var =</span> cec7_r_value, <span class="at">df =</span> m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -497,7 +494,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">ln_adjust =</span> <span class="dv">1</span>,</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sqrt_adjust =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I think this transformation looks the best</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>m <span class="sc">%&gt;%</span> </span>
@@ -509,14 +510,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
 <section id="sec-var-ec" class="level2" data-number="7.8">
 <h2 data-number="7.8" class="anchored" data-anchor-id="sec-var-ec"><span class="header-section-number">7.8</span> EC</h2>
-<p>No transformation for now, but need to think about if we have a threshold where we set everything below to zero. Consider setting our threshold at 1, but first look more closely at the MUKEYs with values =1, decide whether or not to include these. See <a href="09-plot-ec-lep.html#sec-ec-map"><span>Section&nbsp;8.6.3</span></a> and the QGIS project in <code>_qgis_files</code></p>
-<p>The vast majority of our EC values are 0, approximately 89.6 . Of the values that are &gt;0, most are 1.5 dS/m or less, which Devine et al.&nbsp;set to zero. So it might be worth considering whether we even include EC? I looked up more info about the range of ECs that are a concern for crop production, perhaps that could inform our decision. See <a href="#sec-ec-tol"><span>Section&nbsp;7.8.2</span></a> .</p>
+<p>No transformation for now, but need to think about if we have a threshold where we set everything below to zero. Consider setting our threshold at 1, but first look more closely at the MUKEYs with values =1, decide whether or not to include these. See <a href="09-plot-ec-lep.html#sec-ec-map" class="quarto-xref"><span>Section 8.6.3</span></a> and the QGIS project in <code>_qgis_files</code></p>
+<p>The vast majority of our EC values are 0, approximately 89.6 . Of the values that are &gt;0, most are 1.5 dS/m or less, which Devine et al.&nbsp;set to zero. So it might be worth considering whether we even include EC? I looked up more info about the range of ECs that are a concern for crop production, perhaps that could inform our decision. See <a href="#sec-ec-tol" class="quarto-xref"><span>Section 7.8.2</span></a> .</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_transformations</span>(<span class="at">var =</span> ec_r_value,</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">df =</span> m,</span>
@@ -524,7 +529,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">ln_adjust =</span> <span class="dv">1</span>,</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sqrt_adjust =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <section id="explore-ec-values-0" class="level3" data-number="7.8.1">
@@ -538,10 +547,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Distribution of EC values greater than 0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<p>Want to look more closely at the spatial distribution of these non-zero EC values, see <a href="09-plot-ec-lep.html#sec-ec-map"><span>Section&nbsp;8.6.3</span></a> . To facilitate that, here I am making a simple lookup table of the MUKEYs and an “EC category” so I can make a simple map of where these non-zero values are.</p>
+</div>
+<p>Want to look more closely at the spatial distribution of these non-zero EC values, see <a href="09-plot-ec-lep.html#sec-ec-map" class="quarto-xref"><span>Section 8.6.3</span></a> . To facilitate that, here I am making a simple lookup table of the MUKEYs and an “EC category” so I can make a simple map of where these non-zero values are.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ec_cat <span class="ot">&lt;-</span> m <span class="sc">%&gt;%</span> </span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(mukey, ec_r_value) <span class="sc">%&gt;%</span> </span>
@@ -585,7 +598,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">df =</span> m,</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">nbins =</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -600,7 +617,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">ln_adjust =</span> <span class="dv">1</span>,</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sqrt_adjust =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>m <span class="sc">%&gt;%</span> </span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(caco3_r_value <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
@@ -610,13 +631,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
 <section id="sec-lep-var" class="level2" data-number="7.11">
 <h2 data-number="7.11" class="anchored" data-anchor-id="sec-lep-var"><span class="header-section-number">7.11</span> LEP</h2>
-<p>Would pick log10 or ln here, recall that since we are setting LEP=0 to 0.5 (see <a href="09-plot-ec-lep.html#sec-lep-map"><span>Section&nbsp;8.6.4</span></a> ), don’t need to worry about adding an offset before the log.</p>
+<p>Would pick log10 or ln here, recall that since we are setting LEP=0 to 0.5 (see <a href="09-plot-ec-lep.html#sec-lep-map" class="quarto-xref"><span>Section 8.6.4</span></a> ), don’t need to worry about adding an offset before the log.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_transformations</span>(<span class="at">var =</span> lep_r_value,</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">df =</span> m,</span>
@@ -625,7 +650,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">ln_adjust =</span> <span class="dv">1</span>,</span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sqrt_adjust =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>LEP values and <a href="https://casoilresource.lawr.ucdavis.edu/gmap/help/defn-linear-extensibility.html">corresponding shrink-swell classes</a>:</p>
@@ -660,7 +689,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lep_desc =</span> lep_cat_desc) <span class="sc">%&gt;%</span> </span>
 <span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(lep_desc, n, lep_cat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["lep_desc"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["lep_cat"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Zero","2":"117","3":"0"},{"1":"Low","2":"4844","3":"1"},{"1":"Moderate","2":"1628","3":"2"},{"1":"High","2":"247","3":"3"},{"1":"Very High","2":"76","3":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -671,7 +699,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="explore-lep-0" class="level3" data-number="7.11.1">
 <h3 data-number="7.11.1" class="anchored" data-anchor-id="explore-lep-0"><span class="header-section-number">7.11.1</span> Explore LEP = 0</h3>
 <ul>
-<li>See also <a href="09-plot-ec-lep.html#sec-lep-map"><span>Section&nbsp;8.6.4</span></a></li>
+<li>See also <a href="09-plot-ec-lep.html#sec-lep-map" class="quarto-xref"><span>Section 8.6.4</span></a></li>
 <li>There are 117 MUKEYs with LEP = 0.</li>
 <li>There are 75 unique MUNAMEs with LEP = 0</li>
 <li>After exploring maps of LEP on 2022-09-19, Nic and I decided to set anything with LEP = 0 to 0.5, which keeps it in the lowest part of the “low” range. When we looked at these values across the state, they were discontinuous across counties, and the total area with LEP=0 is small. Suspect these aren’t</li>
@@ -692,7 +720,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>df_mukey_lep_zero</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["mukey"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["muname"],"name":[2],"type":["chr"],"align":["left"]},{"label":["mukind"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"2798036","2":"Markey muck, ponded, 0 to 1 percent slopes","3":"Consociation"},{"1":"2798033","2":"Hamre muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"2798031","2":"Deerwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"2474925","2":"Hamre muck, depressional, des moines, 0 to 1 percent slopes","3":"Consociation"},{"1":"2474943","2":"Northwood muck, depressional, des moines, 0 to 1 percent slopes","3":"Consociation"},{"1":"397656","2":"Deerwood muck","3":"Consociation"},{"1":"397660","2":"Northwood muck","3":"Consociation"},{"1":"733182","2":"Stonelake-Sanburn complex, 1 to 6 percent slopes","3":"Complex"},{"1":"733183","2":"Stonelake-Sanburn complex, 6 to 15 percent slopes","3":"Complex"},{"1":"2798154","2":"Hamre muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"2798151","2":"Deerwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"2474795","2":"Hamre muck, depressional, des moines, 0 to 1 percent slopes","3":"Consociation"},{"1":"2474810","2":"Northwood muck, depressional, des moines, 0 to 1 percent slopes","3":"Consociation"},{"1":"430544","2":"Northwood muck","3":"Consociation"},{"1":"430443","2":"Hamre muck","3":"Consociation"},{"1":"2510401","2":"Graycalm loamy sand, 12 to 25 percent slopes","3":"Consociation"},{"1":"2510413","2":"Graycalm-Wurtsmith complex, 2 to 8 percent slopes","3":"Complex"},{"1":"2510414","2":"Wurtsmith-Meehan complex, 1 to 8 percent slopes","3":"Complex"},{"1":"2510415","2":"Wurtsmith-Meehan-Beach complex, 1 to 8 percent slopes","3":"Complex"},{"1":"397813","2":"Blue Earth muck","3":"Consociation"},{"1":"1670735","2":"Mantorville loam, 2 to 6 percent slopes","3":"Consociation"},{"1":"1670734","2":"Mantorville loam, 0 to 2 percent slopes","3":"Consociation"},{"1":"1670736","2":"Mantorville loam, 6 to 12 percent slopes, moderately eroded","3":"Consociation"},{"1":"1713082","2":"Bellechester loamy sand, 18 to 45 percent slopes","3":"Consociation"},{"1":"1591928","2":"Cresent-Eden Prairie complex, 2 to 6 percent slopes","3":"Complex"},{"1":"1591933","2":"Sparta loamy sand, 0 to 6 percent slopes","3":"Consociation"},{"1":"1690459","2":"Sparta loamy sand, 6 to 12 percent slopes","3":"Consociation"},{"1":"1591936","2":"Chelsea loamy sand, 2 to 6 percent slopes","3":"Consociation"},{"1":"1690272","2":"Chelsea loamy sand, 6 to 12 percent slopes","3":"Consociation"},{"1":"1690273","2":"Chelsea loamy sand, 12 to 35 percent slopes","3":"Consociation"},{"1":"1670007","2":"Eleva sandy loam, 2 to 6 percent slopes","3":"Consociation"},{"1":"1670008","2":"Eleva sandy loam, 6 to 12 percent slopes, moderately eroded","3":"Consociation"},{"1":"1690458","2":"Plainfield loamy sand, 12 to 18 percent slopes","3":"Consociation"},{"1":"1690457","2":"Plainfield loamy sand, 6 to 12 percent slopes","3":"Consociation"},{"1":"1690456","2":"Coloma loamy sand, 0 to 6 percent slopes","3":"Consociation"},{"1":"1690453","2":"Lilah sandy loam, 6 to 12 percent slopes, moderately eroded","3":"Consociation"},{"1":"1690452","2":"Lilah sandy loam, 0 to 6 percent slopes","3":"Consociation"},{"1":"1675879","2":"Chaseburg silt loam, 2 to 12 percent slopes, frequently flooded","3":"Consociation"},{"1":"1690451","2":"Burkhardt sandy loam, 0 to 6 percent slopes","3":"Consociation"},{"1":"1675883","2":"Ankeny-Zumbro complex, 0 to 3 percent slopes, occasionally flooded","3":"Complex"},{"1":"1690744","2":"Meridian silt loam, 6 to 12 percent slopes, moderately eroded","3":"Consociation"},{"1":"1675862","2":"McPaul silt loam, 0 to 3 percent slopes, frequently flooded","3":"Consociation"},{"1":"1670227","2":"Hawick sandy loam, 18 to 45 percent slopes","3":"Consociation"},{"1":"1690742","2":"Burkhardt sandy loam, very gravelly substratum, 0 to 3 percent slopes","3":"Consociation"},{"1":"1690461","2":"Billett fine sandy loam, 0 to 4 percent slopes","3":"Consociation"},{"1":"1670228","2":"Hawick sandy loam, 12 to 18 percent slopes","3":"Consociation"},{"1":"1690460","2":"Malardi loam, 0 to 3 percent slopes","3":"Consociation"},{"1":"1670222","2":"Malardi loam, 6 to 12 percent slopes, moderately eroded","3":"Consociation"},{"1":"1690743","2":"Meridian silt loam, 12 to 18 percent slopes, moderately eroded","3":"Consociation"},{"1":"1711671","2":"Rasset sandy loam, strath terrace, 6 to 12 percent slopes, moderately eroded","3":"Consociation"},{"1":"1670200","2":"Rasset sandy loam, strath terrace, 2 to 6 percent slopes","3":"Consociation"},{"1":"1670179","2":"Billett sandy loam, 6 to 12 percent slopes, moderately eroded","3":"Consociation"},{"1":"1670178","2":"Billett sandy loam, 2 to 6 percent slopes","3":"Consociation"},{"1":"1670177","2":"Lilah-Billett complex, 12 to 18 percent slopes, moderately eroded","3":"Complex"},{"1":"1690467","2":"Rasset fine sandy loam, 0 to 6 percent slopes","3":"Consociation"},{"1":"1670003","2":"Hesch-Rasset complex, 1 to 6 percent slopes","3":"Complex"},{"1":"1481602","2":"Rasset sandy loam, 0 to 6 percent slopes","3":"Consociation"},{"1":"1690898","2":"Rasset sandy loam, 6 to 12 percent slopes, moderately eroded","3":"Consociation"},{"1":"1670010","2":"Eleva-Alvin complex, 6 to 12 percent slopes, moderately eroded","3":"Complex"},{"1":"1670176","2":"Lilah-Billett complex, 6 to 12 percent slopes, moderately eroded","3":"Complex"},{"1":"2798410","2":"Markey muck, ponded, 0 to 1 percent slopes","3":"Consociation"},{"1":"784653","2":"Mantorville loam, 2 to 6 percent slopes","3":"Consociation"},{"1":"784789","2":"Mantorville loam, 0 to 2 percent slopes","3":"Consociation"},{"1":"1384990","2":"Mantorville loam, 6 to 12 percent slopes, moderately eroded","3":"Consociation"},{"1":"1384957","2":"Meridian loam, 0 to 3 percent slopes","3":"Consociation"},{"1":"399214","2":"Hamre muck","3":"Consociation"},{"1":"2798920","2":"Markey muck, ponded, 0 to 1 percent slopes","3":"Consociation"},{"1":"2798912","2":"Hamre muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"2798899","2":"Deerwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"357122","2":"Haug muck","3":"Consociation"},{"1":"357156","2":"Deerwood muck","3":"Consociation"},{"1":"357158","2":"Northwood muck","3":"Consociation"},{"1":"357099","2":"Northwood muck, ponded","3":"Consociation"},{"1":"357125","2":"Hamre muck","3":"Consociation"},{"1":"2799027","2":"Wildwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"725690","2":"Talmo gravelly sandy loam, 6 to 35 percent slopes","3":"Consociation"},{"1":"2799033","2":"Deerwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"2799129","2":"Deerwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"435655","2":"Haug muck","3":"Consociation"},{"1":"2799191","2":"Markey muck, ponded, 0 to 1 percent slopes","3":"Consociation"},{"1":"2799185","2":"Hamre muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"2799172","2":"Deerwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"681022","2":"Hamre muck, depressional, des moines, 0 to 1 percent slopes","3":"Consociation"},{"1":"681017","2":"Northwood muck, depressional, des moines, 0 to 1 percent slopes","3":"Consociation"},{"1":"725511","2":"Talmo gravelly sandy loam, 2 to 6 percent slopes","3":"Consociation"},{"1":"1674446","2":"Talmo gravelly sandy loam, 6 to 35 percent slopes","3":"Consociation"},{"1":"2799664","2":"Markey muck, ponded, 0 to 1 percent slopes","3":"Consociation"},{"1":"2799649","2":"Hamre muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"2799633","2":"Deerwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"352275","2":"Deerwood muck","3":"Consociation"},{"1":"352276","2":"Northwood muck","3":"Consociation"},{"1":"352196","2":"Northwood muck, marl subsoil","3":"Consociation"},{"1":"352207","2":"Hamre muck","3":"Consociation"},{"1":"2799790","2":"Markey muck, ponded, 0 to 1 percent slopes","3":"Consociation"},{"1":"2799774","2":"Hamre muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"2799757","2":"Deerwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"623356","2":"Hamre muck, depressional, mlra 88, 0 to 1 percent slopes","3":"Consociation"},{"1":"623357","2":"Northwood muck, depressional, mlra 88, 0 to 1 percent slopes","3":"Consociation"},{"1":"432674","2":"Talmo gravelly sandy loam, 2 to 6 percent slopes","3":"Consociation"},{"1":"432675","2":"Talmo gravelly sandy loam, 6 to 35 percent slopes","3":"Consociation"},{"1":"2799828","2":"Markey muck, ponded, 0 to 1 percent slopes","3":"Consociation"},{"1":"2799823","2":"Deerwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"394807","2":"Northwood muck, wooded, 0 to 1 percent slopes","3":"Consociation"},{"1":"394814","2":"Leafriver muck, wooded, 0 to 1 percent slopes","3":"Consociation"},{"1":"394831","2":"Leafriver muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"394874","2":"Sago muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"394881","2":"Deerwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"394884","2":"Northwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"394898","2":"Wildwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"2799905","2":"Wildwood muck, 0 to 1 percent slopes","3":"Consociation"},{"1":"431439","2":"Stonelake-Sanburn complex, 6 to 15 percent slopes","3":"Complex"},{"1":"428093","2":"Glencoe muck","3":"Consociation"},{"1":"2230460","2":"Minneiska sandy loam, 0 to 2 percent slopes, occasionally flooded","3":"Consociation"},{"1":"1946884","2":"Dunnbot-Scotah complex, 0 to 3 percent slopes, frequently flooded","3":"Complex"},{"1":"1946890","2":"Riverwash sand, 2 to 12 percent slopes, frequently flooded","3":"Consociation"},{"1":"428782","2":"Leafriver muck","3":"Consociation"},{"1":"2799978","2":"Deerwood muck, 0 to 1 percent slopes","3":"Consociation"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -716,7 +743,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(muname, <span class="st">"muck"</span>),</span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(muname, <span class="st">"sand"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["mukey"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["muname"],"name":[2],"type":["chr"],"align":["left"]},{"label":["mukind"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"733182","2":"Stonelake-Sanburn complex, 1 to 6 percent slopes","3":"Complex"},{"1":"733183","2":"Stonelake-Sanburn complex, 6 to 15 percent slopes","3":"Complex"},{"1":"2510413","2":"Graycalm-Wurtsmith complex, 2 to 8 percent slopes","3":"Complex"},{"1":"2510414","2":"Wurtsmith-Meehan complex, 1 to 8 percent slopes","3":"Complex"},{"1":"2510415","2":"Wurtsmith-Meehan-Beach complex, 1 to 8 percent slopes","3":"Complex"},{"1":"1670735","2":"Mantorville loam, 2 to 6 percent slopes","3":"Consociation"},{"1":"1670734","2":"Mantorville loam, 0 to 2 percent slopes","3":"Consociation"},{"1":"1670736","2":"Mantorville loam, 6 to 12 percent slopes, moderately eroded","3":"Consociation"},{"1":"1591928","2":"Cresent-Eden Prairie complex, 2 to 6 percent slopes","3":"Complex"},{"1":"1675879","2":"Chaseburg silt loam, 2 to 12 percent slopes, frequently flooded","3":"Consociation"},{"1":"1675883","2":"Ankeny-Zumbro complex, 0 to 3 percent slopes, occasionally flooded","3":"Complex"},{"1":"1690744","2":"Meridian silt loam, 6 to 12 percent slopes, moderately eroded","3":"Consociation"},{"1":"1675862","2":"McPaul silt loam, 0 to 3 percent slopes, frequently flooded","3":"Consociation"},{"1":"1690460","2":"Malardi loam, 0 to 3 percent slopes","3":"Consociation"},{"1":"1670222","2":"Malardi loam, 6 to 12 percent slopes, moderately eroded","3":"Consociation"},{"1":"1690743","2":"Meridian silt loam, 12 to 18 percent slopes, moderately eroded","3":"Consociation"},{"1":"1670177","2":"Lilah-Billett complex, 12 to 18 percent slopes, moderately eroded","3":"Complex"},{"1":"1670003","2":"Hesch-Rasset complex, 1 to 6 percent slopes","3":"Complex"},{"1":"1670010","2":"Eleva-Alvin complex, 6 to 12 percent slopes, moderately eroded","3":"Complex"},{"1":"1670176","2":"Lilah-Billett complex, 6 to 12 percent slopes, moderately eroded","3":"Complex"},{"1":"784653","2":"Mantorville loam, 2 to 6 percent slopes","3":"Consociation"},{"1":"784789","2":"Mantorville loam, 0 to 2 percent slopes","3":"Consociation"},{"1":"1384990","2":"Mantorville loam, 6 to 12 percent slopes, moderately eroded","3":"Consociation"},{"1":"1384957","2":"Meridian loam, 0 to 3 percent slopes","3":"Consociation"},{"1":"431439","2":"Stonelake-Sanburn complex, 6 to 15 percent slopes","3":"Complex"},{"1":"1946884","2":"Dunnbot-Scotah complex, 0 to 3 percent slopes, frequently flooded","3":"Complex"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -754,7 +780,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Number MUKEYs"</span>) <span class="sc">+</span> </span>
 <span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"MUKEYs with LEP=0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>And also look at the soil taxonomy:</p>
@@ -765,7 +795,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["taxgrtgroup"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Humaquepts","2":"49"},{"1":"Hapludalfs","2":"23"},{"1":"Argiudolls","2":"20"},{"1":"Udipsamments","2":"18"},{"1":"Haplosaprists","2":"7"},{"1":"Hapludolls","2":"7"},{"1":"Haplustolls","2":"5"},{"1":"Udifluvents","2":"4"},{"1":"Udorthents","2":"3"},{"1":"Fluvaquents","2":"1"},{"1":"Haplaquolls","2":"1"},{"1":"Psammaquents","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -778,7 +807,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["taxsubgrp"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Histic Humaquepts","2":"49"},{"1":"Typic Argiudolls","2":"20"},{"1":"Mollic Hapludalfs","2":"9"},{"1":"Terric Haplosaprists","2":"7"},{"1":"Typic Hapludalfs","2":"7"},{"1":"Lamellic Udipsamments","2":"6"},{"1":"Typic Udipsamments","2":"6"},{"1":"Udorthentic Haplustolls","2":"5"},{"1":"Entic Hapludolls","2":"4"},{"1":"Psammentic Hapludalfs","2":"4"},{"1":"Inceptic Hapludalfs","2":"3"},{"1":"Mollic Udifluvents","2":"3"},{"1":"Oxyaquic Udipsamments","2":"3"},{"1":"Typic Udorthents","2":"3"},{"1":"Aquic Udipsamments","2":"2"},{"1":"Typic Hapludolls","2":"2"},{"1":"NA","2":"2"},{"1":"Cumulic Hapludolls","2":"1"},{"1":"Histic Haplaquolls","2":"1"},{"1":"Mollic Fluvaquents","2":"1"},{"1":"Typic Udifluvents","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -796,7 +824,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">df =</span> m,</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">nbins =</span> <span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -808,7 +840,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">df =</span> m,</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">nbins =</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="08-var-transformations_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 
@@ -895,10 +931,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -908,8 +961,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -921,7 +983,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -965,6 +1150,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -990,6 +1176,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1051,17 +1263,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./07-map-unit-agg.html" class="pagination-link">
+      <a href="./07-map-unit-agg.html" class="pagination-link" aria-label="Map unit aggregation">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Map unit aggregation</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./09-plot-ec-lep.html" class="pagination-link">
+      <a href="./09-plot-ec-lep.html" class="pagination-link" aria-label="MAP EC and LEP with `{terra}`">
         <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">MAP EC and LEP with <code>{terra}</code></span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 

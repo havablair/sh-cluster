@@ -156,4 +156,4 @@ halfeye_patch <-
 
 halfeye_patch
 
-ggsave("figs/halfeye_multiplot.png", halfeye_patch, height = 8, width = 8, units = "in")
+ggsave("figs/dpi300/halfeye_multiplot.tiff", halfeye_patch, height = 8, width = 8, units = "in")

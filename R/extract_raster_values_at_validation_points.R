@@ -13,7 +13,7 @@ library(terra)
 # points to validate
 ncss_dat <- read_csv("data/validation_data/NCSS-KSSL/validation_ncss_kssl_0-20cm_aggr.csv")
 
-cig_dat <- read_csv("../CIG/cig-main/cig_lab_data_all_20230301.csv")
+cig_dat <- read_csv("data/cig_lab_data_all_20230301.csv")
 
 # ended up making these matrices so I can add ids as "attributes" (atts) 
 # in the vect function 
@@ -91,7 +91,7 @@ extract_rast_values <- function(k, tif_path, pts_spat_vec){
 
 # first create a dataframe to hold the arguments we will pass 
 # to the extract_rast_values function
-tif_paths <- list.files(path = "E:/big-files-backup/ch03-sh-groups/",
+tif_paths <- list.files(path = "D:/big-files-backup/ch03-sh-groups/",
                         pattern = "allvar",
                         full.names = TRUE)
 
@@ -135,18 +135,24 @@ write_csv(results_wide,
 # note that we used the cluster metrics (C-H index, WSS, silhouette) to narrow
 # down the number of candidates (values of k), so there aren't 19 versions here.
 
-pca_tif_paths <- list.files(path = "E:/big-files-backup/ch03-sh-groups/",
+pca_tif_paths <- list.files(path = "D:/big-files-backup/ch03-sh-groups/",
                         pattern = "pca",
                         full.names = TRUE)
 
-pca_k_vals <- map_chr(pca_tif_paths, basename) %>% 
+# added this section later because using the pattern = 'pca' argument above
+# when getting paths no longer worked as expected (I had created extra
+# tifs that also included "pca")
+pca_no_clim <- pca_tif_paths[!str_detect(pca_tif_paths, 'clim')]
+pca_no_mask <- pca_no_clim[!str_detect(pca_no_clim, 'mask')]
+
+pca_k_vals <- map_chr(pca_no_mask, basename) %>% 
   str_extract(string = .,
               pattern = "[:digit:]+")
 
 pca_k_colnames <- glue("k_{pca_k_vals}")
 
 pca_args_df <- data.frame(
-  path = pca_tif_paths,
+  path = pca_no_mask,
   k_col = pca_k_colnames
 )
 
@@ -250,7 +256,7 @@ mukey_crosswalk <- read.delim(file = "data/gSSURGO_MN/mukey_new_crosswalk.txt", 
 # file size issues.
 # below we will join in the real SSURGO MUKEYs using the crosswalk
 cig_ncss_mukeys <- extract_rast_values(k = "mukey",
-                    tif_path = "data/gSSURGO_MN/MapunitRaster_10m_Clip1_and_Reclass/MapunitRaster_10m_Clip1_and_Reclass/Reclass_tif1.tif",
+                    tif_path = "../MapunitRaster_10m_Clip1_and_Reclass/Reclass_tif1.tif",
                     pts_spat_vec = val_reproj)
 
 cig_ncss_mukeys_ids <- left_join(cig_ncss_mukeys, val_ids, by = "row_id") %>% 
@@ -259,7 +265,8 @@ cig_ncss_mukeys_ids <- left_join(cig_ncss_mukeys, val_ids, by = "row_id") %>%
 cig_ncss <- left_join(cig_ncss_mukeys_ids, mukey_crosswalk, by = "MUKEY_New") %>% 
   select(-c(MUKEY_New, OID_, Count, Value))
 
-write_csv(cig_ncss, "cig_ncss_validation_pt_mukey_sample_id.csv")
+# HERE
+write_csv(cig_ncss, "data/cig_ncss_validation_pt_mukey_sample_id.csv")
 
 
 # ** subset component table to only include components for CIG mukeys --------
