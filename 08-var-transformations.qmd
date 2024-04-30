@@ -3,32 +3,30 @@
 ## Overview
 
 So it makes sense to me that we would want to apply transformations on our variables with skewed distributions, but it has been surprisingly hard to find more info about this in the textbooks and tutorials I've found on k-means.
-Might need to continue looking.
 Because we are going to standardize / scale the data by subtracting the mean and dividing by 1 standard deviation, I think it makes sense that we'd want something close to normal for the starting distribution (since the mean is not really a helpful summary statistic for data that is very skewed...).
 
 I made plots to review the best transformations for normalizing the soil property data I will be including in my k-means clustering.
 Here, I summarize my decisions based on the plots below:
 
 -   Clay: square root
+
 -   Organic matter: log10 or ln
+
 -   CEC: log10 or ln
+
 -   Bulk density: cubed (dB \^ 3)
+
 -   EC: None
+
 -   pH: None
+
 -   Carbonates: square root
+
 -   LEP: ln OR log10 (note that since we are setting LEP=0 values to 0.5, we don't have to worry about adding an offset here before doing the log transformation).
+
 -   Ksat: log10 or ln
+
 -   AWC: log10 or ln
-
-"In order to weight these properties equally in the analysis and de-emphasize extreme values, some data were log transformed and all data were rescaled to produce standardized distributions with means equal to 0 and standard deviations equal to 1."
-
-Devine et al transformed:
-
--   OM log(x+0)
--   CEC log(x+5)
--   EC log(x+2)
--   LEP log(x+5)
--   Ks log(x+0)
 
 ```{r setup8, message = FALSE, warning = FALSE}
 
@@ -58,9 +56,6 @@ mukey_details <- read_csv("./data/target_mapunit_table.csv")
 A key consideration for these transformations is whether we have zero values, and whether to set very low values to zero.
 
 In cases where we have lots of zero values (carbonates would be a good example), think about whether we need to add a constant before applying a transformation in order to make the distribution more normal.
-
-In terms of setting very low values to zero, need to think about this more in terms of the variables we have.
-I don't have much experience with EC data, but Devine et al. did this for EC, setting anything \<1.5 to zero in order to disregard differences in this low range.
 
 Let's count the zeroes, keeping only variables that have zero values:
 

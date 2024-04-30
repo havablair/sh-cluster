@@ -230,7 +230,7 @@ Need to match up the right lab methods from the NCSS dataset so they correspond 
 Looking up more info in the gSSURGO metadata about these to see if methods are listed
 
 | variable       | gSSURGO info                                                                                                              | Spreadsheet                                                                                               |
-|----------------|---------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+|--------------|-------------------------------|---------------------------|
 | x clay         |                                                                                                                           |                                                                                                           |
 | x SOC (for OM) | OM (LOI), pull SOC data from NCSS and convert                                                                             |                                                                                                           |
 | x CEC          | pH 7                                                                                                                      |                                                                                                           |
@@ -256,12 +256,13 @@ On pg 2 (introduction), Weaver states
 For now I'm not going to worry too much about Ksat data, as it doesn't seem like the most important thing to validate (very few SH studies collect it right now, it's highly variable, it will be related to particle size).
 So I'm leaving this aside for now, but wanted to document in case I come back in the future.
 
-## NOAA NCEI U.S. Climate Normals
+## NOAA NCEI U.S. Climate Normals - Station Data
 
 -   On January 9, 2023 Access the map interface for US Climate Normals Data at https://www.ncei.noaa.gov/maps/normals
+-   Originally did to to access station data, but later also to download climate rasters for the climate clustering analysis (see `32-sample-climate-vars.qmd`)
 -   Select 1991-2020 Climate Normals in the side bar, Annual Normals (hourly, daily, and monthly are also available)
 -   Select the wrench icon next to the selected dataset in the sidebar to open the "Tools" for that dataset. Use the "identify" (i) tool to pick a station and learn it's name and ID number.
--   I picked two stations:
+-   I picked two stations representing the far NW and far SE corners of my area of interest:
     -   One in the far northwest (Hallock, MN USC00213455) and one in the far southeast (Caledonia MN, USC00211198)
 
     -   NW: Hallock, MN MAT is 39.1 F and MAP is 22.31 inches
@@ -273,7 +274,7 @@ So I'm leaving this aside for now, but wanted to document in case I come back in
     -   
 -   Recommended dataset citation, per [metadata page](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C01619/html#), is Arguez, A., I. Durre, S. Applequist, R. Vose, M. Squires, X. Yin, R. Heim, and T. Owen, 2012: NOAA's 1981-2010 climate normals: An overview. Bull. Amer. Meteor. Soc., 93, 1687-1697. (this is saved in my Zotero library already)
 
-### Convert MAP and MAT values
+Quick conversions for getting the MAT and MAP at the NW and SE corners of my area of interest:
 
 ```{r}
 # MAT convert from F to C: subtract 32 and multiply by 5/9

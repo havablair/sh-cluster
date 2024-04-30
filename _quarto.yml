@@ -18,18 +18,16 @@ book:
     - 10-additional-data-prep.qmd
     - 11-implement-kmeans.qmd
     - 12-explore-clust-props.qmd
-    - 19-sample-points.qmd
-    - 20-cluster-pairwise-comp.qmd
-    - 21-map-indiv-regions.qmd
     - 22-pca-kmeans.qmd
     - 23-pca-kmeans-finalists.qmd
     - 24-compare-kmeans.qmd
-    - 25-pca-cluster-pairwise-comp.qmd
     - 26-notes-pca6-8.qmd
-    - 27-pairwise-nonparametric.qmd
-    - 28-compare-variation-demo.qmd
+    - 31-demo-weighted-centroids.qmd
+    - 32-sample-climate-vars.qmd
+    - 35-climate-clusters.qmd
+    - 19-sample-points.qmd
     - 29-welch-pairwise.qmd
-    - 30-welch-compare-variation.qmd
+    - 36-climate-welch-compare-variation-demo.qmd
     - references.qmd
 
 bibliography: references.bib

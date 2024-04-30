@@ -1,15 +1,12 @@
-# PCA-kmeans Clustering Finalists {#sec-finalists}
+# Clustering Finalists {#sec-finalists}
 
 ## Overview
 
-**Original k-means:** silhouette suggests 6, 9-11.
-C-H suggests 6, 11.
-Pairwise comparisons suggest 6, 8, or 11
+Exploring some of the clustering results from the version of the models where I did PCA as a data pre-processing step.
+Visualizing some of the results here.
 
-**PCA before k-means:** silhouette suggests 4, 6, 8, 11.
-C-H 4-8 would be similar, 9-11 would be similar.
-
-So between these two, it seems like it would make sense to compare 6, 8, 11.
+**("reduced") PCA before k-means:** silhouette suggests 4, 6, 8, 11.
+C-H index 4-8 would be similar, 9-11 would be similar.
 
 ```{r}
 #| message: false

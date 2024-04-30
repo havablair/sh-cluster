@@ -2,6 +2,8 @@
 
 ## Overview
 
+First did some data processing in `prep_validation_data_for_pca_versions.R` to prepare for the analyses I'm running in this chapter.
+
 Did some more reading on March 15, 2023 and decided a better way to deal with the issue of hetergeneous variance is to do Welch's ANOVA followed by Games-Howell pairwise comparisons.
 
 See Lakens et al. (2019) "Taking Parametric Assumptions Seriously: Arguments for the Use of Welch's F-test instead of the Classical F-test in One-Way ANOVA" for more info on Welch's F-test.

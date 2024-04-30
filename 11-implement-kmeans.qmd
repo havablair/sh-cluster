@@ -420,71 +420,6 @@ silh_df %>%
 
 ```
 
-Can also plot the individual silhouettes.
-For each clustering (model version), we have a silhouette value per observation in the dataset (n=6872).
-We also have the closest "neighbor" cluster, or the cluster that specific observation would belong to if its home cluster didn't exist.
-
-Here's an example of this data for the k=6 clustering.
-The
-
-```{r}
-
-neighbor_counts <- indiv_sil_df %>% 
-  group_by(n_clust, cluster, neighbor) %>% 
-  count()  %>% 
-  mutate(cluster = str_replace(cluster, "Cluster_", "c"),
-         neighbor = str_replace(neighbor, "Cluster_", "c"))
-
-k6_neighbor_counts <- neighbor_counts %>% 
-  filter(n_clust == 6)
-
-
-indiv_sil_df %>% 
-  mutate(across(.cols = c(cluster, neighbor),
-         ~str_replace(.x, "Cluster_", "c"))) %>% 
-  filter(n_clust == 6) %>% 
-  ggplot() + 
-  geom_boxplot(aes(x = neighbor, y = sil_width)) +
-    geom_point(aes(x = neighbor, y = sil_width),
-             position = position_jitter(width = 0.1),
-             alpha = 0.2,
-             color = "pink") + 
-  geom_text(data = k6_neighbor_counts,
-            aes(x = neighbor, y = 0.7, label = n),
-            color = "blue") +
-  facet_wrap(vars(cluster), scales = "free_x") +
-  theme_bw() +
-  ggtitle("k=6 silhouettes")
-
-
-
-```
-
-```{r}
-
-clust_sil_avgs <- indiv_sil_df %>% 
-  group_by(cluster,
-           n_clust) %>% 
-  summarise(mean_sil = mean(sil_width),
-            sd_sil = sd(sil_width), 
-            .groups = "drop")
-
-clust_sil_avgs %>% 
-  mutate(cluster = str_replace(cluster, "Cluster_", "c0"),
-         cluster = case_when(
-           cluster %in% c("c010", "c011", "c012", "c013", "c014", "c015", "c016",
-                          "c017", "c018", "c019", "c020") ~ str_replace(cluster, "c0", "c"),
-           TRUE ~ cluster
-         )) %>% 
-  filter(n_clust %in% c(6:12)) %>% 
-  ggplot() +
-  geom_col(aes(y = cluster, x = mean_sil)) +
-  facet_wrap(vars(n_clust), scales = "free_y") + 
-  ggtitle("Average silhouette width per cluster for k=6-12") +
-  theme_bw()
-
-```
-
 ### Not used: Gap statistic
 
 For `fviz_nbclust()`, first couple times running this, got `Warning: Quick-TRANSFER stage steps exceeded maximum…` Looking online, this seems to be a problem with the model not converging.
@@ -541,7 +476,7 @@ ch_index_vals <- enframe(nbc_indices$All.index) %>%
 ```
 
 Trying a different implementation of the Calinski-Harabasz index from the `{fpc}` package.
-This is preferred to the above approach, where I originally used the `NbClust` function from `{NbClust}` package because I can give this function my clustering generated above (NbClust does its own run of kmeans but I can't customize it to keep it consistent with
+This is preferred to the above approach, where I originally used the `NbClust` function from `{NbClust}` package because I can give this function my clustering generated above (NbClust does its own run of kmeans but I can't customize it to keep it consistent with the model settings I use above).
 
 ```{r}
 # calinhara wants an observations/variables matrix
@@ -695,3 +630,11 @@ write_csv(clust_props, "data/mukey_cluster_assignments_and_soilprops.csv")
 
 
 ```
+
+## Note - raster reclass step
+
+A key step that happens between this chapter and the following ones is carried out in `R/cluster_reclass_rast.R`.
+This is a script that takes information about the map units and their assigned clusters from the models we just generated and saves that info to separate rasters (one for each version of the model).
+This allows us to visualize how these different cluster models look.
+
+I put this step in a separate script because the raster reclassing process takes quite a while (35-40 minutes per raster on my computer).

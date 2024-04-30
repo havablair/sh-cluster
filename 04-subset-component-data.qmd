@@ -2,7 +2,7 @@
 
 ## Setup
 
-First, load the list of **MUKEYs** generated in `mus_comp_in_aoi.qmd`
+First, load the list of **MUKEYs** generated in previous chapter `03-mus_comp_in_aoi.qmd`
 
 ```{r setup-4}
 #| echo: false 
@@ -23,7 +23,7 @@ mus <- read_csv("data/target_mapunit_table.csv")
 
 We will use our MUKEYs to get the relevant components.
 I've created a list column with all the components for each MUKEY in it.
-There are `r nrow(mus)` unique mapunits in my area of interest (AOI).
+There are `r nrow(mus)` unique map units in my area of interest (AOI).
 
 ```{r load-4}
 mn_gdb <- "data/gSSURGO_MN/gSSURGO_MN.gdb" 
@@ -159,6 +159,7 @@ target_choriz <- choriz %>%
 
 -   Need to pull `fragvol_r` from the `chfrags` table, this is the volume percentage of horizon occupied by 2mm or larger fraction (20mm or larger for wood fragments) on a whole soil basis
 -   Turns out I need to aggregate this by `chkey`, there can be multiple `fragvol_r` entries for a given component-horizon.
+-   Didn't end up using this data, but keeping the code here in case we need to refer to it
 
 ```{r frag-dat}
 

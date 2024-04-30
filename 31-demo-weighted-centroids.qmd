@@ -1,0 +1,155 @@
+# Find map unit weighted centroids
+
+Want to find the "center of gravity", or what I'm thinking of as a density-weighted geographic centroid for each map unit in this k-means analysis.
+This gives me one point that I can use as a representative to pull MAP and MAT data to include in a version of the clustering model in response to reviewer comments.
+
+Setting these code chunks to eval: false so they don't run again during the build (takes a long time)
+
+## Set-up and load data
+
+```{r}
+#| eval: false
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(terra)
+library(glue)
+
+
+```
+
+Recall that per the gSSURGO documentation the gSSURGO raster (from which my reclassed raster was derived) uses the USA Contiguous Albers Equal Area Conic USGS version coordinate system with a horizontal datum of NAD 1983.
+
+```{r}
+#| eval: false
+
+cty <- sf::st_read('data/mn_county/mn_county_boundaries.shp')
+
+redwood <- cty %>% filter(CTY_NAME == "Redwood")
+spat_redwood <- vect(x = redwood)
+
+# gssurgo raster, clipped to AOI and simple MUKEYs to reduce size
+r <- raster::raster("data/gSSURGO_MN/MapunitRaster_10m_Clip1_and_Reclass/MapunitRaster_10m_Clip1_and_Reclass/Reclass_tif1.tif")
+  
+
+crs(raster::raster("data/gSSURGO_MN/MapunitRaster_10m_Clip1_and_Reclass/MapunitRaster_10m_Clip1_and_Reclass/Reclass_tif1.tif"))
+
+
+```
+
+## Tests
+
+```{r}
+#| eval: false
+
+test1 <- raster::rasterToPoints(x = r,
+                       fun = function(x){x==1},
+                       progress = "text")
+
+
+test1_named <- data.frame(test1) %>%
+  rename(lon = x,
+         lat = y,
+         mukey_short = Reclass_tif1)
+
+test_centroid <- test1_named %>%
+  summarise(lon = mean(lon),
+            lat = mean(lat))
+
+test_vect <- vect(test1_named, geom = c("lon", "lat"), crs = "+proj=aea +lat_0=23 +lon_0=-96 +lat_1=29.5 +lat_2=45.5 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
+
+centroid_vect <- vect(test_centroid, geom = c("lon", "lat"), crs = "+proj=aea +lat_0=23 +lon_0=-96 +lat_1=29.5 +lat_2=45.5 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs")
+
+plot(r)
+points(test_vect)
+points(centroid_vect, col = c("red"))
+
+
+```
+
+## Raster to points function
+
+```{r}
+#| eval: false
+
+save_mu_points_from_rast <- function(rast_obj = r, mukey_chunk) {
+  
+  pts <- raster::rasterToPoints(
+    x = rast_obj,
+    fun = function(x) {
+      x %in% mukey_chunk
+    },
+    progress = "text"
+  )
+  
+  
+  pts_named <- data.frame(pts) %>%
+    rename(lon = x,
+           lat = y,
+           mukey_short = Reclass_tif1) %>%
+    group_by(mukey_short) %>%
+    summarise(across(
+      .cols = c("lat", "lon"),
+      .fns = list(mean = mean),
+      .names = "{.fn}_{.col}"
+    ), n = n())
+  
+  fname <- glue("{min(mukey_chunk)}_{max(mukey_chunk)}")
+  
+  write_csv(
+    pts_named,
+    glue(
+      "data/mu_points_from_rast/{fname}_mukey_short_points.csv"
+    )
+  )
+  
+}
+
+
+
+```
+
+## Find centroids
+
+Note I have eval set to false below, this takes a little while to run so I don't want it to redo every time I do a new build.
+
+```{r}
+#| eval: false
+
+all <- c(1:7861)
+chunk_length <- 200
+
+sp <- split(x = all, f = ceiling(seq_along(all) / chunk_length))
+
+
+purrr::map(
+  .x = sp,
+  .f = ~ save_mu_points_from_rast(mukey_chunk = .x),
+  .progress = TRUE
+)
+
+
+```
+
+## Combine centroid data
+
+Now that we have the centroids for each map unit, want to combine into one data set.
+In the next chapter (`32-sample-climate-vars.qmd`) I will use these points to sample the climate data (30 year normals for mean annual precipitation, mean annual temperature).
+
+This is set to eval: false too because it depends on the above code chunk.
+
+```{r}
+#| eval: false
+
+fpaths <- list.files('data/mu_points_from_rast/', full.names = TRUE)
+
+df_list <- map(.x = fpaths, .f = read_csv)
+
+centroids_all <- bind_rows(df_list)
+
+head(centroids_all)
+
+write_csv(centroids_all, 'data/mapunit_centroids_nad1983_epsg5070.csv')
+
+```

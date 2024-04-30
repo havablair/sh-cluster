@@ -5,12 +5,7 @@
 Goal is to calculate 0-20cm depth weighted averages for all the soil properties of interest, for each component.
 
 I think I want to turn my horizon dataframe into an SPC object (`aqp` package), [see this demo](http://ncss-tech.github.io/AQP/demos/profileApply/loafercreek.html#26_build-your-own_spcs).
-I think I would use cokey as "site"?
-
-Note for available water capacity (AWC) and soil organic carbon (SOC) these will be sums.
-Need to convert OM to SOC stock following equation 1 in Devine et al. (2020), but consider if I want to use a different Van Bemmelen factor, per discussion with Nic on 2022-08-11.
-
-SOC (kg/m\^-2) = OM % / 1.72 x BD x (1-CF) x Z/10
+I think I would use cokey as "site"
 
 ```{r setup-5}
 #| echo: false 
@@ -19,9 +14,6 @@ SOC (kg/m\^-2) = OM % / 1.72 x BD x (1-CF) x Z/10
  
 library(tidyverse)
 library(glue)
-# library(terra)
-# library(sf)
-# library(soilDB)
 library(aqp) 
 library(gt)
 
@@ -137,8 +129,6 @@ weighted.mean(x = c(2.5, 0.25), w = c(18,2))
 
 ### List to include
 
-Devine et al. 2020 included SAR and gypsum, these seem less relevant to us (and in fact might not be populated as much over here, since there are relatively few spots on the western side of the state where this might be relevant?)
-
 ```{r vars}
 
 
@@ -147,7 +137,7 @@ vars_of_interest <-
     'claytotal_r',
     'silttotal_r',
     'sandtotal_r',
-    'claysizedcarb_r', # not in Devine, I added 
+    'claysizedcarb_r', 
     'om_r',
     'cec7_r',
     'dbthirdbar_r',
@@ -160,8 +150,8 @@ vars_of_interest <-
     'lep_r',
     'ksat_r',
     'awc_r'
-    # 'freeiron_r', # not in Devine, also no data
-    # 'feoxalate_r' # not in Devine, also no data 
+    # 'freeiron_r', # no data
+    # 'feoxalate_r' # no data
   )
 
 
@@ -186,10 +176,203 @@ colSums(is.na(na_df)) %>%
 
 ```
 
-## Implicit Zeroes
+
+## Full dataset SPC workflow
+
+### Create SPC object
+
+Here I turn the entire `horiz` dataframe into an SPC object.
+
+```{r spc-all}
+
+# sort so all horizons are in order for each cokey
+hz_sort <- horiz %>% 
+  arrange(cokey, hzdept_r) 
+
+# upgrade to SPC
+depths(hz_sort) <-  cokey ~ hzdept_r + hzdepb_r
+
+# check it out 
+# note only 10237 profiles, started with 10785 cokeys
+# figure out missing ones below
+hz_sort
+
+# specify horizon name col
+hzdesgnname(hz_sort) <- 'hzname'
+
+```
+
+### Custom slab function {#sec-custom-slab}
+
+I will use this function along with the `map` function from `{purrr}` to calculate weighted means of the soil properties on our list.
+
+```{r slab-fun}
+
+# depending on your version of aqp, may see this warning,
+# could update the function below to use "dice" as recommended
+#
+# Note: aqp::slice() will be deprecated in aqp version 2.0
+#--> Please consider using the more efficient aqp::dice()
+
+slab_fun <- function(var, spc_obj){
+  
+  slab_formula <- as.formula(paste("cokey ~ ", var))
+  
+  slab_df <- slab(object = spc_obj, 
+                fm = slab_formula,
+                slab.structure = c(0,20),
+                slab.fun = mean,
+                na.rm = TRUE) 
+  
+  return(slab_df)
+  
+}
+
+
+
+```
+
+### Apply (map) slab function
+
+Debugging victory here!
+I was having trouble with my custom function (defined above) working with any of the variants of `purrr::map()` .
+Found the answer in the `map2()` documentation (but it seems to work here, even though I'm using just `map()` ).
+Under the Details section: "Note that arguments to be vectorised over come before `.f` , and arguments that are supplied to every call come after `.f`"
+
+So in my case, the same `spc` object is used for all of these function calls; I needed to put that argument after `.f` .
+
+```{r map-slab}
+#| message: false
+#| warning: false
+
+# # dataframe for results to land in
+r <- data.frame(var_name = vars_of_interest)
+
+# map over my list of vars, using custom slab function
+# takes a minute or so
+# depending on version of aqp may get warning about slice (used by slab)
+# being deprecated in v2.0
+rnest <- r %>% 
+  dplyr::mutate(aggr_data = map(.x = var_name,
+                          .f = slab_fun, 
+                          spc_obj = hz_sort))
+
+# result is a list col with soil prop data nested 
+head(rnest)
+
+```
+
+```{r long-wide}
+
+# unnest, save long version b/c nice for 
+# facetted plots
+rlong <- rnest %>% 
+  unnest(cols = c(aggr_data)) %>% 
+  select(-var_name)   # don't need, col also returned by slab
+
+  
+# save wider version b/c better for modeling
+# this matches the number of elements in our SPC (10237)
+# not sure why the difference between nrow of comps and n
+# elements in our SPC... look into this. 
+rwide <- rlong %>% 
+  pivot_wider(names_from = "variable",
+              values_from = c("value", "contributing_fraction"),
+              names_glue = "{variable}_{.value}")
+
+```
+
+### Missing/Dropped Components? {#sec-missing}
+
+I started with `r nrow(comps)` that were identified in `04-subset-component-data.qmd`.
+However, when I promoted this list to an SPC object in `aqp` we got only `r nrow(rwide)` .
+Check out what's missing.
+
+```{r id-missing}
+
+comps_start <- comps$cokey
+
+comps_end <- rwide$cokey
+
+missing_cokeys <- setdiff(comps_start, comps_end)
+
+missing_comps <- comps %>% 
+  filter(cokey %in% missing_cokeys) %>% 
+  select(compname,
+         compkind,
+         majcompflag,
+         taxclname,
+         taxorder,
+         taxsuborder,
+         taxgrtgroup,
+         taxsubgrp,
+         mukey)
+
+
+```
+
+Here's more info about the missing components, by component kind:
+
+```{r info-missing1}
+#| echo: false 
+
+missing_comps %>% 
+  dplyr::group_by(compkind) %>% 
+  dplyr::count() %>% 
+  arrange(n) %>% 
+  ggplot() + 
+  geom_col(aes(x = n, y = compkind)) +
+  theme_minimal()
+
+make_compname_plot <- function(ckind){
+  
+  cplot <- missing_comps %>% 
+    filter(compkind == ckind) %>% 
+  dplyr::group_by(compname) %>% 
+  dplyr::count() %>% 
+  arrange(desc(n)) %>% 
+  ggplot() + 
+  geom_col(aes(x = n, y = compname)) +
+  theme_minimal() +
+  ggtitle(glue("{ckind}"))
+  return(cplot)
+  
+}
+
+missing_compkinds <- missing_comps %>% 
+  pull(compkind) %>% 
+  unique()
+
+```
+
+Check out component names, grouped by component kind.
+
+```{r info-missing2}
+#| echo: false
+
+map(missing_compkinds, make_compname_plot)
+
+```
+
+## Save Data
+
+Based on the summaries of missing/dropped components above, I think this is all stuff we would have wanted to exclude anyway (and data availability is likely low...).
+Saving long and wide versions of the 20cm slab-aggregated dataset for further analysis.
+
+```{r save-dat}
+
+datestamp <- lubridate::today() %>% str_replace_all("-", "")
+
+write_csv(rlong, glue("./data/long_slab_aggregated_soil_props_{datestamp}.csv"))
+
+write_csv(rwide, glue("./data/wide_slab_aggregated_soil_props_{datestamp}.csv"))
+
+```
+
+## Implicit Zeroes (not used)
 
 Nic suggested that I check on the cokeys where `fragvol_r_sum` is `NA`, it's possible that these are actually implied zeroes.
-The main place we'll use this info is for calculating SOC stocks.
+The main place we'll use this info is for calculating SOC stocks (didn't end up doing this for the manuscript).
 
 ```{r}
 
@@ -424,187 +607,4 @@ other %>% select(compname, taxsuborder) %>%
 dplyr::group_by(taxsuborder) %>% 
   dplyr::summarise(comps = str_c(compname, collapse = ", ")) %>% 
   gt()
-```
-
-## Full dataset SPC workflow
-
-### Create SPC object
-
-Here I turn the entire `horiz` dataframe into an SPC object.
-
-```{r spc-all}
-
-# sort so all horizons are in order for each cokey
-hz_sort <- horiz %>% 
-  arrange(cokey, hzdept_r) 
-
-# upgrade to SPC
-depths(hz_sort) <-  cokey ~ hzdept_r + hzdepb_r
-
-# check it out 
-# note only 10237 profiles, started with 10785 cokeys
-# figure out missing ones below
-hz_sort
-
-# specify horizon name col
-hzdesgnname(hz_sort) <- 'hzname'
-
-```
-
-### Custom slab function {#sec-custom-slab}
-
-I will use this function along with the `map` function from `{purrr}` to calculate weighted means of the soil properties on our list.
-
-```{r slab-fun}
-
-
-slab_fun <- function(var, spc_obj){
-  
-  slab_formula <- as.formula(paste("cokey ~ ", var))
-  
-  slab_df <- slab(object = spc_obj, 
-                fm = slab_formula,
-                slab.structure = c(0,20),
-                slab.fun = mean,
-                na.rm = TRUE) 
-  
-  return(slab_df)
-  
-}
-
-
-
-```
-
-### Apply (map) slab function
-
-Debugging victory here!
-I was having trouble with my custom function (defined above) working with any of the variants of `purrr::map()` .
-Found the answer in the `map2()` documentation (but it seems to work here, even though I'm using just `map()` ).
-Under the Details section: "Note that arguments to be vectorised over come before `.f` , and arguments that are supplied to every call come after `.f`"
-
-So in my case, the same `spc` object is used for all of these function calls; I needed to put that argument after `.f` .
-
-```{r map-slab}
-
-# # dataframe for results to land in
-r <- data.frame(var_name = vars_of_interest)
-
-# map over my list of vars, using custom slab function
-# takes a minute or so
-rnest <- r %>% 
-  dplyr::mutate(aggr_data = map(.x = var_name,
-                          .f = slab_fun, 
-                          spc_obj = hz_sort))
-
-# result is a list col with soil prop data nested 
-head(rnest)
-
-```
-
-```{r long-wide}
-
-# unnest, save long version b/c nice for 
-# facetted plots
-rlong <- rnest %>% 
-  unnest(cols = c(aggr_data)) %>% 
-  select(-var_name)   # don't need, col also returned by slab
-
-  
-# save wider version b/c better for modeling
-# this matches the number of elements in our SPC (10237)
-# not sure why the difference between nrow of comps and n
-# elements in our SPC... look into this. 
-rwide <- rlong %>% 
-  pivot_wider(names_from = "variable",
-              values_from = c("value", "contributing_fraction"),
-              names_glue = "{variable}_{.value}")
-
-```
-
-### Missing/Dropped Components? {#sec-missing}
-
-I started with `r nrow(comps)` that were identified in `04-subset-component-data.qmd`.
-However, when I promoted this list to an SPC object in `aqp` we got only `r nrow(rwide)` .
-Check out what's missing.
-
-```{r id-missing}
-
-comps_start <- comps$cokey
-
-comps_end <- rwide$cokey
-
-missing_cokeys <- setdiff(comps_start, comps_end)
-
-missing_comps <- comps %>% 
-  filter(cokey %in% missing_cokeys) %>% 
-  select(compname,
-         compkind,
-         majcompflag,
-         taxclname,
-         taxorder,
-         taxsuborder,
-         taxgrtgroup,
-         taxsubgrp,
-         mukey)
-
-
-```
-
-Here's more info about the missing components, by component kind:
-
-```{r info-missing1}
-#| echo: false 
-
-missing_comps %>% 
-  dplyr::group_by(compkind) %>% 
-  dplyr::count() %>% 
-  arrange(n) %>% 
-  ggplot() + 
-  geom_col(aes(x = n, y = compkind)) +
-  theme_minimal()
-
-make_compname_plot <- function(ckind){
-  
-  cplot <- missing_comps %>% 
-    filter(compkind == ckind) %>% 
-  dplyr::group_by(compname) %>% 
-  dplyr::count() %>% 
-  arrange(desc(n)) %>% 
-  ggplot() + 
-  geom_col(aes(x = n, y = compname)) +
-  theme_minimal() +
-  ggtitle(glue("{ckind}"))
-  return(cplot)
-  
-}
-
-missing_compkinds <- missing_comps %>% 
-  pull(compkind) %>% 
-  unique()
-
-```
-
-Check out component names, grouped by component kind.
-
-```{r info-missing2}
-#| echo: false
-
-map(missing_compkinds, make_compname_plot)
-
-```
-
-## Save Data
-
-Based on the summaries of missing/dropped components above, I think this is all stuff we would have wanted to exclude anyway (and data availability is likely low...).
-Saving long and wide versions of the 20cm slab-aggregated dataset for further analysis.
-
-```{r save-dat}
-
-datestamp <- lubridate::today() %>% str_replace_all("-", "")
-
-write_csv(rlong, glue("./data/long_slab_aggregated_soil_props_{datestamp}.csv"))
-
-write_csv(rwide, glue("./data/wide_slab_aggregated_soil_props_{datestamp}.csv"))
-
 ```

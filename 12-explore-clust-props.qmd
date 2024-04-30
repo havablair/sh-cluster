@@ -1,10 +1,12 @@
 # Explore clusters {#sec-clust-full}
 
+These are my attempts to visualize some of the clustering results and understand what is going on with each cluster.
+
 Based on the model metrics in @sec-mod-metrics , k = 4, 6, or 9 seem like reasonable places to start.
 These are local maxima in the average silhouette metric.
 For the Calinski-Harabasz index, we see a steady decrease from 2-7, then similar index values for 7-9, then decreasing again.
 In general higher is better, which would suggest something in the lower range.
-Really don't have a clear elbow in the WSS plot, I could see an argument for the 8-11 region being where it starts to flatten out more.
+Don't see a clear elbow in the WSS plot, I could see an argument for the 8-11 region being where it starts to flatten out more.
 
 ```{r setup12}
 #| message: false
@@ -34,7 +36,7 @@ prop <- read_csv("data/mukey_cluster_assignments_and_soilprops.csv")
 
 ```
 
-## Extract Centroids
+## Extract values at cluster centroids
 
 Recall that these are still the standardized values.
 
@@ -63,7 +65,7 @@ This tells us about how how "cohesive" each cluster is (lower SSE means points a
 ```{r}
 
 iclust <- mods %>% 
-  mutate(clust_stat = map(km_fit, ~within_cluster_sse(.x))) %>% 
+  mutate(clust_stat = map(km_fit, ~sse_within(.x))) %>% 
   select(n_clust, clust_stat) %>% 
   unnest(clust_stat) %>% 
   mutate(.cluster = str_replace_all(.cluster, "er_", ""))
@@ -235,7 +237,7 @@ iclust %>%
 
 ```
 
-## 2 Clusters "Split the difference"
+## 2 Clusters
 
 -   Cluster 1: sandy, high Ksat and low AWC. Low OM and clay.
 -   Cluster 2: high clay, CEC, OM, AWC, LEP.
@@ -272,7 +274,9 @@ ggplot() +
 
 ```
 
-## 3 Clusters "Distinguishing NW?"
+## 3 Clusters
+
+Maybe starting to see soils in NW part of state distinguish themselves here
 
 ```{r pc3}
 
@@ -308,7 +312,7 @@ radar_plot(4)
 
 ```
 
-## 5 Clusters "EC artefacts? EC-OM-Clay spread"
+## 5 Clusters
 
 ```{r pc5}
 
@@ -328,7 +332,7 @@ radar_plot(5)
 
 ```
 
-## 6 Clusters "Histosols break free"
+## 6 Clusters
 
 What strikes me about this one is Cluster 2, it seems like those might be histosols that broke away into their own cluster?
 Cluster 2 very high OM, CEC, very low bulk density, high AWC.
@@ -444,7 +448,7 @@ Only really works with a small number of clusters
 
 ```{r}
 
-# the centroids are all on a standardized scale,
+# these values are all on a standardized scale,
 # so we can plot all the vars together to compare
 # the properties of each cluster
 cent_df %>%
@@ -460,22 +464,6 @@ cent_df %>%
   expand_limits(y = 13.5) +
   theme_bw()
 
-# +
-#   geom_label(data = clust_stat,
-#              aes(
-#                x = 0.25,
-#                y = 11.5,
-#                label = glue("n:{n_members}")
-#              ),
-#              size = 2.5) +
-#   geom_label(data = clust_stat,
-#              aes(
-#                x = 0.25,
-#                y = 12.5,
-#                label = glue("wss:{round(wss,0)}")
-#              ),
-#              size = 2.5) +
-#   theme_bw() 
 ```
 
 ```{r}

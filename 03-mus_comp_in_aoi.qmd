@@ -17,7 +17,7 @@ aoi_mu <- read.delim("data/gSSURGO_MN/mukey_new_crosswalk.txt", sep = ",") %>%
 
 ## Overview
 
-I have a list of map unit keys from my clipped area of interest.
+I have a list of map unit keys from my clipped area of interest (saved crosswalk text file after clipping my AOI in ArcMap, see @sec-data-source).
 In order to reduce the file size of the TIF I was working with, I created new map unit key IDs.
 The cross-walk table is in `data/gSSURGO_MN/mukey_new_crosswalk.txt`.
 There are 7,862 unique map unit keys in my area of interest (AOI).
@@ -176,7 +176,6 @@ suborders %>%
   ggtitle("Number of components by suborder")
 
 # what's up with taxonomic suborder = NA?
-# much of this likely dropped if we use CDL to subset 
 comps_no_taxsuborder <- target_comp %>% 
   filter(is.na(taxsuborder)) %>% 
   pull(compname) %>% 
@@ -188,9 +187,8 @@ tail(comps_no_taxsuborder, n = 20)
 
 ```
 
-### Subgroup & Family (long name)
+### Subgroup & Family
 
-The `taxclname` is a concatenation of the taxonomy subgroup and family.
 On 11 August, 2022 Nic and I talked about how this could be another way to pull out mineralogy information.
 Could grab "smectitic" or "mixed" from these names if we wanted to do yes/no variable.
 
@@ -222,7 +220,7 @@ target_horiz <- chorizon %>%
 ## Diagnostic Features {#sec-diag-feat}
 
 Here, I'm pulling out the depth to restrictive horizon (if any) in the profile.
-Note that this may be \>20cm, for our other features we are summarizing soil properties in the 0-20cm depth range.
+Note that this may be \>20cm, which is the depth we are summarizing to for the soil properties.
 
 ```{r diag-feat}
 
@@ -241,8 +239,6 @@ target_diag <- diag %>%
 
 Ok, so from above we can see that `r nrow(target_diag)` cokeys out of a total of `r nrow(maj_comp)` have something entered in the `featkind` field as a diagnostic feature.
 Now let's investigate how many of those might be considered restrictive to roots (relevant in agricultural context):
-
-target_restr
 
 ```{r root-restr}
 

@@ -1,0 +1,561 @@
+# Cluster map units based on climate
+
+One of the comments we received from reviewers of this manuscript is that our clustering strategy does not explicitly consider climate.
+I explored what it would look like to include climate variables (MAT, MAP) along with soil properties when clustering.
+Initial interpretation of the results (see `_refs/alluvial_compare_k78_clim.pdf`) is that including climate variables results in clusters with greater heterogeneity in **soil** properties relative to the original versions(s), which is the opposite of what we want.
+
+After Nic and I talked through this on March 8, 2024 one potential solution we discussed was to use the climate variables as another level of clustering, on top of the existing soil clusters.
+The idea is to use k-means to cluster by climate variables alone (using representative MAP and MAT values for each map unit), and then use soil cluster nested in climate cluster as our grouping scheme.
+
+## Overview
+
+Quick outline of the process:
+
+1.  Already have the data we need (MAP, MAT) from `31-demo-weighted-centroids.qmd` and `32-sample-climate-vars.qmd` , make some plots to show the distributions
+2.  Pre-process data (standardize), subtracting the mean and dividing by 1 sd
+3.  PCA doesn't seem necessary here because we only have 2 variables (MAT and MAP)
+4.  Specify model options, set up data structure and k-means recipe
+5.  Fit models (probably k = 2-5 is reasonable to start?)
+6.  Evaluate results
+
+## Set up
+
+```{r setup}
+library(workflows)
+library(parsnip)
+library(tidyverse)
+library(tidymodels)
+library(glue)
+library(tidyclust)
+library(factoextra) # trying fviz_nbclust(), which gives elbow, silhouette, and gap statistic
+library(hopkins)
+library(fpc)
+library(ggforce)
+library(gt)
+library(sf)
+
+
+d <- read_csv("data/ann_normals_precip_temp_mukey_centroids.csv") %>% 
+  select(-ID) 
+
+mukeys_include <- read_csv("data/clean_mu_weighted_soil_props_with_sand.csv")
+
+# for translating MUKEY from gSSURGO to my shortened version
+cwalk <- aoi_mu <- read.delim("data/gSSURGO_MN/mukey_new_crosswalk.txt", sep = ",") %>% 
+  select(MUKEY, MUKEY_New)
+
+d_ids <- left_join(d, cwalk, by = c("mukey_short" = "MUKEY_New"))
+
+d_incl <- d_ids %>% 
+  filter(MUKEY %in% mukeys_include$mukey) %>% 
+  rename(mukey = MUKEY)
+```
+
+Check out the MAP and MAT data:
+
+```{r}
+
+head(d_incl)
+
+ggplot(data = d_incl) +
+  geom_histogram(aes(x = annprcp_norm)) +
+  ggtitle("Distribution of precipitation (mm) values") +
+  xlab("Annual precipitation normal (mm)")
+
+ggplot(data = d_incl) +
+  geom_histogram(aes(x = anntavg_norm)) +
+  ggtitle("Distribution of temperature (degree Celsius) values") +
+  xlab("Annual temperature normal (degrees C)")
+
+# check for missing values
+d_incl %>% 
+  filter(is.na(annprcp_norm) |
+           is.na(anntavg_norm))
+
+```
+
+## Pre-process data (build recipe)
+
+```{r}
+
+rec_spec <- recipe(~., data = d_incl) %>%
+    update_role(mukey, new_role = "ID_long") %>%
+  update_role(mukey_short, new_role = "ID_short") %>% 
+  update_role(c(x, y), new_role = "lat_lon") %>% 
+    step_normalize(all_numeric_predictors()) 
+
+rec_spec
+
+# confirm all predictors are labelled with role = predictor,
+# other vars should have other roles so they aren't included
+# in the model.
+summary(rec_spec)
+
+```
+
+```{r rec-check}
+
+# retain argument here tells prep to keep 
+# the pre-processed training data 
+# note this can make the final recipe size large, 
+# so this is not the recipe object I probably want to use
+# in my list col below
+check_prep <- prep(rec_spec, retain=TRUE)
+
+# using NULL here for new_data b/c I want the 
+# pre-processed training data 
+check_prepped_df <- bake(check_prep, new_data = NULL)
+
+head(check_prepped_df)
+
+# save the pre-processed data in case I want to make some plots of 
+# the distribution of the normalized (centered/scaled) variables
+
+write_csv(check_prepped_df, "./data/data_preprocessed_only_climate_20240310.csv")
+
+```
+
+```{r}
+
+ggplot(data = check_prepped_df) +
+  geom_histogram(aes(x = annprcp_norm)) +
+  ggtitle("Distribution of *centered & scaled* precipitation (mm) values") +
+  xlab("Annual precipitation normal")
+
+ggplot(data = check_prepped_df) +
+  geom_histogram(aes(x = anntavg_norm)) +
+  ggtitle("Distribution of *centered & scaled* temperature (degree Celsius) values") +
+  xlab("Annual temperature normal")
+
+```
+
+## Set model options
+
+```{r}
+
+# writing a custom function here so I can be explicit 
+# about the options I'm choosing, and also use within the 
+# list-col framework I set up with map() below. 
+km_spec <- function(nclust){
+  
+  tidyclust::k_means(num_clusters = nclust) %>%
+    parsnip::set_engine(engine = "stats",
+               nstart = 10, # 1 is default, >1 recommended
+               algorithm = "Hartigan-Wong", # H-W is default
+               iter.max = 20) # default is 10, wasn't always enough
+  
+}
+
+```
+
+## Set up data structure
+
+Here I set up a dataframe that will catch my modeling results in list columns of the different model objects and return values.
+The first column I define specifies the range of different cluster sizes (k) that we will try.
+
+```{r}
+try_clusts <- c(2:6)
+
+km_df <- data.frame(n_clust = try_clusts)
+
+km_df
+
+```
+
+## Specify model (for each value of k)
+
+For each unique value of k (2-6), this returns a model specification object (in the `kmeans_spec` column) based on the custom function I wrote above.
+The model specification has all the options set about how we want the algorithm to run (methods, number of starts, etc.).
+We need a different one for each value of k.
+
+The `kmeans_wflow` column here holds our workflow objects.
+These objects combine our model specification (from `kmeans_spec`) with the data recipe (preprocessor) we made above (`rec_spec`, is same for all models).
+
+```{r}
+
+# for each unique value of clusters (2:20), returns a model
+# specification (kmeans_spec) and a workflow (kmeans_wflow) 
+# note that the workflow 
+km_df <- km_df %>%
+  mutate(
+    kmeans_spec = map(n_clust, ~ km_spec(nclust = .x)),
+    kmeans_wflow = map(kmeans_spec,
+                       ~ workflow(
+                         preprocessor = rec_spec, spec = .x
+                       ))
+  )
+
+# our current data structure
+head(km_df)
+
+# take a look at an example workflow
+km_df$kmeans_wflow[3]
+
+```
+
+## Fit the models
+
+All the steps above were related to specifying different aspects of this model.
+Now we can actually fit the models.
+
+Some troubleshooting here:
+
+-   Started by specifying `tidyclust::fit()` but something weird was happening where my `step_normalize()` wasn't included in the pre-processor recipe when I looked at the fitted model object.
+-   If I specify `parsnip::fit()` , then `step_normalize()` is included and the values of the cluster centroids are in the expected ranges (centered, scaled).
+-   I also tried this without explicitly specifying the package (so just `fit()` ) and it worked as expected.
+
+```{r}
+
+# make a quiet version of fit(), so we can capture results 
+# and any warning messages from the models 
+# see troubleshooting notes below
+quiet_fit <- purrr::quietly(.f = parsnip::fit)
+
+set.seed(4) # for reproducibility 
+km_fit_df <- km_df %>%
+  mutate(km_result = map(.x = kmeans_wflow,
+                      .f = quiet_fit,
+       # data comes after .f b/c not vectorized over            
+                      data = d_incl),
+       km_fit = map(km_result, ~pluck(.x, 'result')),
+       warn = map(km_fit, ~pluck(.x, 'warnings')),
+       msg = map(km_fit, ~pluck(.x, 'messages')),
+       n_iter = map_dbl(km_fit, 
+                      ~pluck(.x, 'fit', 'fit', 'fit', 'iter' ))) 
+         
+
+# check out current data structure
+head(km_fit_df)
+
+# don't need anymore, cleaning up
+rm(km_df)
+
+```
+
+### View messages & warnings
+
+We can look at any warnings or messages from the modeling process:
+
+```{r}
+km_fit_df %>% 
+  select(n_clust, warn, msg, n_iter)
+
+```
+
+## Model metrics
+
+See also section 7.5 in the Chapter by Tan et al. for more about cluster evaluation.
+
+### Extract metrics
+
+```{r}
+
+metrics_df <- km_fit_df %>%
+  mutate(
+    # tot_sse = total sum of squared error
+    tot_sse = map_dbl(km_fit, ~ sse_total_vec(.x)),
+    # tot_wss = sum of within-cluster sse
+    tot_wss = map_dbl(km_fit, ~sse_within_total_vec(.x)),
+    # sse ratio = wss / total sse, 
+    sse_ratio = map_dbl(km_fit, ~sse_ratio_vec(.x))
+    )
+
+rm(km_fit_df)
+
+metrics_simple <- metrics_df %>% 
+  select(n_clust, tot_sse, tot_wss, sse_ratio)
+
+metrics_simple
+   
+```
+
+### Plot Total WSS
+
+```{r}
+
+metrics_simple %>% 
+  ggplot(aes(x = n_clust, y = tot_wss)) +
+  geom_point() + 
+  geom_line() +
+  theme_bw() +
+  scale_x_continuous(breaks = c(2:6)) +
+  xlab("k (number clusters)") +
+  ylab("sum of within-cluster sse") +
+  ggtitle("Compare values of k: looking for elbow")
+
+```
+
+### Average Silhouette
+
+From the `{tidyclust}` documentation:
+
+> Another common measure of cluster structure is called the **silhouette**.
+> The silhouette of a single observation is proportional to the average distance from that observation to within-cluster observations minus the average distance to outside-cluster observations; normalized by the greater of these two average.\
+>
+> In principle, a large silhouette (close to 1) suggests that an observation is more similar to those within its cluster than those outside its cluster.
+
+See also pg.
+581 in Tan2018 Chap 7 Cluster Analysis: Basic Concepts and Algorithms
+
+```{r}
+
+prepped_rec <- prep(rec_spec, retain=TRUE)
+
+# using NULL here for new_data b/c I want the 
+# pre-processed training data 
+baked_df <- bake(prepped_rec, new_data = NULL) %>% 
+  select(-mukey) 
+
+dists <- baked_df %>% as.matrix() %>% dist(method = "euclidean")
+
+silh_df <- metrics_df %>% 
+  mutate(avg_sil = map_dbl(km_fit, 
+                       tidyclust::silhouette_avg_vec,
+                       dists = dists),
+         indiv_sil = map(km_fit, 
+                         tidyclust::silhouette,
+                         dists = dists))
+
+indiv_sil_df <- silh_df %>% select(n_clust, indiv_sil) %>% 
+  unnest(indiv_sil) %>% 
+  mutate(across(.cols = c(cluster, neighbor),
+                .fns = as.character))
+
+write_csv(indiv_sil_df, "data/kmeans_points_silhouettes_climate_only.csv")
+
+rm(metrics_df)  
+rm(dists)
+rm(prepped_rec)
+
+```
+
+Higher silhouette is better (means observations are closer to their centroids than to other observations).
+
+```{r}
+silh_df %>% 
+  ggplot(aes(x = n_clust, y = avg_sil)) +
+  geom_point() + 
+  geom_line() + 
+  theme_bw() +
+  scale_x_continuous(breaks = c(2:6)) +
+  ggtitle("Overall Average Silhouette") +
+  labs(subtitle = "Higher is better, possible values [-1,1]")
+
+```
+
+```{r}
+
+clust_sil_avgs <- indiv_sil_df %>% 
+  group_by(cluster,
+           n_clust) %>% 
+  summarise(mean_sil = mean(sil_width),
+            sd_sil = sd(sil_width), 
+            .groups = "drop")
+
+clust_sil_avgs %>% 
+  mutate(cluster = str_replace(cluster, "Cluster_", "c0")) %>% 
+  ggplot() +
+  geom_col(aes(y = cluster, x = mean_sil)) +
+  facet_wrap(vars(n_clust), scales = "free_y") + 
+  ggtitle("Average silhouette width per cluster for k=2-6") +
+  theme_bw()
+
+```
+
+### Calinski-Harabasz index
+
+**Not used: `{NbClust}`** **, using `{fpc}` instead.**
+
+Using the implementation of the Calinski-Harabasz index from the `{fpc}` package.
+This is preferred to my original approach, where I used the `NbClust` function from `{NbClust}` package because I can give this function my clustering generated above (NbClust does its own run of kmeans but I can't customize it to keep it consistent with
+
+```{r}
+# calinhara wants an observations/variables matrix
+# as first argument (as opposed to a distance matrix)
+obsvar_mx <- as.matrix(baked_df)
+
+# function to extract and modify tidyclust clusters
+# into a integer vector, which I will pass to calinhara()
+create_clust_vec <- function(fit_obj){
+  
+  extract_cluster_assignment(fit_obj) %>% 
+    pull(.cluster) %>% 
+    str_replace(., "Cluster_", "") %>% 
+    as.integer()
+  
+}
+
+# apply function to extract clusterings as integer vectors
+# map to get a c-h index value for every value of k (2-20)
+ch_metrics <- silh_df %>%
+  select(n_clust, km_fit) %>%
+  mutate(
+    clustering_vec = map(km_fit, create_clust_vec),
+    ch_index = map_dbl(clustering_vec,
+                       ~ fpc::calinhara(x = obsvar_mx,
+                                        clustering = .x)
+    ))
+
+ch_metrics %>% 
+  ggplot(aes(x = n_clust, y = ch_index)) + 
+  geom_point() + 
+  geom_line() +
+  theme_bw() +
+  ylab("Calinski-Harabasz index") + 
+  ggtitle("Calinski-Harabasz") +
+  labs(subtitle = "Higher is better") +
+  scale_x_continuous(breaks = c(2:6))
+
+```
+
+### WSS and Silhouette metrics on one plot
+
+```{r}
+#| echo: false
+#| fig-width: 3
+
+sil_totwss <- silh_df %>% 
+  select(n_clust, avg_sil, tot_wss, tot_sse, sse_ratio)
+
+ch <- ch_metrics %>% 
+  select(n_clust, ch_index)
+
+met_combined <- left_join(sil_totwss, ch, by = "n_clust")
+
+write_csv(met_combined, "data/kmeans_cluster_metrics_climate_only.csv")
+
+met2 <- met_combined %>% 
+  pivot_longer(cols = -c('n_clust'), names_to = "metric",
+               values_to = "value")
+
+met2 %>% 
+  filter(metric != "tot_wss", 
+         metric != "tot_sse") %>% 
+  ggplot(aes(x = n_clust, y = value)) + 
+  geom_point() + 
+  geom_line() +
+  scale_x_continuous(breaks = c(2:6)) + 
+  facet_wrap(vars(metric), ncol = 1, scales = "free") +
+  theme_bw()
+
+```
+
+## Save model fits
+
+Will save these as Rdata so I can call them up and investigate them further as needed.
+
+```{r}
+
+mods <- silh_df %>% 
+  select(n_clust, km_fit)
+
+save(mods, file = "data/fitted_kmeans_mods_climate_only.RData")
+
+```
+
+## Save cluster assignments
+
+For each version of the model (each value of k, different numbers of clusters), a MUKEY is assigned to a specific cluster.
+Here, I'm pulling that data, shaping it into one dataframe (one row per MUKEY, cluster assignments in separate columns).
+I'm also adding back in the soil property data so we can use this in the next step when evaluating different cluster sizes.
+
+```{r}
+
+clust_assign_df <- mods %>% 
+  mutate(clust_assign = map(km_fit, ~augment(.x, new_data = d_incl)),
+         mukey_clust = map(clust_assign, ~select(.x, mukey, .pred_cluster)))
+
+
+assign_mukey_df <- clust_assign_df %>% 
+  select(n_clust, mukey_clust) %>% 
+  unnest(mukey_clust) %>% pivot_wider(names_from = n_clust, values_from = .pred_cluster, names_prefix = "k_")
+
+
+clust_props <- full_join(d_incl, assign_mukey_df, by = "mukey")
+
+write_csv(clust_props, "data/mukey_cluster_assignments_and_props_climate_only.csv")
+
+
+```
+
+## Map clusters
+
+```{r}
+
+
+clust_long <- clust_props %>% 
+  select(-mukey) %>% 
+  pivot_longer(cols = contains("k_"),
+               names_to = "model_ver",
+               values_to = "cluster_assignment")
+
+climsf <- st_as_sf(clust_long, coords = c("x","y"))
+
+climsf <- st_set_crs(climsf, 4326) 
+
+
+ggplot(data = climsf) +
+  geom_sf(aes(color = cluster_assignment)) +
+ # scale_color_viridis_d() + 
+  facet_wrap(vars(model_ver)) +
+  ggtitle("Map unit centroids color coded by climate cluster")
+
+```
+
+```{r}
+
+clust_long %>% 
+  group_by(model_ver, cluster_assignment) %>% 
+  summarise(n = n(),
+            min_temp = min(anntavg_norm),
+            max_temp = max(anntavg_norm),
+            mean_temp = mean(anntavg_norm),
+            min_prcp = min(annprcp_norm),
+            max_prcp = max(annprcp_norm),
+            mean_prcp = mean(annprcp_norm)) %>% 
+  mutate(across(.cols = contains("temp"), .fns = ~round(.x, digits = 1)),
+         across(.cols = contains('prcp'), .fns = ~round(.x, digits = 0))) %>% 
+  gt() %>% 
+  tab_spanner(label = "MAT normal (Celsius)",
+              columns = contains("temp")) %>% 
+  tab_spanner(label = "MAP normal (mm)",
+              columns = contains("prcp")) %>%
+  cols_label(min_temp = "Min.",
+             max_temp = "Max.",
+             mean_temp = "Mean",
+             min_prcp = "Min.",
+             max_prcp = "Max.", 
+             mean_prcp = "Mean")
+  
+  
+
+```
+
+```{r}
+
+clust_long %>% 
+  mutate(cluster_assignment = str_replace(cluster_assignment, "Cluster_", "C")) %>% 
+  ggplot() +
+  geom_boxplot(aes(x = cluster_assignment, y = anntavg_norm)) +
+  facet_wrap(vars(model_ver), axes = "all_x", drop = TRUE, scales = "free_x") +
+  ggtitle("Annual temperature normals by model version & cluster") +
+  ylab("Annual temp. normal (degrees C)")
+
+clust_long %>% 
+  mutate(cluster_assignment = str_replace(cluster_assignment, "Cluster_", "C")) %>% 
+  ggplot() +
+  geom_boxplot(aes(x = cluster_assignment, y = annprcp_norm)) +
+  facet_wrap(vars(model_ver), axes = "all_x", drop = TRUE, scales = "free_x") +
+  ggtitle("Annual precipitation normals by model version & cluster") +
+  ylab("Annual precip normal (mm)")
+
+
+
+```
+
+```{r}
+
+
+
+
+```

@@ -48,13 +48,9 @@ Using the same variables they did in Devine et al., but added calcium carbonate 
 
 clust_vars <- c(
   "claytotal_r_value",
-  # "silttotal_r_value",
-  # "sandtotal_r_value",
   "om_r_value",
   "cec7_r_value",
   "dbthirdbar_r_value",
-  #"fragvol_r_sum_value",
-  #"kwfact_value",  
   "ec_r_value",
   "ph1to1h2o_r_value",
   "caco3_r_value",
@@ -156,10 +152,6 @@ calc_mu_wtd <- function(df, myvars){
 
 }
 
-# test <- as.data.frame(cmp_nest$data[[115]])
-# 
-# calc_mu_wtd(df = test, myvars = clust_vars)
-
 
 df_mu_sum <- cmp_nest %>% 
   mutate(mu_sum_data = map(.x = data, 
@@ -217,8 +209,7 @@ head(data_avail)
 
 ```{r}
 
-# use same conditions as Devine et al. 
-# to populate a column specifying whether 
+# populate a column specifying whether 
 # to include a given mukey.
 # the order of the conditions is important
 # must go from most specific to most general
@@ -371,7 +362,7 @@ There is data available for lower % components "Dassel" and "Udipsamment" here, 
 So if I want to use the dominant component percentage as a criterion in including/excluding data, I need to grab it earlier.
 
 More broadly, if these areas are primarily urban land or pits, they aren't really the type of thing we'd want to include in this primarily agricultural analysis anyway.
-So it's good that we have a way to filter them out, using similar criteria to Devine et al. (described above).
+So it's good that we have a way to filter them out.
 
 ```{r}
 

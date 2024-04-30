@@ -1,6 +1,6 @@
 # Sample validation points
 
-Now that we have our clustering candidates from the k-means models saved as raster files, to validate the models we need to sample the rasters at the locations where the soil samples were collected.
+Now that we have our clustering candidates from the k-means models saved as raster files (see final section in @sec-run-km and also `R/cluster_reclass_rast.R` ) , to validate the models we need to sample the rasters at the locations where the soil samples were collected.
 This will tell us which "region" or cluster the sample falls into, based on its position on the map.
 We will do this for each raster we generated (different \# of clusters).
 
@@ -10,7 +10,7 @@ After we have this information for our validation points, we can compare the exp
 
 There are 3 main validation datasets that I currently have access to:
 
--   NRCS SHI project (Jess). Validation completed by Joe Brennan, saved in data \> validation data \> NCRS-SHI \> shi_site_allvar_validation_20221116.csv
+-   NRCS SHI project (Jess). Validation completed by JB, saved in data \> validation data \> NCRS-SHI \> shi_site_allvar_validation_20221116.csv
 -   CIG field data
 -   NCSS data from KSSL. I completed the data cleaning and merging process with the script `unqip_merge_ncss_data.R`. The dataset (all props averaged to 0-20cm) is saved in data \> validation data \> NCSS-KSSL \> validation_ncss_kssl_0-20cm_aggr.csv
 
@@ -31,7 +31,7 @@ ncss_pts <- ncss_dat %>%
          lat = latitude_decimal_degrees) %>% 
   as.matrix()
 
-cig_dat <- read_csv("../CIG/cig-main/cig_lab_data_all_20221129.csv")
+cig_dat <- read_csv("../CIG/cig-main/cig_lab_data_all_20230301.csv")
 
 cig_pts <- cig_dat %>% 
   select(lon, lat) %>% 
@@ -50,7 +50,7 @@ ncss_ids <- data.frame(pedon_key = ncss_dat$pedon_key)
 
 My rasters are in NAD 1983 Albers projection (EPSG: 5070).
 My points are in WGS 84 (EPSG: 4326, they are lon/lat).
-I need to reproject the points before I extract the raster values.
+I need to reproject the points before I extract the cluster assignments from the rasters I made.
 This involves two steps:
 
 -   Turn my 2-column dataframes (lon, lat) into SpatVector objects
@@ -110,7 +110,7 @@ OK, got this working after some silly troubleshooting with attributes and CRS (h
 
 ```{r}
 # start with the k=2 model
-test_rast <- rast("E:/big-files-backup/ch03-sh-groups/clust2_allvar.tif")
+test_rast <- rast("F:/big-files-backup/ch03-sh-groups/clust2_allvar.tif")
 
 ext_df <- extract(x = test_rast,
         y = cig_reproj,
@@ -127,30 +127,12 @@ extract(x = test_rast,
 
 ```
 
-### Brainstorm process to iterate with "extract"
-
-Again, thinking about how I want to be able to set up the steps of this process in a `{targets}` pipeline, the meat of this process of extracting raster values will be done in a separate R script.
-Here I am thinking through how I would structure that.
-
--   Setup: Like above, load the locations and sample IDs for the points I want to use in my validation. Combine the CIG and NCSS points into a single dataframe. Then do Data.frame \> matrix \> spat vector w/ ID attribute
--   Write a custom function that will:
-    -   Load a raster for a given value of `k`
-
-    -   Extract raster values at our target points -\> this is a dataframe.
-        Make sure the raster value column has an informative name that includes the `k` value so we can distinguish it
-
-    -   Remove the raster (it's big, we dont need it any more)
-
-    -   Return the dataframe
--   Use map to run the custom function above, iterating over values of `k` from 2-20 and column-binding the results, so we end up with a dataframe that has rows = validation points, and columns = raster values for different `k` cluster sizes
-
 ### Finished raster extract process (CIG, NCSS)
 
 The script `R/extract_raster_values_at_validation_points.R` implements the process described above.
 At the end of that script, I save a CSV file in wide format with the CIG and NCSS_KSSl validation data `cig_ncss-kssl_allvar_validation_20221230.csv`.
 
 The next step is to combine the validation data, which identifies the cluster assignments, with the soil property data.
-I will do this in the next chapter.
 
 ## Number points per dataset & soil property
 

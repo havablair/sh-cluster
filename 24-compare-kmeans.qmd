@@ -3,8 +3,6 @@
 Now that I've completed versions of the k-means process with AND without PCA as a data reduction step, I'd like to compare the models.
 In the reading I did over the course of Jan 10-13, 2023, I found some good examples of other papers where they do this:
 
-| 
-
 Lasantha, V., Oki, T., & Tokuda, D.
 (2022).
 Data-Driven versus Köppen--Geiger Systems of Climate Classification.

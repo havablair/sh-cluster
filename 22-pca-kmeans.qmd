@@ -3,11 +3,11 @@
 ## Overview
 
 After lots of reading during the drafting phase of methods & results for my original k-means analysis, I found many authors in soil science, climate/atomspheric science, and geochemistry who use principal components analysis (PCA) for data reduction prior to doing k-means.
-The argument for doing this is that when you have highly correlated variables (which we do, see @sec-corr ), including them all basically gives more weight to the correlated variables.
+The argument for doing this is that when you have highly correlated variables), including them all basically gives more weight to the correlated variables.
 If they are highly correlated, they contain most of the same "information", and by including both variables you are giving that "information" more weight in the calculation of (dis)similarity matrix (Euclidean distances) that we ultimately use for clustering.
 
 My plan is to do PCA, run k-means again, and compare the results with my original k-means analysis.
-I think this would be a valuable thing to add to my paper, as we can make an argument for whether one method or another might be more generalizable for others who want to use this technique for creating similar conceptual clusters from a regional set of soil data (presumably with a slightly different set of variables given the specific context - think about depth to restrictive horizon in Devine vs. carbonates in my analysis).
+I think this would be a valuable thing to add to my paper, as we can make an argument for whether one method or another might be more generalizable for others who want to use this technique for creating similar conceptual clusters from a regional set of soil data (presumably with a slightly different set of variables given the specific context).
 
 ## Implementation
 
@@ -153,7 +153,8 @@ plot_validation_results() +
 ### Extract loadings
 
 Took me FOREVER to figure out why I wasn't able to extract my loadings with the example code from the `step_pca` [documentation here](https://recipes.tidymodels.org/reference/step_pca.html#ref-examples) using `tidy(prepped_rec, number = 2, type = "coef")`.
-After much frustration, I figured out that the "number" argument needs to correspond to the PCA step in the tidied dataframe of my prepped recipe... in all the documentation this number is 2, so I kept trying that and getting my bulk density mutation step.
+After much frustration, I figured out that the "number" argument needs to correspond to the PCA step in the tidied dataframe of my prepped recipe...
+in all the documentation this number is 2, so I kept trying that and getting my bulk density mutation step.
 In my case, the number is 5.
 
 ```{r}

@@ -1,0 +1,252 @@
+# Sample climate data at map-unit centroids
+
+In `31-demo-weighted-centroids.qmd` I calculated the "center of gravity" or density-weighted centroid for each map unit, which means I have n = 7,859 points where I want to sample my climate variables.
+
+## Set-up
+
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(glue)
+library(sf)
+library(terra)
+
+```
+
+Loading the Minnesota state boundary so I can use it when plotting later.
+Originally thought it would be a good idea to clip the climate rasters to the MN boundary, but then I realized that it was possible for my map unit centroids to fall OUTSIDE of the Minnesota border if their center of gravity was close to the border anyway.
+A better solution I think is to use `terra::ext` with a SpatVector of my centroid points and then use the resulting extent to clip the climate raster.
+That way I am guaranteed to have climate data for all the centroid points.
+
+```{r}
+
+# EPSG 4269 / NAD 83
+mn <- st_read('data/cb_2018_us_state_500k/cb_2018_us_state_500k.shp') %>% 
+  filter(NAME == "Minnesota")
+
+st_crs(mn)
+
+# make it a SpatVector 
+mnspat <- vect(mn)
+mn84 <- project(x = mnspat, y = 'epsg:4326')
+
+
+ggplot(data = mn) +
+  geom_sf()
+
+mn_cty <- vect('_qgis_files/shp_bdry_counties_in_minnesota/mn_county_boundaries.shp')
+
+mn_cty84 <- project(x = mn_cty, y = 'epsg:4326')
+```
+
+### Load map unit centroids
+
+Note need to convert these to WGS 84 before we can sample the climate data.
+
+```{r}
+
+
+centroid_df <- read_csv('data/mapunit_centroids_nad1983_epsg5070.csv', show_col_types = FALSE) %>% 
+  rename(lon = mean_lon,
+         lat = mean_lat) %>% 
+  select(-n) %>%
+  # because my short Mukeys are essentially row numbers (1-7859)
+  # adding an ID (row number) column here AND arranging by mukey_short
+  # is redundant. Having a separate ID column is important because
+  # it's conceivable that you might NOT have mukeys that line up exactly 
+  # with row numbers, and then you wouldn't have a way to join the row ids
+  # returned by terra::extract back with the appropriate mukeys in 
+  # this dataframe. I made this mistake the first time around (not sorting
+  #by mukey_short OR creating ID column) and got some weird climate results
+  arrange(mukey_short) %>% 
+  mutate(ID = row_number())
+
+# NAD 1983 / EPSG 5070
+centroids_nad83 <- vect(centroid_df, geom = c("lon", "lat"), crs = 'epsg:5070')
+
+# WGS 84 = EPSG 4326
+centroids_wgs84 <- project(centroids_nad83, 'epsg:4326')
+
+plot(mn_cty84)
+points(centroids_wgs84)
+```
+
+### Get extent of centroids
+
+Wondering if I should create an extent that's a little larger than this one?
+Seems possible that if any centroids fall close enough to the edge I won't have the corresponding raster cell(s) in the extent.
+The docs for `terra::crop` back this up: "Note that the SpatRaster returned may not have exactly the same extent as the SpatExtent supplied because you can only select entire cells (rows and columns), and you cannot add new areas."
+
+After a little more reading I found that `terra` already has a function to do exactly what I want (add a few rows/columns around the edges of my SpatExtent to make sure it covers what I need).
+That function is `terra::extend`.
+
+```{r}
+
+c_extent <- terra::ext(centroids_wgs84)
+
+# plot the extent with centroids
+plot(c_extent, main = "Extent with centroids")
+points(centroids_wgs84)
+
+# extend the extent by specified number rows/columns on each side
+# at first I was thinking about this in terms of raster cells,
+# but the extending happens in the same units (degress lon/lat)
+# as the extent itself. So below I am extending by 0.25 degrees
+# on each side of the rectangle
+c_extent_expanded <- terra::extend(x = c_extent, y = c(0.25))
+
+# plot again
+plot(c_extent_expanded, main = "Extent expanded +0.25 degrees, with map unit centroids")
+points(centroids_wgs84)
+polys(mn_cty84)
+
+
+```
+
+### Load climate data
+
+Net CDF files, NOAA US Climate Normals https://www.ncei.noaa.gov/products/land-based-station/us-climate-normals
+
+-   The file has 85 layers in total (1 layer = 1 variable, like `mlytavg_norm_2` which translates to "monthly mean temperature normals from monthly averages", for February (month = 2)
+
+-   I believe the layer I want is `anntavg_norm` , which per the NOAA README for the monthly gridded normals is "Annual mean temperature normals from monthly normals"
+
+    -   Units are degrees Celsius
+
+    -   Values should be rounded to the nearest tenth
+
+```{r}
+
+# if you want to see all the layers in this netCDF file, remove the 
+# lyrs argument
+temp <- rast(
+  x = 'data/climate/tavg-1991_2020-monthly-normals-v1.0.nc',
+             lyrs = 'anntavg_norm')
+
+# WGS 84 / EPSG 4326
+temp
+
+terra::plot(temp,
+     main = 'Annual Temperature Normal, Celsius, (1991-2020)')
+
+
+```
+
+```{r}
+precip <- rast(x = 'data/climate/prcp-1991_2020-monthly-normals-v1.0.nc',
+               lyrs = 'annprcp_norm')
+
+precip
+
+plot(precip, main = "Annual Precipitation Normal, mm (1991-2020)")
+
+```
+
+## Crop climate data to extent
+
+```{r}
+
+precip_crop <- terra::crop(x = precip, y = c_extent_expanded)
+
+temp_crop <- terra::crop(x = temp, y = c_extent_expanded)
+
+plot(precip_crop, main = "Annual precipitation normal (mm) 1991-2020")
+lines(mn_cty84)
+
+plot(temp_crop, main = "Annual temperature normal (deg. Celsius) 1991-2020")
+lines(mn_cty84)
+```
+
+## Extract (sample) climate variables at centroid points
+
+Writing this a reminder to myself when I come back and wonder if I did all the CRS stuff right.
+The climate data's original CRS is `lon/lat WGS 84 (CRS84) (OGC:CRS84)`.
+The climate data is provided in as netCDF files (rasters).
+Because re-projecting rasters can result in loss of information, it's better if I change the CRS of my POINTS (vector) to match the climate raster before extracting values.
+This is what I did.
+
+From the `terra` [documentation](https://rspatial.github.io/terra/reference/project.html):
+
+> Transforming (projecting) raster data is fundamentally different from transforming vector data.
+> Vector data can be transformed and back-transformed without loss in precision and without changes in the values.
+> This is not the case with raster data.
+> In each transformation the values for the new cells are estimated in some fashion.
+> Therefore, if you need to match raster and vector data for analysis, you should generally transform the vector data.
+
+This
+
+```{r}
+temp_pts <- terra::extract(x = temp_crop, y = centroids_wgs84)
+
+precip_pts <- terra::extract(x = precip_crop, y = centroids_wgs84)
+
+
+# missing any values?
+temp_pts %>% filter(is.na(anntavg_norm))
+precip_pts %>% filter(is.na(annprcp_norm))
+
+# first time around I did this join with "mukey_short" = "ID" and that 
+# was a mistake because it turned out my original centroid_df
+# was NOT sorted by mukey (1:7859) so it was NOT the appropriate join
+# Noticed the issue when I mapped the extracted temp and precip values 
+# of the centroids
+c_temp <- left_join(centroid_df, temp_pts, by = c("ID"))
+centroids_clim <- left_join(c_temp, precip_pts, by = c("ID"))
+
+
+centroids_clim
+
+# get the WGS 84 lat/long points out of the spatvector object
+# really only doing this so I can make some quick plots 
+# below 
+pts_wgs84 <- as.data.frame(centroids_wgs84, geom = "xy")
+
+clim_plot_df <- left_join(centroids_clim, pts_wgs84, by = c("ID", "mukey_short")) %>% 
+  select(-c(lat, lon))
+
+climsf <- st_as_sf(clim_plot_df, coords = c("x","y"))
+
+climsf <- st_set_crs(climsf, 4326) 
+
+
+ggplot(data = climsf) +
+  geom_sf(aes(color = anntavg_norm)) +
+  scale_color_viridis_c() +
+  ggtitle("Map Unit Centroids - Temperature") +
+  labs(subtitle = "Annual Temperature Normal (deg. Celsius) 1991-2020")
+
+
+
+ggplot(data = climsf) +
+  geom_sf(aes(color = annprcp_norm)) +
+  scale_color_viridis_c() + 
+  ggtitle("Map Unit Centroids - Precipitation") +
+  labs(subtitle = "Annual Precipitation Normal (mm) 1991-2020")
+
+
+
+
+
+```
+
+## Save climate data
+
+```{r}
+
+write_csv(clim_plot_df, "data/ann_normals_precip_temp_mukey_centroids.csv")
+
+```
+
+## How correlated are the climate variables?
+
+```{r}
+
+c <- read_csv("data/ann_normals_precip_temp_mukey_centroids.csv")
+
+c %>% 
+  select(anntavg_norm, annprcp_norm) %>% 
+  corrr::correlate()
+
+```

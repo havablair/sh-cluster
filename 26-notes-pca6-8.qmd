@@ -18,11 +18,12 @@ library(terra)
 
 cluster_names <- read_csv("data/named_clustering_candidates.csv")%>% 
   mutate(desc_w_count = glue("n={n_members}\n{description}"),
-    wrap_names = str_wrap(desc_w_count, 15))
+    wrap_names = str_wrap(desc_w_count, 15)) %>% 
+  filter(version == "pca")
 
-rastpca6 <- rast("E:/big-files-backup/ch03-sh-groups/clust6_pca.tif")
+rastpca6 <- rast("F:/big-files-backup/ch03-sh-groups/clust6_pca.tif")
 
-rastpca8 <- rast("E:/big-files-backup/ch03-sh-groups/clust8_pca.tif")
+rastpca8 <- rast("F:/big-files-backup/ch03-sh-groups/clust8_pca.tif")
 
 
 ```
