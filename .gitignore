@@ -20,12 +20,14 @@
 *.docx
 *.pptx
 
+_freeze/
 _refs/
 
 # big shape files
 _qgis_files/
 
 data/
+figs/
 
 /.quarto/
 .quarto/
